@@ -11,6 +11,6 @@
   /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); */
   padding: 1rem;
   margin: 2rem auto;
-  max-width: 40rem;
+  max-width: 50rem;
 }
 </style>
