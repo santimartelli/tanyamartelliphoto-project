@@ -65,6 +65,8 @@ p {
 .container {
   width: 70%;
   margin: 0 auto;
+  box-sizing: border-box; /* Include padding in the container's width */
+  padding: 0 1rem; /* Add padding to the container */
 }
 
 .route-enter-from {

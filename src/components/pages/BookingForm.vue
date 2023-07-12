@@ -111,7 +111,7 @@
           :disabled="isDateDisabled(selectedDate)"
         />
       </div>
-      <div>
+      <div class="time-label-imput">
         <label for="time">Time:</label>
         <select id="time" v-model="selectedTime">
           <option v-for="time in availableTimes" :value="time" :key="time">
@@ -128,9 +128,9 @@
             to your preferences and needs.
           </p></label
         >
-        <textarea id="message" v-model="message" rows="4"></textarea>
+        <textarea id="message" v-model="message" rows="10"></textarea>
       </div>
-      <div class="btn">
+      <div class="btn-container">
         <base-button @click="submitForm">Enviar</base-button>
       </div>
     </base-card>
@@ -207,7 +207,8 @@ label {
   color: black;
 }
 
-input,
+input[type="text"],
+input[type="email"],
 textarea {
   font-family: typewriter-extralight;
   letter-spacing: 0.1rem;
@@ -243,9 +244,9 @@ textarea:focus {
   border: 0.5px solid slategray;
 }
 
-.btn {
-  width: 100%;
-  text-align: right;
+.btn-container {
+  display: flex;
+  justify-content: center;
   margin-top: -1rem;
 }
 
@@ -266,11 +267,6 @@ textarea:focus {
 .radio-container input[type="radio"] {
   position: absolute;
   opacity: 0;
-}
-
-input[type="date"],
-.radio-container input[type="time"] {
-  width: 30%;
 }
 
 .radio-desc {
@@ -297,6 +293,40 @@ input[type="date"],
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/* Date and time */
+
+input[type="date"]{
+  width: 30%;
+  font-family: typewriter-extralight;
+  letter-spacing: 0.1rem;
+  border: none;
+  outline: none;
+  background-color: white;
+  border: 0.5px solid rgb(235, 228, 228);
+  font-size: 0.8rem;
+  padding: 5px 0;
+  color: black;}
+
+  
+
+input[type="time"] {
+  width: 30%;
+  font-family: typewriter-extralight;
+  letter-spacing: 0.1rem;
+  border: none;
+  outline: none;
+  background-color: white;
+  border: 0.5px solid rgb(235, 228, 228);
+  font-size: 0.8rem;
+  padding: 5px 0;
+  color: black;}
+
+.time-label-imput {
+  margin-top: 1rem;
+}
+
+/* Media queries */
 
 @media (max-width: 768px) {
   select {

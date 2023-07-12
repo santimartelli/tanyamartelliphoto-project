@@ -29,10 +29,10 @@
         <textarea
           id="message"
           name="message"
-          rows="4"
+          rows="10"
           v-model="message"
         ></textarea>
-        <div class="btn">
+        <div class="btn-container">
           <base-button @click="submitForm" value="Enviar">Enviar</base-button>
         </div>
       </form>
@@ -87,21 +87,23 @@ textarea {
   letter-spacing: 0.1rem;
   border: none;
   outline: none;
-  border-bottom: 1px solid #ddd;
+  background-color: white;
+  border: 0.5px solid rgb(235, 228, 228);
   font-size: 0.8rem;
   padding: 5px 0;
-  margin: 1rem 0;
+  margin-top: 12px;
+  margin-bottom: 2rem;
   width: 100%;
   color: black;
 }
 
 input:focus,
 textarea:focus {
-  background-color: snow;
+  border: 0.5px solid slategray;
 }
 
-.btn {
-  width: 100%;
-  text-align: right;
+.btn-container {
+  display: flex;
+  justify-content: center;
 }
 </style>
