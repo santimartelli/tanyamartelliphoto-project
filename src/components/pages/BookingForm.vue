@@ -308,8 +308,6 @@ input[type="date"]{
   padding: 5px 0;
   color: black;}
 
-  
-
 input[type="time"] {
   width: 30%;
   font-family: typewriter-extralight;
