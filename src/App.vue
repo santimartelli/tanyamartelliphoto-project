@@ -71,27 +71,32 @@ p {
 
 .route-enter-from {
   opacity: 0;
+  transform: translateY(20px);
 }
 
 .route-leave-to {
   opacity: 0;
+  transform: translateY(20px);
 }
 
 .route-enter-active {
-  transition: all 0.3s ease-out;
+  transition: all 0.5s ease;
+  transform: translateY(20px);
 }
 
 .route-leave-active {
-  transition: all 0.3s ease-in;
+  transition: all 0.3s ease;
 }
 
 .route-enter-to,
 .route-leave-from {
   opacity: 1;
+  transform: translateY(0);
 }
 
 .route-leave-to {
   opacity: 0;
+  transform: translateY(0);
 }
 
 /*generate the media queries for the cpntainer to occupy 100% width*/
