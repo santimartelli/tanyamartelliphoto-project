@@ -2,21 +2,10 @@
   <div class="container">
     <h2>I would love to hear from you!</h2>
     <p>
-      Whether you're interested in booking a photoshoot, have a question about
-      my services, or just want to say hello, please don't hesitate to fill out
-      the contact form below. I will do my best to respond to your message
-      within 24-48 hours.
-    </p>
-    <p>
-      Please include as many details as possible about your inquiry, including
-      the type of session you're interested in, the location, and any special
-      requests or requirements. This helps ensure that I can provide you with
-      the most accurate and helpful information.
-    </p>
-
-    <p>
-      Thank you for considering me as your photographer, and I look forward to
-      the opportunity to work with you!
+      I truly appreciate your interest and consideration in my photography
+      services! If you have any questions, want more information, or would like
+      to get in touch with me, please don't hesitate to reach out using the
+      contact form below. I'll respond to your message as soon as possible.
     </p>
 
     <base-card>
