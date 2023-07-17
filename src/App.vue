@@ -71,17 +71,17 @@ p {
 
 .route-enter-from {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(1rem);
 }
 
 .route-leave-to {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(1rem);
 }
 
 .route-enter-active {
-  transition: all 0.5s ease;
-  transform: translateY(20px);
+  transition: all 1s ease;
+  transform: translateY(1rem);
 }
 
 .route-leave-active {
