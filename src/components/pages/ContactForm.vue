@@ -79,7 +79,7 @@ textarea {
   background-color: white;
   border: 0.5px solid rgb(235, 228, 228);
   font-size: 0.8rem;
-  padding: 5px 0;
+  padding: 5px;
   margin-top: 12px;
   margin-bottom: 2rem;
   width: 100%;
