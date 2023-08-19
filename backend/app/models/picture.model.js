@@ -6,7 +6,7 @@ const Picture = function (picture) {
 };
 
 Picture.create = (newPicture, result) => {
-  sql.query("INSERT INTO pictures SET ?", newPicture, (err, res) => {
+  sql.query("INSERT INTO Pictures SET ?", newPicture, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -19,10 +19,10 @@ Picture.create = (newPicture, result) => {
 };
 
 Picture.getAll = (result) => {
-  sql.query("SELECT * FROM pictures", (err, res) => {
+  sql.query("SELECT * FROM Pictures", (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(err, null);
+      result(null, err);
       return;
     }
 
@@ -33,25 +33,25 @@ Picture.getAll = (result) => {
 
 Picture.getByCategory = (categoryID, result) => {
   sql.query(
-    "SELECT * FROM pictures WHERE categoryID = ?",
+    "SELECT * FROM Pictures WHERE categoryID = ?",
     categoryID,
     (err, res) => {
       if (err) {
         console.log("error: ", err);
-        result(err, null);
+        result(null, err);
         return;
       }
 
-      console.log(`pictures in category ${categoryID}: `, res);
+      console.log("pictures for category: ", res);
       result(null, res);
     }
   );
 };
 
-Picture.updateCategory = (pictureID, newCategoryID, result) => {
+Picture.updateById = (pictureID, updatedPicture, result) => {
   sql.query(
-    "UPDATE pictures SET categoryID = ? WHERE pictureID = ?",
-    [newCategoryID, pictureID],
+    "UPDATE Pictures SET picturePath = ?, categoryID = ? WHERE pictureID = ?",
+    [updatedPicture.picturePath, updatedPicture.categoryID, pictureID],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -60,24 +60,21 @@ Picture.updateCategory = (pictureID, newCategoryID, result) => {
       }
 
       if (res.affectedRows == 0) {
-        // not found Picture with the id
+        // Picture with the ID not found
         result({ kind: "not_found" }, null);
         return;
       }
 
-      console.log("updated picture category: ", {
-        pictureID: pictureID,
-        newCategoryID: newCategoryID,
-      });
-      result(null, { pictureID: pictureID, newCategoryID: newCategoryID });
+      console.log("updated picture: ", { id: pictureID, ...updatedPicture });
+      result(null, { id: pictureID, ...updatedPicture });
     }
   );
 };
 
-Picture.remove = (pictureID, result) => {
+Picture.updateAllByCategory = (categoryID, updatedPicture, result) => {
   sql.query(
-    "DELETE FROM pictures WHERE pictureID = ?",
-    pictureID,
+    "UPDATE Pictures SET picturePath = ? WHERE categoryID = ?",
+    [updatedPicture.picturePath, categoryID],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -85,16 +82,56 @@ Picture.remove = (pictureID, result) => {
         return;
       }
 
-      if (res.affectedRows == 0) {
-        // not found Picture with the id
-        result({ kind: "not_found" }, null);
-        return;
-      }
-
-      console.log("deleted picture with pictureID: ", pictureID);
+      console.log(`updated pictures for category ${categoryID}: `, res);
       result(null, res);
     }
   );
 };
+
+Picture.deleteById = (pictureID, result) => {
+  sql.query("DELETE FROM Pictures WHERE pictureID = ?", pictureID, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.affectedRows == 0) {
+      // Picture with the ID not found
+      result({ kind: "not_found" }, null);
+      return;
+    }
+
+    console.log("deleted picture with id: ", pictureID);
+    result(null, res);
+  });
+};
+
+Picture.deleteAllByCategory = (categoryID, result) => {
+  sql.query("DELETE FROM Pictures WHERE categoryID = ?", categoryID, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    console.log(`deleted ${res.affectedRows} pictures for category ${categoryID}`);
+    result(null, res);
+  });
+};
+
+Picture.deleteAll = (result) => {
+  sql.query("DELETE FROM Pictures", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    console.log(`deleted ${res.affectedRows} pictures`);
+    result(null, res);
+  });
+};
+
 
 module.exports = Picture;

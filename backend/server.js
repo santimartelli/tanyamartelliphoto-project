@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const app = express();
@@ -11,18 +10,18 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
-app.use(bodyParser.json());
+app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-
-const db = require("./app/models");
-db.sequelize.sync();
+app.use(express.urlencoded({ extended: true }));
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to Tanya Martelli Photo application." });
+  res.json({ message: "Welcome to Tanya Martelli Photography application." });
 });
+
+require("./app/routes/category.routes.js")(app);
+require("./app/routes/picture.routes.js")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;

@@ -1,25 +1,28 @@
-module.exports = app => {
-  const pictures = require("../controllers/pictures.controller.js");
+module.exports = (app) => {
+  const pictures = require("../controllers/picture.controller.js");
 
   var router = require("express").Router();
 
-  // Add a new Picture
+  // Create a new Picture
   router.post("/", pictures.create);
 
   // Retrieve all Pictures
   router.get("/", pictures.findAll);
 
-  // Retrieve all the Pictures of a category
-  router.get("/:categoryID", tutorials.findOne);
+  // Retrieve Pictures by Category
+  router.get("/category/:categoryID", pictures.findByCategory);
 
-  // Update a Tutorial with id
-  router.put("/:id", tutorials.update);
+  // Update a Picture with id
+  router.put("/:id", pictures.update);
 
-  // Delete a Tutorial with id
-  router.delete("/:id", tutorials.delete);
+  // Delete a Picture with id
+  router.delete("/:id", pictures.delete);
 
-  // Delete all Tutorials
-  router.delete("/", tutorials.deleteAll);
+  // Delete all Pictures
+  router.delete("/", pictures.deleteAll);
 
-  app.use('/api/tutorials', router);
+  // Delete all Pictures for a specific Category
+  router.delete("/category/:categoryID", pictures.deleteAllByCategory);
+
+  app.use("/api/pictures", router);
 };

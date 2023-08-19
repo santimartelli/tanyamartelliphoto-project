@@ -1,39 +1,18 @@
-const mysql = require("mysql2/promise");
+const mysql = require("mysql2");
 const dbConfig = require("../config/db.config.js");
 
-async function createDatabase() {
+// Create a connection to the database
+const connection = mysql.createConnection({
+  host: dbConfig.HOST,
+  user: dbConfig.USER,
+  password: dbConfig.PASSWORD,
+  database: dbConfig.DB
+});
 
-  const db = await mysql.createConnection({
-    host: dbConfig.HOST,
-    user: dbConfig.USER,
-    password: dbConfig.PASSWORD,
-    database: dbConfig.DB
-  });
+// open the MySQL connection
+connection.connect(error => {
+  if (error) throw error;
+  console.log("Successfully connected to the database.");
+});
 
-  await db.query(`CREATE DATABASE IF NOT EXISTS TanyaMartelliPhotography`);
-
-  await db.query(`USE TanyaMartelliPhotography`);
-
-  await db.query(`
-    CREATE TABLE IF NOT EXISTS Categories (
-      CategoryID INT AUTO_INCREMENT,
-      CategoryName VARCHAR(100),
-      PRIMARY KEY (CategoryID)
-    )
-  `);
-
-  await db.query(`
-    CREATE TABLE IF NOT EXISTS Pictures (
-      PictureID INT AUTO_INCREMENT,
-      PicturePath VARCHAR(255),
-      CategoryID INT,
-      PRIMARY KEY (PictureID),
-      FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
-    )
-  `);
-
-  await db.end();
-
-}
-
-createDatabase();
+module.exports = connection;
