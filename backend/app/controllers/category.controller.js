@@ -1,4 +1,4 @@
-const Category = require("../models/category.model.js");
+const CategoryModel = require("../models/category.model.js");
 
 exports.create = (req, res) => {
   console.log(req.body);
@@ -7,11 +7,11 @@ exports.create = (req, res) => {
     return;
   }
 
-  const newCategory = new Category({
+  const newCategory = new CategoryModel({
     categoryName: req.body.categoryName,
   });
 
-  Category.create(newCategory, (err, data) => {
+  CategoryModel.create(newCategory, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || "Some error occurred while creating the Category.",
@@ -23,7 +23,7 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  Category.getAll((err, data) => {
+  CategoryModel.getAll((err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving categories.",
@@ -35,7 +35,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  Category.findById(req.params.id, (err, data) => {
+  CategoryModel.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({ message: `Category not found with id ${req.params.id}` });
@@ -54,7 +54,7 @@ exports.update = (req, res) => {
     return;
   }
 
-  Category.updateById(req.params.id, new Category(req.body), (err, data) => {
+  CategoryModel.updateById(req.params.id, new Category(req.body), (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({ message: `Category not found with id ${req.params.id}` });
@@ -67,8 +67,8 @@ exports.update = (req, res) => {
   });
 };
 
-exports.delete = (req, res) => {
-  Category.remove(req.params.id, (err, data) => {
+exports.deleteOne = (req, res) => {
+  CategoryModel.removeOne(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({ message: `Category not found with id ${req.params.id}` });
@@ -82,7 +82,7 @@ exports.delete = (req, res) => {
 };
 
 exports.deleteAll = (req, res) => {
-  Category.removeAll((err, data) => {
+  CategoryModel.removeAll((err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || "Some error occurred while removing all categories.",

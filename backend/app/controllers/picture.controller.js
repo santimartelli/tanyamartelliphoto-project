@@ -1,4 +1,4 @@
-const Picture = require("../models/picture.model.js");
+const PictureModel = require("../models/picture.model.js");
 
 exports.create = (req, res) => {
   if (!req.body.picturePath || !req.body.categoryID) {
@@ -6,12 +6,12 @@ exports.create = (req, res) => {
     return;
   }
 
-  const newPicture = new Picture({
+  const newPicture = new PictureModel({
     picturePath: req.body.picturePath,
     categoryID: req.body.categoryID,
   });
 
-  Picture.create(newPicture, (err, data) => {
+  PictureModel.create(newPicture, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || "Some error occurred while creating the Picture.",
@@ -23,7 +23,7 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  Picture.getAll((err, data) => {
+  PictureModel.getAll((err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving pictures.",
@@ -35,7 +35,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findByCategory = (req, res) => {
-  Picture.getByCategory(req.params.categoryID, (err, data) => {
+  PictureModel.getByCategory(req.params.categoryID, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving pictures for the category.",
@@ -52,7 +52,7 @@ exports.update = (req, res) => {
     return;
   }
 
-  Picture.updateById(req.params.id, new Picture(req.body), (err, data) => {
+  PictureModel.updateById(req.params.id, new PictureModel(req.body), (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({ message: `Picture not found with id ${req.params.id}` });
@@ -66,7 +66,7 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  Picture.deleteById(req.params.id, (err, data) => {
+  PictureModel.deleteById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({ message: `Picture not found with id ${req.params.id}` });
@@ -80,7 +80,7 @@ exports.delete = (req, res) => {
 };
 
 exports.deleteAll = (req, res) => {
-  Picture.deleteAll((err, data) => {
+  PictureModel.deleteAll((err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || "Some error occurred while removing all pictures.",
@@ -92,12 +92,14 @@ exports.deleteAll = (req, res) => {
 };
 
 exports.deleteAllByCategory = (req, res) => {
-  Picture.deleteAllByCategory(req.params.categoryID, (err, data) => {
+  PictureModel.deleteAllByCategory(req.params.categoryID, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || "Some error occurred while removing all pictures for the category.",
       });
-    } else {
+    } else if (!data.affectedRows) {
+      res.status(404).send({ message: `No pictures found for category ${req.params.categoryID}` });
+    }else {
       res.send({ message: `All pictures for category ${req.params.categoryID} deleted successfully!` });
     }
   });

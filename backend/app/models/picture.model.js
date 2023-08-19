@@ -24,8 +24,10 @@ Picture.getAll = (result) => {
       console.log("error: ", err);
       result(null, err);
       return;
+    }else if(res.length == 0){
+      result(null, {message: "No pictures found!"});
+      return;
     }
-
     console.log("pictures: ", res);
     result(null, res);
   });
@@ -42,8 +44,18 @@ Picture.getByCategory = (categoryID, result) => {
         return;
       }
 
-      console.log("pictures for category: ", res);
-      result(null, res);
+      if (res.length) {
+        const picturesFound = [];
+        res.forEach((picture) => {
+          picturesFound.push(picture);
+        });
+        console.log("found pictures: ", picturesFound);
+        result(null, picturesFound);
+        return;
+      }
+
+      // not found Category with the id
+      result({ kind: "not_found" }, null);
     }
   );
 };
@@ -67,23 +79,6 @@ Picture.updateById = (pictureID, updatedPicture, result) => {
 
       console.log("updated picture: ", { id: pictureID, ...updatedPicture });
       result(null, { id: pictureID, ...updatedPicture });
-    }
-  );
-};
-
-Picture.updateAllByCategory = (categoryID, updatedPicture, result) => {
-  sql.query(
-    "UPDATE Pictures SET picturePath = ? WHERE categoryID = ?",
-    [updatedPicture.picturePath, categoryID],
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-
-      console.log(`updated pictures for category ${categoryID}: `, res);
-      result(null, res);
     }
   );
 };

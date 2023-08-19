@@ -76,4 +76,35 @@ Category.updateById = (categoryId, category, result) => {
   );
 };
 
+Category.removeOne = (categoryId, result) => {
+  sql.query("DELETE FROM Categories WHERE CategoryID = ?", categoryId, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    if (res.affectedRows == 0) {
+      // not found Category with the id
+      result({ kind: "not_found" }, null);
+      return;
+    } else {
+      console.log("deleted category with id: ", categoryId);
+      result(null, res);
+    }
+  });
+};
+
+Category.removeAll = (result) => {
+  sql.query("DELETE FROM Categories", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    } else {
+      console.log(`deleted ${res.affectedRows} categories`);
+      result(null, res);
+    }
+  });
+};
+
 module.exports = Category;
