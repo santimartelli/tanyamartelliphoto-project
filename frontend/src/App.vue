@@ -57,7 +57,7 @@ h2 {
 
 p {
   font-size: 0.75rem;
-  line-height: 1.3rem;
+  line-height: 2rem;
   letter-spacing: 0.1rem;
   text-align: justify;
 }

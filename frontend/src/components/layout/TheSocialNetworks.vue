@@ -46,6 +46,7 @@ export default {};
   display: flex;
   justify-content: center;
   padding-top: 2rem;
+  width: 100%;
 }
 
 .redes-sociales ul {

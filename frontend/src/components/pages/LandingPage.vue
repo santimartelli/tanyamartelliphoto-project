@@ -1,64 +1,76 @@
 <template>
-  <div class="container">
+  <div class="container-big">
     <div class="hero">
       <transition-group name="fade" tag="div">
         <div
-          v-for="(image, index) in images"
-          :key="image.id"
+          v-for="(picture, index) in pictures"
+          :key="picture.PictureID"
           class="image-container"
           v-show="index === currentImageIndex"
         >
-          <img :src="image.src" :alt="image.alt" />
+          <img
+            :src="picture.PicturePath"
+            :alt="'Picture ' + picture.PictureID"
+          />
         </div>
       </transition-group>
     </div>
-    <p>
-      Welcome! I'm Tatiana, a passionate photographer based in Spain. From
-      family portraits to fashion shots, I specialize in capturing life's most
-      precious moments. Take a look at my portfolio and let's create beautiful
-      memories together.
-    </p>
-    <p>
-      Book a session or reach out for more information. Let's capture the magic
-      together.
-    </p>
+    <div class="container">
+      <p>
+        Welcome! I'm Tatiana, a passionate photographer based in Spain. From
+        family portraits to fashion shots, I specialize in capturing life's most
+        precious moments. Take a look at my portfolio and let's create beautiful
+        memories together.
+      </p>
+      <p>
+        Book a session or reach out for more information. Let's capture the
+        magic together.
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
-import preg1 from "@/assets/images/pregnancy/preg1.jpg";
-import newborn1 from "@/assets/images/newborn/newborn1.jpg";
-import newborn2 from "@/assets/images/newborn/newborn2.jpg";
-import fam3 from "@/assets/images/family/fam3.jpg";
+import axios from "axios";
 
 export default {
   data() {
     return {
-      images: [
-        { id: 1, src: preg1, alt: "Image 1" },
-        { id: 2, src: newborn1, alt: "Image 2" },
-        { id: 3, src: newborn2, alt: "Image 3" },
-        { id: 4, src: fam3, alt: "Image 4"}
-      ],
+      pictures: [],
       currentImageIndex: 0,
     };
   },
   methods: {
     changeImage() {
       this.currentImageIndex =
-        (this.currentImageIndex + 1) % this.images.length;
+        (this.currentImageIndex + 1) % this.pictures.length;
     },
   },
   created() {
     setInterval(this.changeImage, 5000); // Change image every 3 seconds
   },
+  mounted() {
+    axios
+      .get("http://localhost:3000/api/pictures")
+      .then((response) => {
+        console.log(response.data);
+        this.pictures = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
 };
 </script>
 
 <style scoped>
+
+.container-big {
+  width: 100%;
+}
 .hero {
   position: relative;
-  height: 500px;
+  height: 750px;
   overflow: hidden; /* Adjust this value to fit your images */
 }
 

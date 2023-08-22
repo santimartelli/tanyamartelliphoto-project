@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2>Book Your Photosession!</h2>
+    <h2><span class="highlight">Book Your Photosession!</span></h2>
     <p>
       Thank you for your interest in booking a photosession with me! Please fill
       out the form below with your details and preferences, and I will get back
