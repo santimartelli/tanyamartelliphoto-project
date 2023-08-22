@@ -47,7 +47,7 @@ export default {
     },
   },
   created() {
-    setInterval(this.changeImage, 5000); // Change image every 3 seconds
+    setInterval(this.changeImage, 9000); // Change image every 3 seconds
   },
   mounted() {
     axios
@@ -89,7 +89,7 @@ img {
 }
 
 .fade-enter-active {
-  transition: all 1s ease-in-out;
+  transition: all 2s ease-in-out;
 }
 .fade-enter-to,
 .fade-leave-from {
@@ -97,7 +97,7 @@ img {
 }
 
 .fade-leave-active {
-  transition: all 1s ease-in-out;
+  transition: all 2s ease-in-out;
 }
 
 .fade-leave-to {
