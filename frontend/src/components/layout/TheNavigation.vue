@@ -6,6 +6,13 @@
         <li>
           <router-link
             class="link sparkle u-hover--sparkle"
+            :to="{ name: 'home' }"
+            >HOME</router-link
+          >
+        </li>
+        <li>
+          <router-link
+            class="link sparkle u-hover--sparkle"
             :to="{ name: 'about' }"
             >SOBRE MÍ</router-link
           >
@@ -17,13 +24,11 @@
             >PORTFOLIO</router-link
           >
         </li>
-        <li>
-          <router-link class="link" :to="{ name: 'home' }"
-            ><div class="title">
-              <h1 class="name-title">TANYAMARTELLI</h1>
-              <h1 class="photography-title">PHOTOGRAPHY</h1>
-            </div></router-link
-          >
+        <li class="logo">
+          <div class="title">
+            <h1 class="name-title">TANYAMARTELLI</h1>
+            <h1 class="photography-title">PHOTOGRAPHY</h1>
+          </div>
         </li>
         <li>
           <router-link
@@ -37,6 +42,13 @@
             class="link sparkle u-hover--sparkle"
             :to="{ name: 'contact' }"
             >CONTACTO</router-link
+          >
+        </li>
+        <li>
+          <router-link
+            class="link sparkle u-hover--sparkle"
+            :to="{ name: 'access' }"
+            >MINI-SESSIONS</router-link
           >
         </li>
       </ul>
@@ -104,6 +116,13 @@
                 >CONTACTO</router-link
               >
             </li>
+            <li>
+          <router-link
+            class="link sparkle u-hover--sparkle"
+            :to="{ name: 'access' }"
+            >MINI-SESSIONS</router-link
+          >
+        </li>
           </ul>
         </div>
       </transition>
@@ -144,7 +163,7 @@ export default {
     },
     checkScreen() {
       this.windowWidth = window.innerWidth;
-      if (this.windowWidth < 889) {
+      if (this.windowWidth < 988) {
         this.mobile = true;
         return;
       }
@@ -186,6 +205,7 @@ header {
 
     li {
       margin: 1rem;
+      letter-spacing: 0.1rem;
     }
     .link {
       transition: 0.5s ease all;
@@ -196,15 +216,15 @@ header {
 
     .title {
       font-family: typewriter-extralight;
-      padding: 0 3rem;
+      padding: 1rem 3rem;
     }
 
     .title h1 {
       letter-spacing: 0.3rem;
-      margin-bottom: 1rem;
     }
     .name-title {
       font-size: 1.2rem;
+      margin-bottom: 1rem;
       // transition: all 0.5s ease;
     }
     .photography-title {
@@ -223,7 +243,7 @@ header {
     .u-hover--sparkle {
       box-sizing: border-box;
       position: relative;
-      padding: 0.5em 1em;
+      padding: 0.2em 0.8em;
     }
 
     .u-hover--sparkle::before,
@@ -237,9 +257,11 @@ header {
       width: 100%;
       transform-origin: center;
     }
+
     .u-hover--sparkle::before {
-      border-bottom: 0.05em solid #000000;
+      border-bottom: 0.8em solid #fae8e8;
       transform: scale3d(0, 1, 1);
+      z-index: -100;
     }
     .u-hover--sparkle::after {
       transform: scale3d(1, 0, 1);
@@ -251,8 +273,9 @@ header {
     }
 
     .router-link-exact-active::before {
-      border-bottom: 0.05em solid #000000;
+      border-bottom: 0.8em solid #fae8e8;
       transform: scale3d(1, 1, 1);
+      z-index: -100;
     }
 
     .icon {

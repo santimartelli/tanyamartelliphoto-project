@@ -7,18 +7,20 @@
       </transition>
     </router-view>
     <the-social-networks></the-social-networks>
+    <footer-credits></footer-credits>
   </main>
 </template>
 
 <script>
 import TheNavigation from "./components/layout/TheNavigation.vue";
 import TheSocialNetworks from "./components/layout/TheSocialNetworks.vue";
-
+import FooterCredits from "./components/layout/FooterCredits.vue";
 
 export default {
   components: {
     TheNavigation,
     TheSocialNetworks,
+    FooterCredits,
   },
 };
 </script>
@@ -38,15 +40,13 @@ export default {
 }
 
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 html {
   font-family: Typewriter-light, Helvetica, Arial, sans-serif;
-}
-
-body {
-  margin: 0;
 }
 
 h2 {
@@ -67,6 +67,15 @@ p {
   margin: 0 auto;
   box-sizing: border-box; /* Include padding in the container's width */
   padding: 0 1rem; /* Add padding to the container */
+}
+
+.btn a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn:hover a {
+  color: #f7bebe;
 }
 
 .route-enter-from {

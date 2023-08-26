@@ -43,9 +43,10 @@ export default {};
 
 <style scoped>
 .redes-sociales {
+  height: 100px;
   display: flex;
   justify-content: center;
-  padding-top: 2rem;
+  align-items: center;
   width: 100%;
 }
 

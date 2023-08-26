@@ -5,6 +5,7 @@ import AboutMe from './components/pages/AboutMe.vue';
 import ContactForm from './components/pages/ContactForm.vue';
 import PortfolioPage from './components/pages/PortfolioPage.vue';
 import BookingForm from './components/pages/BookingForm.vue';
+import LogIn from './components/pages/LogIn.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -14,7 +15,9 @@ const router = createRouter({
     { path: '/about', name: 'about', component: AboutMe },
     { path: '/contact', name: 'contact', component: ContactForm },
     { path: '/portfolio', name: 'portfolio', component: PortfolioPage },
-    { path: '/booking', name: 'booking', component: BookingForm }
+    { path: '/booking', name: 'booking', component: BookingForm },
+    { path: '/access', name: 'access', component: LogIn }
+
   ],
   scrollBehavior() {
     return new Promise((resolve) => {
