@@ -17,12 +17,29 @@
             >SOBRE MÍ</router-link
           >
         </li>
-        <li>
-          <router-link
-            class="link sparkle u-hover--sparkle"
-            :to="{ name: 'portfolio' }"
-            >PORTFOLIO</router-link
-          >
+        <li
+          @mouseover="showDropdown = true"
+          @mouseleave="showDropdown = false"
+          @click="toggleShowDropdown"
+        >
+          <a class="link sparkle u-hover--sparkle" @click.prevent
+            >PORTFOLIO
+            <img
+              v-if="!showDropdown"
+              src="../../assets/Icons/flecha-abajo.png"
+              style="width: 10px" />
+            <img
+              v-else
+              src="../../assets/Icons/flecha-arriba.png"
+              style="width: 10px"
+          /></a>
+          <ul v-if="showDropdown" class="dropdown">
+            <li v-for="cat in categories" :key="cat.CategoryID">
+              <router-link :to="'/portfolio/' + cat.CategoryID" class="li-a">{{
+                cat.CategoryName
+              }}</router-link>
+            </li>
+          </ul>
         </li>
         <li class="logo">
           <div class="title">
@@ -117,12 +134,12 @@
               >
             </li>
             <li>
-          <router-link
-            class="link sparkle u-hover--sparkle"
-            :to="{ name: 'access' }"
-            >MINI-SESSIONS</router-link
-          >
-        </li>
+              <router-link
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'access' }"
+                >MINI-SESSIONS</router-link
+              >
+            </li>
           </ul>
         </div>
       </transition>
@@ -131,6 +148,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -139,11 +158,14 @@ export default {
       mobileNav: null,
       windowWidth: null,
       scrollPosition: 0,
+      showDropdown: false,
+      categories: [],
     };
   },
   created() {
     window.addEventListener("resize", this.checkScreen);
     this.checkScreen();
+    this.getCategories();
   },
   mounted() {
     window.addEventListener("scroll", this.updateScroll);
@@ -151,6 +173,9 @@ export default {
   methods: {
     toggleMobileNav() {
       this.mobileNav = !this.mobileNav;
+    },
+    toggleShowDropdown() {
+      this.showDropdown = !this.showDropdown;
     },
     updateScroll() {
       const scrollPosition = window.scrollY;
@@ -169,6 +194,17 @@ export default {
       }
       this.mobile = false;
       this.mobileNav = false;
+    },
+    getCategories() {
+      axios
+        .get("http://localhost:3000/api/categories")
+        .then((res) => {
+          this.categories = res.data;
+          console.log(this.categories);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
@@ -294,6 +330,40 @@ header {
 
     .icon-active {
       transform: rotate(180deg);
+    }
+
+    .dropdown {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      margin: 0;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      background-color: #fff;
+      transition: 0.5s ease all;
+    }
+
+    .dropdown ul {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dropdown li {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      text-align: left;
+      font-size: 0.8rem;
+    }
+    .dropdown li:hover {
+      background-color: #fae8e8;
+    }
+
+    .li-a {
+      margin: 0;
+      padding: 1rem;
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     .dropdown-nav {

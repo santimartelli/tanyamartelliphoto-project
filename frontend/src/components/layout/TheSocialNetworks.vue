@@ -61,14 +61,17 @@ export default {};
 .redes-sociales ul li {
   padding: 1rem;
 }
-
 .redes-sociales ul li a img {
   width: 25px;
   height: auto;
   opacity: 0.7;
+  display: block;
 }
 
 .redes-sociales img:hover {
   opacity: 1;
 }
 </style>
+
+
+

@@ -62,6 +62,11 @@ p {
   text-align: justify;
 }
 
+a {
+  text-decoration: none;
+  color: #000;
+}
+
 .container {
   width: 70%;
   margin: 0 auto;
