@@ -1,77 +1,166 @@
 <template>
   <header :class="{ 'scrolled-nav': scrolledNav }">
     <nav>
-      <!-- Versión de escritorio -->
-      <ul v-show="!mobile">
-        <li>
-          <router-link
-            class="link sparkle u-hover--sparkle"
-            :to="{ name: 'home' }"
-            >HOME</router-link
+
+      <!-- Versión de escritorio 1-->
+
+      <ul v-if="!mobile && !segundoNav">
+        <div class="nav-items">
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'home' }"
+              >HOME</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'about' }"
+              >SOBRE MÍ</router-link
+            >
+          </li>
+          <li
+            @mouseover="showDropdown = true"
+            @mouseleave="showDropdown = false"
+            @click="toggleShowDropdown"
           >
-        </li>
-        <li>
-          <router-link
-            class="link sparkle u-hover--sparkle"
-            :to="{ name: 'about' }"
-            >SOBRE MÍ</router-link
-          >
-        </li>
-        <li
-          @mouseover="showDropdown = true"
-          @mouseleave="showDropdown = false"
-          @click="toggleShowDropdown"
-        >
-          <a class="link sparkle u-hover--sparkle" @click.prevent
-            >PORTFOLIO
-            <img
-              v-if="!showDropdown"
-              src="../../assets/Icons/flecha-abajo.png"
-              style="width: 10px" />
-            <img
-              v-else
-              src="../../assets/Icons/flecha-arriba.png"
-              style="width: 10px"
-          /></a>
-          <ul v-if="showDropdown" class="dropdown">
-            <li v-for="cat in categories" :key="cat.CategoryID">
-              <router-link :to="'/portfolio/' + cat.CategoryID" class="li-a">{{
-                cat.CategoryName
-              }}</router-link>
-            </li>
-          </ul>
-        </li>
+            <a class="link sparkle u-hover--sparkle" @click.prevent
+              >PORTFOLIO
+              <img
+                v-if="!showDropdown"
+                src="../../assets/Icons/flecha-abajo.png"
+                style="width: 10px" />
+              <img
+                v-else
+                src="../../assets/Icons/flecha-arriba.png"
+                style="width: 10px"
+            /></a>
+            <transition name="dropdown">
+              <ul v-if="showDropdown" class="dropdown">
+                <li v-for="cat in categories" :key="cat.CategoryID">
+                  <router-link
+                    :to="'/portfolio/' + cat.CategoryID"
+                    class="li-a"
+                    >{{ cat.CategoryName }}</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
+          </li>
+        </div>
         <li class="logo">
           <div class="title">
             <h1 class="name-title">TANYAMARTELLI</h1>
             <h1 class="photography-title">PHOTOGRAPHY</h1>
           </div>
         </li>
-        <li>
-          <router-link
-            class="link sparkle u-hover--sparkle"
-            :to="{ name: 'booking' }"
-            >RESERVAS</router-link
-          >
-        </li>
-        <li>
-          <router-link
-            class="link sparkle u-hover--sparkle"
-            :to="{ name: 'contact' }"
-            >CONTACTO</router-link
-          >
-        </li>
-        <li>
-          <router-link
-            class="link sparkle u-hover--sparkle"
-            :to="{ name: 'access' }"
-            >MINI-SESSIONS</router-link
-          >
-        </li>
+        <div class="nav-items">
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'booking' }"
+              >RESERVAS</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'contact' }"
+              >CONTACTO</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'access' }"
+              >MINI-SESSIONS</router-link
+            >
+          </li>
+        </div>
       </ul>
+
+      <!-- Versión de escritorio 2-->
+
+      <ul v-if="segundoNav">
+        <li class="logo">
+          <div class="title">
+            <h1 class="name-title">TANYAMARTELLI</h1>
+            <h1 class="photography-title">PHOTOGRAPHY</h1>
+          </div>
+        </li>
+        <div class="nav-items">
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'home' }"
+              >HOME</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'about' }"
+              >SOBRE MÍ</router-link
+            >
+          </li>
+          <li
+            @mouseover="showDropdown = true"
+            @mouseleave="showDropdown = false"
+            @click="toggleShowDropdown"
+          >
+            <a class="link sparkle u-hover--sparkle" @click.prevent
+              >PORTFOLIO
+              <img
+                v-if="!showDropdown"
+                src="../../assets/Icons/flecha-abajo.png"
+                style="width: 10px" />
+              <img
+                v-else
+                src="../../assets/Icons/flecha-arriba.png"
+                style="width: 10px"
+            /></a>
+            <transition name="dropdown">
+              <ul v-if="showDropdown" class="dropdown">
+                <li v-for="cat in categories" :key="cat.CategoryID">
+                  <router-link
+                    :to="'/portfolio/' + cat.CategoryID"
+                    class="li-a"
+                    >{{ cat.CategoryName }}</router-link
+                  >
+                </li>
+              </ul>
+            </transition>
+          </li>
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'booking' }"
+              >RESERVAS</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'contact' }"
+              >CONTACTO</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'access' }"
+              >MINI-SESSIONS</router-link
+            >
+          </li>
+        </div>
+      </ul>
+
+
       <!-- Versión móvil -->
+
       <div>
-        <router-link v-show="mobile" class="link" :to="{ name: 'home' }"
+        <router-link v-if="mobile" class="link" :to="{ name: 'home' }"
           ><div class="title">
             <h1 class="name-title">TANYAMARTELLI</h1>
             <h1 class="photography-title">PHOTOGRAPHY</h1>
@@ -109,14 +198,35 @@
                 >SOBRE MÍ</router-link
               >
             </li>
-            <li>
-              <router-link
-                class="link sparkle u-hover--sparkle"
-                :to="{ name: 'portfolio' }"
-                @click="toggleMobileNav"
-                >PORTFOLIO</router-link
-              >
+            <li @click="toggleShowDropdown">
+              <a class="link sparkle u-hover--sparkle" @click.prevent
+                >PORTFOLIO
+                <img
+                  v-if="!showDropdown"
+                  src="../../assets/Icons/flecha-abajo.png"
+                  style="width: 10px" />
+                <img
+                  v-else
+                  src="../../assets/Icons/flecha-arriba.png"
+                  style="width: 10px"
+              /></a>
+              <transition name="dropdown">
+                <ul v-if="showDropdown" class="dropdown">
+                  <li
+                    v-for="cat in categories"
+                    :key="cat.CategoryID"
+                    @click="toggleMobileNav"
+                  >
+                    <router-link
+                      :to="'/portfolio/' + cat.CategoryID"
+                      class="li-a"
+                      >{{ cat.CategoryName }}</router-link
+                    >
+                  </li>
+                </ul>
+              </transition>
             </li>
+
             <li>
               <router-link
                 class="link sparkle u-hover--sparkle"
@@ -156,6 +266,8 @@ export default {
       scrolledNav: null,
       mobile: null,
       mobileNav: null,
+      primerNav: null,
+      segundoNav: null,
       windowWidth: null,
       scrollPosition: 0,
       showDropdown: false,
@@ -188,12 +300,24 @@ export default {
     },
     checkScreen() {
       this.windowWidth = window.innerWidth;
-      if (this.windowWidth < 988) {
-        this.mobile = true;
+      if (this.windowWidth > 1224) {
+        this.primerNav = true;
+        this.segundoNav = false;
+        this.mobile = false;
         return;
       }
-      this.mobile = false;
-      this.mobileNav = false;
+      else if(this.windowWidth < 1224 && this.windowWidth > 854) {
+        this.segundoNav = true;
+        this.mobile = false;
+        this.primerNav = false;
+        return;
+      }
+      else if (this.windowWidth < 854) {
+        this.mobile = true;
+        this.segundoNav = false;
+        this.primerNav = false;
+        return;
+      }
     },
     getCategories() {
       axios
@@ -242,6 +366,11 @@ header {
     li {
       margin: 1rem;
       letter-spacing: 0.1rem;
+    }
+
+    .nav-items {
+      display: flex;
+      flex-direction: row;
     }
     .link {
       transition: 0.5s ease all;
@@ -317,8 +446,8 @@ header {
     .icon {
       display: flex;
       position: absolute;
-      top: 1rem;
-      right: 1rem;
+      top: 2rem;
+      right: 2rem;
       z-index: 99;
 
       i {
@@ -340,6 +469,7 @@ header {
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
       background-color: #fff;
       transition: 0.5s ease all;
+      z-index: 99;
     }
 
     .dropdown ul {
@@ -364,6 +494,19 @@ header {
       display: block;
       width: 100%;
       height: 100%;
+    }
+
+    .dropdown-enter-active,
+    .dropdown-leave-active {
+      transition: opacity 0.5s;
+    }
+    .dropdown-enter-from,
+    .dropdown-leave-to {
+      opacity: 0;
+    }
+    .dropdown-enter-to,
+    .dropdown-leave-from {
+      opacity: 1;
     }
 
     .dropdown-nav {
@@ -415,4 +558,22 @@ header {
     }
   }
 }
+
+@media (max-width: 1224px) {
+  nav ul {
+    flex-direction: column;
+  }
+  .nav-items {
+    flex-direction: row;
+  }
+
+  .logo{
+    margin: 0;
+  }
+
+  .nav-items li{
+    margin-top: 0.2rem;
+  }
+}
+
 </style>
