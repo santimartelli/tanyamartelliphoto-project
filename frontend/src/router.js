@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import LandingPage from '../src/components/pages/LandingPage.vue';
-import AboutMe from './components/pages/AboutMe.vue';
-import ContactForm from './components/pages/ContactForm.vue';
-import PortfolioPage from './components/pages/PortfolioPage.vue';
-import BookingForm from './components/pages/BookingForm.vue';
-import LogIn from './components/pages/LogIn.vue';
-import PortfolioCat from './components/pages/PortfolioCat.vue';
+import LandingPage from './pages/LandingPage.vue';
+import AboutMe from './pages/AboutMe.vue';
+import ContactForm from './pages/ContactForm.vue';
+import PortfolioPage from './pages/PortfolioPage.vue';
+import BookingForm from './pages/BookingForm.vue';
+import LogIn from './pages/LogIn.vue';
+import PortfolioCat from './pages/PortfolioCat.vue';
 
 const router = createRouter({
   history: createWebHistory(),

@@ -22,6 +22,17 @@ export default {
     TheSocialNetworks,
     FooterCredits,
   },
+  mounted() {
+    window.addEventListener('resize', this.updateScreenWidth);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.updateScreenWidth);
+  },
+  methods: {
+    updateScreenWidth() {
+      this.$store.dispatch('onResize');
+    },
+  },
 };
 </script>
 
@@ -36,6 +47,13 @@ export default {
   font-family: "Typewriter-extralight";
   src: local("Typewriter-extralight"),
     url(./assets/fonts/typewriter-serial-extralight-regular.ttf)
+      format("truetype");
+}
+
+@font-face {
+  font-family: "Thesignature";
+  src: local("Thesignature"),
+    url(./assets/fonts/Thesignature.ttf)
       format("truetype");
 }
 

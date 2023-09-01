@@ -2,7 +2,7 @@
   <div class="container">
     <h2>Who I am?</h2>
     <div class="content">
-      <img src="../../assets/images/tanya.jpg" :alt="name" />
+      <img src="../assets/images/tanya.jpg" :alt="name" />
       <div class="text">
         <p>
           Hello there! I'm Tatiana, a passionate photographer hailing from

@@ -1,7 +1,6 @@
 <template>
   <header :class="{ 'scrolled-nav': scrolledNav }">
     <nav>
-
       <!-- Versión de escritorio 1-->
 
       <ul v-if="!mobile && !segundoNav">
@@ -25,16 +24,14 @@
             @mouseleave="showDropdown = false"
             @click="toggleShowDropdown"
           >
-            <a class="link sparkle u-hover--sparkle" @click.prevent
+            <a
+              class="link sparkle u-hover--sparkle porfolio-arrow-container"
+              @click.prevent
               >PORTFOLIO
               <img
                 v-if="!showDropdown"
-                src="../../assets/Icons/flecha-abajo.png"
-                style="width: 10px" />
-              <img
-                v-else
-                src="../../assets/Icons/flecha-arriba.png"
-                style="width: 10px"
+                src="../../assets/Icons/flecha-abajo.png" />
+              <img v-else src="../../assets/Icons/flecha-arriba.png"
             /></a>
             <transition name="dropdown">
               <ul v-if="showDropdown" class="dropdown">
@@ -51,7 +48,7 @@
         </div>
         <li class="logo">
           <div class="title">
-            <h1 class="name-title">TANYAMARTELLI</h1>
+            <h1 class="name-title">TanyaMartelli</h1>
             <h1 class="photography-title">PHOTOGRAPHY</h1>
           </div>
         </li>
@@ -85,7 +82,7 @@
       <ul v-if="segundoNav">
         <li class="logo">
           <div class="title">
-            <h1 class="name-title">TANYAMARTELLI</h1>
+            <h1 class="name-title">TanyaMartelli</h1>
             <h1 class="photography-title">PHOTOGRAPHY</h1>
           </div>
         </li>
@@ -109,16 +106,14 @@
             @mouseleave="showDropdown = false"
             @click="toggleShowDropdown"
           >
-            <a class="link sparkle u-hover--sparkle" @click.prevent
+            <a
+              class="link sparkle u-hover--sparkle porfolio-arrow-container"
+              @click.prevent
               >PORTFOLIO
               <img
                 v-if="!showDropdown"
-                src="../../assets/Icons/flecha-abajo.png"
-                style="width: 10px" />
-              <img
-                v-else
-                src="../../assets/Icons/flecha-arriba.png"
-                style="width: 10px"
+                src="../../assets/Icons/flecha-abajo.png" />
+              <img v-else src="../../assets/Icons/flecha-arriba.png"
             /></a>
             <transition name="dropdown">
               <ul v-if="showDropdown" class="dropdown">
@@ -156,13 +151,12 @@
         </div>
       </ul>
 
-
       <!-- Versión móvil -->
 
       <div>
         <router-link v-if="mobile" class="link" :to="{ name: 'home' }"
           ><div class="title">
-            <h1 class="name-title">TANYAMARTELLI</h1>
+            <h1 class="name-title">TanyaMartelli</h1>
             <h1 class="photography-title">PHOTOGRAPHY</h1>
           </div>
         </router-link>
@@ -170,15 +164,15 @@
           <i
             @click="toggleMobileNav"
             v-show="mobile"
-            class="far fa-bars"
             :class="{ 'icon-active': mobileNav }"
-          ></i>
+            ><img src="../../assets/Icons/menu.png" alt="menu"
+          /></i>
         </div>
       </div>
       <transition name="mobile-nav">
         <div v-show="mobileNav" class="dropdown-nav link">
           <div class="title">
-            <h1 class="name-title">TANYAMARTELLI</h1>
+            <h1 class="name-title">TanyaMartelli</h1>
             <h1 class="photography-title">PHOTOGRAPHY</h1>
           </div>
           <ul class="dropdown-items">
@@ -199,16 +193,14 @@
               >
             </li>
             <li @click="toggleShowDropdown">
-              <a class="link sparkle u-hover--sparkle" @click.prevent
+              <a
+                class="link sparkle u-hover--sparkle porfolio-arrow-container"
+                @click.prevent
                 >PORTFOLIO
                 <img
                   v-if="!showDropdown"
-                  src="../../assets/Icons/flecha-abajo.png"
-                  style="width: 10px" />
-                <img
-                  v-else
-                  src="../../assets/Icons/flecha-arriba.png"
-                  style="width: 10px"
+                  src="../../assets/Icons/flecha-abajo.png" />
+                <img v-else src="../../assets/Icons/flecha-arriba.png"
               /></a>
               <transition name="dropdown">
                 <ul v-if="showDropdown" class="dropdown">
@@ -259,24 +251,19 @@
 
 <script>
 import axios from "axios";
+import { mapGetters } from 'vuex';
 
 export default {
   data() {
     return {
       scrolledNav: null,
-      mobile: null,
       mobileNav: null,
-      primerNav: null,
-      segundoNav: null,
-      windowWidth: null,
       scrollPosition: 0,
       showDropdown: false,
       categories: [],
     };
   },
   created() {
-    window.addEventListener("resize", this.checkScreen);
-    this.checkScreen();
     this.getCategories();
   },
   mounted() {
@@ -298,27 +285,6 @@ export default {
       }
       this.scrollPosition = scrollPosition;
     },
-    checkScreen() {
-      this.windowWidth = window.innerWidth;
-      if (this.windowWidth > 1224) {
-        this.primerNav = true;
-        this.segundoNav = false;
-        this.mobile = false;
-        return;
-      }
-      else if(this.windowWidth < 1224 && this.windowWidth > 854) {
-        this.segundoNav = true;
-        this.mobile = false;
-        this.primerNav = false;
-        return;
-      }
-      else if (this.windowWidth < 854) {
-        this.mobile = true;
-        this.segundoNav = false;
-        this.primerNav = false;
-        return;
-      }
-    },
     getCategories() {
       axios
         .get("http://localhost:3000/api/categories")
@@ -330,6 +296,9 @@ export default {
           console.log(err);
         });
     },
+  },
+  computed: {
+    ...mapGetters(['screenWidth', 'mobile', 'segundoNav', 'primerNav']),
   },
 };
 </script>
@@ -372,6 +341,16 @@ header {
       display: flex;
       flex-direction: row;
     }
+
+    .porfolio-arrow-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .porfolio-arrow-container img {
+      width: 15px;
+    }
+
     .link {
       transition: 0.5s ease all;
       text-decoration: none;
@@ -388,9 +367,10 @@ header {
       letter-spacing: 0.3rem;
     }
     .name-title {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      // transition: all 0.5s ease;
+      font-family: Thesignature;
+      font-weight: 400;
+      font-size: 3rem;
+      margin-bottom: 0;
     }
     .photography-title {
       font-size: 0.6rem;
@@ -446,19 +426,20 @@ header {
     .icon {
       display: flex;
       position: absolute;
-      top: 2rem;
-      right: 2rem;
+      top: 1rem;
+      right: 1rem;
       z-index: 99;
 
       i {
         cursor: pointer;
-        font-size: 24px;
+        height: 40px;
+        width: 40px;
         transition: 0.8s ease all;
       }
     }
 
     .icon-active {
-      transform: rotate(180deg);
+      transform: rotate(-90deg);
     }
 
     .dropdown {
@@ -559,7 +540,7 @@ header {
   }
 }
 
-@media (max-width: 1224px) {
+@media (max-width: 1235px) {
   nav ul {
     flex-direction: column;
   }
@@ -567,13 +548,33 @@ header {
     flex-direction: row;
   }
 
-  .logo{
+  .logo {
     margin: 0;
   }
 
-  .nav-items li{
+  .nav-items li {
     margin-top: 0.2rem;
   }
 }
 
+@media (max-width: 500px) {
+  i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  i img {
+    height: 30px;
+    width: 30px;
+  }
+
+  header nav .name-title{
+    font-size: 2.5rem;
+  }
+
+  header nav .photography-title{
+    font-size: 0.5rem;
+  }
+}
 </style>
