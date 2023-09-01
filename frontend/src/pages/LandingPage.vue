@@ -20,7 +20,7 @@
         <div class="text-container">
           <h2><span class="highlight">Welcome!</span></h2>
           <p>
-            I'm Tatiana, a passionate photographer based in Spain. From family
+            I am Tatiana, a passionate photographer based in Spain. From family
             portraits to fashion shots, I specialize in capturing life's most
             precious moments. Take a look at my portfolio and let's create
             beautiful memories together. Book a session or reach out for more
@@ -43,7 +43,7 @@
         <div class="text-container">
           <h2><span class="highlight">Welcome!</span></h2>
           <p>
-            I'm Tatiana, a passionate photographer based in Spain. From family
+            I am Tatiana, a passionate photographer based in Spain. From family
             portraits to fashion shots, I specialize in capturing life's most
             precious moments. Take a look at my portfolio and let's create
             beautiful memories together. Book a session or reach out for more
@@ -149,6 +149,8 @@ h2 {
 
 .image-container img {
   width: 100%;
+  min-height: 750px;
+  object-fit: cover;
 }
 
 /* Welcome message section */
@@ -284,9 +286,9 @@ h2 {
 }
 
 @media (max-width: 1235px) {
-  .hero {
+  /* .hero {
     height: 650px;
-  }
+  } */
 
   .welcome-message {
     padding: 6rem 0;
@@ -325,14 +327,14 @@ h2 {
 }
 
 @media (max-width: 854px) {
-  .hero {
+  /* .hero {
     height: 500px;
   }
 
   .hero img {
     min-height: 500px;
     object-fit: cover;
-  }
+  } */
 
   .welcome-message,
   .featured-images {
@@ -377,14 +379,14 @@ h2 {
   } */
 
   @media (max-width: 500px) {
-    .hero {
+    /* .hero {
       height: 500px;
     }
 
     .hero img{
       min-height: 500px;
       object-fit: cover;
-    }
+    } */
 
     .welcome-message{
       width: 100%;
