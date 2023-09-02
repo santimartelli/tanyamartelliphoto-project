@@ -1,3 +1,5 @@
+// Root mutations
+
 export default {
   updateScreenWidth(state) {
     state.screenWidth = window.innerWidth;

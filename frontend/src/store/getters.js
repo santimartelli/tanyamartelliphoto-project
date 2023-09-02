@@ -1,3 +1,5 @@
+//Root getters
+
 export default {
   screenWidth: (state) => state.screenWidth,
   mobile: (state) => state.mobile,

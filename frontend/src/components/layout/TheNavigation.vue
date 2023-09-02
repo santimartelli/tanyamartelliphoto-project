@@ -170,7 +170,7 @@
         </div>
       </div>
       <transition name="mobile-nav">
-        <div v-show="mobileNav" class="dropdown-nav link">
+        <div v-show="mobileNav && mobile" class="dropdown-nav link">
           <div class="title">
             <h1 class="name-title">TanyaMartelli</h1>
             <h1 class="photography-title">PHOTOGRAPHY</h1>
@@ -278,7 +278,7 @@ export default {
     },
     updateScroll() {
       const scrollPosition = window.scrollY;
-      if (scrollPosition >= this.scrollPosition) {
+      if (scrollPosition >= this.scrollPosition && this.scrollPosition > 120) {
         this.scrolledNav = true;
       } else {
         this.scrolledNav = false;
@@ -374,7 +374,6 @@ header {
     }
     .photography-title {
       font-size: 0.6rem;
-      // transition: all 0.5s ease;
     }
 
     .sparkle {
@@ -439,7 +438,7 @@ header {
     }
 
     .icon-active {
-      transform: rotate(-90deg);
+      transform: rotate(-180deg);
     }
 
     .dropdown {
