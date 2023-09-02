@@ -4,8 +4,14 @@ import { createStore } from "vuex";
 import mutations from "./mutations";
 import actions from "./actions";
 import getters from "./getters";
+import categoriesModule from "./modules/categories/index.js";
+import picturesModule from "./modules/pictures/index.js";
 
 const store = createStore({
+  modules: {
+    categories: categoriesModule,
+    pictures: picturesModule,
+  },
   state: {
     screenWidth: window.innerWidth,
     mobile: window.innerWidth <= 854,

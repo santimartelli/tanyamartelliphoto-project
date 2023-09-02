@@ -33,10 +33,6 @@
             />
           </div>
         </div>
-      <!-- <div class="text-links">
-        <router-link to="/booking">Book a session</router-link>
-        <router-link to="/contact">Contact me</router-link>
-      </div> -->
     </section>
     <section v-else class="welcome-message">
       <div class="text-image-container">
@@ -57,10 +53,6 @@
           />
         </div>
       </div>
-      <!-- <div class="text-links">
-        <router-link to="/booking">Book a session</router-link>
-        <router-link to="/contact">Contact me</router-link>
-      </div> -->
     </section>
     <section class="categories"></section>
     <section class="featured-images">
@@ -80,13 +72,11 @@
 </template>
 
 <script>
-import axios from "axios";
 import { mapGetters } from "vuex";
 
 export default {
   data() {
     return {
-      pictures: [],
       currentImageIndex: 0,
     };
   },
@@ -98,20 +88,12 @@ export default {
   },
   computed: {
     ...mapGetters(["screenWidth", "mobile"]),
+    pictures() {
+      return this.$store.getters["pictures/pictures"];
+    }
   },
   created() {
     setInterval(this.changeImage, 9000); // Change image every 3 seconds
-  },
-  mounted() {
-    axios
-      .get("http://localhost:3000/api/pictures")
-      .then((response) => {
-        console.log(response.data);
-        this.pictures = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   },
 };
 </script>
@@ -193,33 +175,6 @@ h2 {
   width: 400px;
   height: auto;
 }
-
-/* Links */
-
-/* .text-links {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 4rem;
-  padding-top: 5rem;
-}
-.text-links a {
-  text-decoration: none;
-  color: black;
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.1rem;
-  transition: all 0.2s ease;
-  text-transform: uppercase;
-  padding: 1rem;
-  border: 1px solid #f79f9f;
-  border-radius: 3px;
-}
-
-.text-links a:hover {
-  border: 1px solid #000;
-} */
 
 /* Featured images section*/
 .featured-images {

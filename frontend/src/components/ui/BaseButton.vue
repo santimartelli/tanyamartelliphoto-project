@@ -29,19 +29,20 @@ export default {
 .btn {
   display: inline-block;
   padding: 1rem 0.5rem;
-  background-color: #565656;
-  border: 1px solid #332e2e;
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 400;
-  letter-spacing: 0.2rem;
+  background-color: #fff;
+  color: #000;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.1rem;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  padding: 1rem;
+  border: 1px solid #f79f9f;
+  border-radius: 3px;
   cursor: pointer;
-  transition: .5s ease all;
 }
 
 .btn:hover {
-  background-color: #332e2e;
-  color: #f7bebe;
+  border: 1px solid #000;
 }
-
 </style>

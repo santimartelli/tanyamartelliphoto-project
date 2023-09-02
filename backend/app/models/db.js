@@ -1,5 +1,4 @@
 const mysql = require("mysql2");
-// const dbConfig = require("../config/db.config.js");
 
 // Create a connection to the database
 const connection = mysql.createConnection({
@@ -7,10 +6,6 @@ const connection = mysql.createConnection({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  // host: 'localhost',
-  // user: 'santimartelli',
-  // password: 'palermo',
-  // database: 'TanyaMartelliPhotography',
 });
 
 // open the MySQL connection

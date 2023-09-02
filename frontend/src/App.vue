@@ -15,12 +15,17 @@
 import TheNavigation from "./components/layout/TheNavigation.vue";
 import TheSocialNetworks from "./components/layout/TheSocialNetworks.vue";
 import FooterCredits from "./components/layout/FooterCredits.vue";
+import { mapActions } from "vuex";
 
 export default {
   components: {
     TheNavigation,
     TheSocialNetworks,
     FooterCredits,
+  },
+  created() {
+    this.getCategories();
+    this.getPictures();
   },
   mounted() {
     window.addEventListener('resize', this.updateScreenWidth);
@@ -32,6 +37,8 @@ export default {
     updateScreenWidth() {
       this.$store.dispatch('onResize');
     },
+    ...mapActions("categories", ["getCategories"]),
+    ...mapActions("pictures", ["getPictures"] ),
   },
 };
 </script>

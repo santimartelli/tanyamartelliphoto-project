@@ -250,7 +250,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import { mapGetters } from 'vuex';
 
 export default {
@@ -260,14 +259,13 @@ export default {
       mobileNav: null,
       scrollPosition: 0,
       showDropdown: false,
-      categories: [],
     };
   },
-  created() {
-    this.getCategories();
-  },
-  mounted() {
-    window.addEventListener("scroll", this.updateScroll);
+  computed: {
+    ...mapGetters(['screenWidth', 'mobile', 'segundoNav', 'primerNav']),
+    categories() {
+      return this.$store.getters['categories/categories'];
+    },
   },
   methods: {
     toggleMobileNav() {
@@ -285,20 +283,9 @@ export default {
       }
       this.scrollPosition = scrollPosition;
     },
-    getCategories() {
-      axios
-        .get("http://localhost:3000/api/categories")
-        .then((res) => {
-          this.categories = res.data;
-          console.log(this.categories);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
   },
-  computed: {
-    ...mapGetters(['screenWidth', 'mobile', 'segundoNav', 'primerNav']),
+  mounted() {
+    window.addEventListener("scroll", this.updateScroll);
   },
 };
 </script>
