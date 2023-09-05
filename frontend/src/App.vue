@@ -108,6 +108,10 @@ a {
   color: #f7bebe;
 }
 
+:root {
+    --swiper-theme-color: #fff;
+}
+
 .route-enter-from {
   opacity: 0;
   transform: translateY(1rem);

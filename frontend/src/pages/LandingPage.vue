@@ -4,35 +4,35 @@
       <transition-group name="fade" tag="div">
         <div
           v-for="(picture, index) in pictures"
-          :key="picture.PictureID"
+          :key="picture.pictureID"
           class="image-container"
           v-show="index === currentImageIndex"
         >
           <img
-            :src="picture.PicturePath"
-            :alt="'Picture ' + picture.PictureID"
+            :src="picture.picturePath"
+            :alt="'Picture category: ' + picture.categoryName"
           />
         </div>
       </transition-group>
     </section>
     <!-- Versión móvil-->
     <section v-if="mobile" class="welcome-message">
-        <div class="text-container">
-          <h2><span class="highlight">Welcome!</span></h2>
-          <p>
-            I am Tatiana, a passionate photographer based in Spain. From family
-            portraits to fashion shots, I specialize in capturing life's most
-            precious moments. Take a look at my portfolio and let's create
-            beautiful memories together. Book a session or reach out for more
-            information.
-          </p>
-          <div class="desc-image">
-            <img
-              src="../assets/images/tanyadesc.jpg"
-              alt="Tatiana with camera in Zumaia's beach"
-            />
-          </div>
+      <div class="text-container">
+        <h2><span class="highlight">Welcome!</span></h2>
+        <p>
+          I am Tatiana, a passionate photographer based in Spain. From family
+          portraits to fashion shots, I specialize in capturing life's most
+          precious moments. Take a look at my portfolio and let's create
+          beautiful memories together. Book a session or reach out for more
+          information.
+        </p>
+        <div class="desc-image">
+          <img
+            src="../assets/images/tanyadesc.jpg"
+            alt="Tatiana with camera in Zumaia's beach"
+          />
         </div>
+      </div>
     </section>
     <section v-else class="welcome-message">
       <div class="text-image-container">
@@ -54,29 +54,120 @@
         </div>
       </div>
     </section>
-    <section class="categories"></section>
-    <section class="featured-images">
+    <section v-show="mobile" class="lema-mob">
+      <p>
+        "Loving photography <br />
+        since 1986"
+      </p>
+    </section>
+    <section v-show="!mobile" class="lema">
+      <p>"Loving photography since 1986"</p>
+    </section>
+    <section class="categories">
+      <!-- Mobile Version
+      <swiper
+        :navigation="true"
+        :loop="true"
+        :keyboard="{
+          enabled: true,
+        }"
+        :clickable="true"
+        :modules="modules"
+        class="mySwiper"
+        v-if="mobile"
+      >
+        <SwiperSlide v-for="picture in pictures" :key="picture.pictureID">
+          <div class="container-cat swiper-mobile">
+            <img :src="picture.picturePath" :alt="picture.pictureID" />
+            <div class="cat-link">
+              <p class="centered">{{ picture.categoryName }}</p>
+              <div class="space"></div>
+              <router-link
+                :to="'/portfolio/' + picture.categoryID"
+                class="btn-link"
+                >View portfolio</router-link
+              >
+            </div>
+          </div>
+        </SwiperSlide>
+      </swiper> -->
+      <!--Desktop Version-->
+      <swiper
+        :navigation="true"
+        :keyboard="{
+          enabled: true,
+        }"
+        :clickable="true"
+        :slidesPerView="1"
+        :spaceBetween="0"
+        :breakpoints="{
+          '640': {
+            slidesPerView: 2,
+            spaceBetween: 0,
+          },
+          '768': {
+            slidesPerView: 2,
+            spaceBetween: 2,
+          },
+          '1024': {
+            slidesPerView: 3,
+            spaceBetween: 2,
+          },
+        }"
+        :modules="modules"
+        class="mySwiper"
+      >
+        <SwiperSlide v-for="picture in pictures" :key="picture.pictureID">
+          <div class="container-cat swiper-mobile">
+            <img :src="picture.picturePath" :alt="picture.pictureID" />
+            <div class="cat-link">
+              <p class="centered">{{ picture.categoryName }}</p>
+              <div class="space"></div>
+              <router-link
+                :to="'/portfolio/' + picture.categoryID"
+                class="btn-link"
+                >View portfolio</router-link
+              >
+            </div>
+          </div>
+        </SwiperSlide>
+      </swiper>
+    </section>
+    <!-- <section class="featured-images">
       <div class="title-wrapper">
         <h2 class="highlight">Featured Images</h2>
       </div>
       <div class="images">
-        <div v-for="picture in pictures" :key="picture.PictureID" class="image">
+        <div v-for="picture in pictures" :key="picture.pictureID" class="image">
           <img
-            :src="picture.PicturePath"
-            :alt="'Picture ' + picture.PictureID"
+            :src="picture.picturePath"
+            :alt="'Picture ' + picture.pictureID"
           />
         </div>
       </div>
-    </section>
+    </section> -->
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import { Swiper, SwiperSlide } from "swiper/vue";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+// import required modules
+import { Keyboard, Pagination, Navigation } from "swiper/modules";
 
 export default {
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
   data() {
     return {
+      modules: [Keyboard, Pagination, Navigation],
       currentImageIndex: 0,
     };
   },
@@ -90,7 +181,7 @@ export default {
     ...mapGetters(["screenWidth", "mobile"]),
     pictures() {
       return this.$store.getters["pictures/pictures"];
-    }
+    },
   },
   created() {
     setInterval(this.changeImage, 9000); // Change image every 3 seconds
@@ -176,15 +267,113 @@ h2 {
   height: auto;
 }
 
+/* Lema section */
+.lema {
+  width: 100%;
+  background-color: #f7f7f7;
+  padding: 8rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lema-mob {
+  width: 100%;
+  background-color: #f7f7f7;
+  padding: 6rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lema p,
+.lema-mob p {
+  font-family: Typewriter-extralight;
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.2rem;
+  line-height: 3rem;
+  text-align: center;
+}
+
+/* Categories section */
+.categories {
+  width: 100%;
+  padding: 0;
+  background-color: #fff;
+  padding: 0 0 8rem 0;
+}
+
+.swiper{
+  height: 300px;
+}
+.swiper-mobile {
+  width: 100%;
+  max-height: auto;
+}
+
+.swiper-slide img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.container-cat {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.cat-link {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.centered {
+  font-family: thesignature;
+  width: 100%;
+  color: #fff;
+  font-size: 6rem;
+  cursor: default;
+  font-weight: 200;
+}
+
+.space {
+  height: 2rem;
+}
+.btn-link {
+  font-family: Typewriter-light;
+  font-weight: 500;
+  letter-spacing: 0.05rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #f7bebe;
+  border-radius: 3px;
+  padding: 1rem;
+  width: fit-content;
+  text-align: center;
+  opacity: 0.9;
+  transition: all 0.2s ease-in-out;
+}
+.btn-link:hover {
+  color: #fff;
+  background-color: transparent;
+  border: 1px solid #fff;
+}
+
 /* Featured images section*/
-.featured-images {
+/* .featured-images {
   width: 100%;
   padding: 8rem 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #f8f8f8;
+  background-color: #fff;
 }
 
 .title-wrapper {
@@ -218,7 +407,7 @@ h2 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
+} */
 
 .fade-enter-from {
   opacity: 0;
@@ -246,7 +435,7 @@ h2 {
   } */
 
   .welcome-message {
-    padding: 6rem 0;
+    padding: 8rem 0;
   }
   .title-wrapper {
     width: 80%;
@@ -294,17 +483,17 @@ h2 {
   .welcome-message,
   .featured-images {
     width: 100%;
-    padding: 3rem 0;
+    padding: 8rem 0;
   }
 
-  .text-container{
+  .text-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
 
-  .welcome-message h2{
+  .welcome-message h2 {
     padding-bottom: 1rem;
     font-size: 6rem;
   }
@@ -317,13 +506,12 @@ h2 {
   .desc-image {
     margin: 0;
   }
-  .title-wrapper{
+  .title-wrapper {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
   }
   .featured-images h2 {
     font-size: 6rem;
@@ -343,7 +531,7 @@ h2 {
       object-fit: cover;
     } */
 
-    .welcome-message{
+    .welcome-message {
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -363,11 +551,11 @@ h2 {
       font-size: 4rem;
     }
 
-    .desc-image{
+    .desc-image {
       width: 100%;
       margin: 0;
     }
-    .desc-image img{
+    .desc-image img {
       width: 70%;
     }
     .welcome-message p {
