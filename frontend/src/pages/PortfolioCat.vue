@@ -1,15 +1,33 @@
 <template>
   <div>
-    hola
+    <h2 v-if="picturesForCategory.length > 0">{{ picturesForCategory[0].categoryName }}</h2>
+    <h3 v-else>There are no pictures of this category</h3>
+    <div v-for="picture in picturesForCategory" :key="picture.pictureID">
+      <img
+        :src="picture.picturePath"
+        :alt="'Foto com ID: ' + picture.pictureID"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-  export default {
-  
-  }
+import { mapGetters } from "vuex";
+export default {
+  computed: {
+    ...mapGetters("pictures", ["pictures"]),
+    picturesForCategory() {
+      return this.pictures.filter(
+        (picture) => picture.categoryID == this.$route.params.id
+      );
+    },
+  },
+};
 </script>
 
 <style scoped>
-
+img {
+  width: 500px;
+  height: auto;
+}
 </style>

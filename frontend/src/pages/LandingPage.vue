@@ -102,7 +102,7 @@
         :spaceBetween="0"
         :breakpoints="{
           '640': {
-            slidesPerView: 2,
+            slidesPerView: 1,
             spaceBetween: 0,
           },
           '768': {
@@ -265,6 +265,7 @@ h2 {
 .desc-image img {
   width: 400px;
   height: auto;
+  transition: all 0.2s ease-in-out;
 }
 
 /* Lema section */
@@ -294,6 +295,7 @@ h2 {
   letter-spacing: 0.2rem;
   line-height: 3rem;
   text-align: center;
+  transition: all 0.2s ease-in-out;
 }
 
 /* Categories section */
@@ -315,6 +317,7 @@ h2 {
 .swiper-slide img {
   width: 100%;
   height: auto;
+  min-height: 300px;
   object-fit: cover;
 }
 
@@ -430,20 +433,12 @@ h2 {
 }
 
 @media (max-width: 1235px) {
-  /* .hero {
-    height: 650px;
-  } */
-
   .welcome-message {
     padding: 8rem 0;
   }
   .title-wrapper {
     width: 80%;
   }
-
-  /* .text-links a {
-    font-size: 0.6rem;
-  } */
 }
 
 @media (max-width: 1150px) {
@@ -471,15 +466,6 @@ h2 {
 }
 
 @media (max-width: 854px) {
-  /* .hero {
-    height: 500px;
-  }
-
-  .hero img {
-    min-height: 500px;
-    object-fit: cover;
-  } */
-
   .welcome-message,
   .featured-images {
     width: 100%;
@@ -517,20 +503,7 @@ h2 {
     font-size: 6rem;
   }
 
-  /* .text-links {
-    justify-content: center;
-  } */
-
   @media (max-width: 500px) {
-    /* .hero {
-      height: 500px;
-    }
-
-    .hero img{
-      min-height: 500px;
-      object-fit: cover;
-    } */
-
     .welcome-message {
       width: 100%;
       display: flex;
@@ -560,10 +533,6 @@ h2 {
     }
     .welcome-message p {
       font-size: 0.8rem;
-    }
-
-    .text-links a {
-      border: 0.6px solid #000;
     }
   }
 }
