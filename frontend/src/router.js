@@ -6,6 +6,7 @@ import ContactForm from './pages/ContactForm.vue';
 import BookingForm from './pages/BookingForm.vue';
 import LogIn from './pages/LogIn.vue';
 import PortfolioCat from './pages/PortfolioCat.vue';
+import AdminPanel from './pages/AdminPanel.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -16,6 +17,7 @@ const router = createRouter({
     { path: '/contact', name: 'contact', component: ContactForm },
     { path: '/portfolio/:id', name: 'portfoliocat', component: PortfolioCat},
     { path: '/booking', name: 'booking', component: BookingForm },
+    { path: '/admin', name: 'admin', component: AdminPanel},
     { path: '/access', name: 'access', component: LogIn }
 
   ],

@@ -1,8 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 require('dotenv').config();
+const path = require('path');
 
 const app = express();
+
+app.use('/resources/static/assets/uploads', express.static(path.join(__dirname, 'resources/static/assets/uploads')));
 
 var corsOptions = {
   origin: true
@@ -23,6 +26,7 @@ app.get("/", (req, res) => {
 
 require("./app/routes/category.routes.js")(app);
 require("./app/routes/picture.routes.js")(app);
+
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;

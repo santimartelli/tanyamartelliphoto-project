@@ -1,22 +1,33 @@
 const sql = require("./db.js");
+const connection = require("./db.js");
 
 const Picture = function (picture) {
   this.picturePath = picture.picturePath;
   this.categoryID = picture.categoryID;
 };
 
-Picture.create = (newPicture, result) => {
-  sql.query("INSERT INTO Pictures SET ?", newPicture, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    console.log("created picture: ", { id: res.insertId, ...newPicture });
-    result(null, { id: res.insertId, ...newPicture });
-  });
+Picture.create = (pictureData, callback) => {
+  const sql = 'INSERT INTO Pictures (picturePath, categoryID) VALUES ?';
+  connection.query(sql, [pictureData], callback)
 };
+// Picture.create = (pictureData, callback) => {
+//   const sql = 'INSERT INTO Pictures (picturePath, categoryID) VALUES ?';
+//   connection.query(sql, [pictureData], callback);
+// };
+
+
+// Picture.create = (newPicture, result) => {
+//   sql.query("INSERT INTO Pictures SET ?", newPicture, (err, res) => {
+//     if (err) {
+//       console.log("error: ", err);
+//       result(err, null);
+//       return;
+//     }
+
+//     console.log("created picture: ", { id: res.insertId, ...newPicture });
+//     result(null, { id: res.insertId, ...newPicture });
+//   });
+// };
 
 // I would like to get all the pictures and also CategoryName for each picture
 
