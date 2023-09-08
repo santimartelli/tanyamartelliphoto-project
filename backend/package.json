@@ -13,7 +13,6 @@
   "keywords": [
     "nodejs",
     "express",
-    "sequelize",
     "mysql",
     "rest",
     "api"

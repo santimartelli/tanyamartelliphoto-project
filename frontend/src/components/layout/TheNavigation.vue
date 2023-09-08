@@ -71,7 +71,7 @@
             <router-link
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'access' }"
-              >MINI-SESSIONS</router-link
+              >LOGIN</router-link
             >
           </li>
         </div>
@@ -145,7 +145,7 @@
             <router-link
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'access' }"
-              >MINI-SESSIONS</router-link
+              >LOGIN</router-link
             >
           </li>
         </div>
@@ -239,7 +239,8 @@
               <router-link
                 class="link sparkle u-hover--sparkle"
                 :to="{ name: 'access' }"
-                >MINI-SESSIONS</router-link
+                @click="toggleMobileNav"
+                >LOGIN</router-link
               >
             </li>
           </ul>
