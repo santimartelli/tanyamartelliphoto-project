@@ -26,6 +26,7 @@ export default {
   created() {
     this.getCategories();
     this.getPictures();
+    this.$store.dispatch('tryLogin');
   },
   mounted() {
     window.addEventListener('resize', this.updateScreenWidth);

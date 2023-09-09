@@ -2,7 +2,7 @@ const express = require("express");
 require('dotenv').config();
 const cors = require("cors");
 const path = require('path');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -13,6 +13,9 @@ var corsOptions = {
   origin: true
 };
 app.use(cors(corsOptions));
+
+// body parser
+app.use(bodyParser.json());
 
 // parse requests of content-type - application/json
 app.use(express.json());

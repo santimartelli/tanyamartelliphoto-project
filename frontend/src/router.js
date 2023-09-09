@@ -7,6 +7,7 @@ import BookingForm from './pages/BookingForm.vue';
 import LogIn from './pages/LogIn.vue';
 import PortfolioCat from './pages/PortfolioCat.vue';
 import AdminPanel from './pages/AdminPanel.vue';
+import store from './store/index.js';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -17,8 +18,8 @@ const router = createRouter({
     { path: '/contact', name: 'contact', component: ContactForm },
     { path: '/portfolio/:id', name: 'portfoliocat', component: PortfolioCat},
     { path: '/booking', name: 'booking', component: BookingForm },
-    { path: '/admin', name: 'admin', component: AdminPanel},
-    { path: '/access', name: 'access', component: LogIn }
+    { path: '/admin', name: 'admin', component: AdminPanel, meta: { requiresAuth: true }},
+    { path: '/login', name: 'login', component: LogIn, meta: { requiresUnAuth: true }},
 
   ],
   scrollBehavior() {
@@ -29,6 +30,16 @@ const router = createRouter({
       }, 300);
     });
   },
+});
+
+router.beforeEach((to, _, next) => {
+  if(to.meta.requiresAuth && !store.getters.isAuthenticated){
+    next('/login');
+  } else if(to.meta.requiresUnAuth && store.getters.isAuthenticated){
+    next('/home');
+  } else {
+    next();
+  }
 });
 
 export default router;

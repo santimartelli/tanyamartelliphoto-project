@@ -69,9 +69,16 @@
           </li>
           <li>
             <router-link
+              v-if="!isLoggedIn"
               class="link sparkle u-hover--sparkle"
-              :to="{ name: 'access' }"
+              :to="{ name: 'login' }"
               >LOGIN</router-link
+            ><a
+              v-if="isLoggedIn"
+              class="link sparkle u-hover--sparkle"
+              to="#"
+              @click.prevent="logout"
+              >LOGOUT</a
             >
           </li>
         </div>
@@ -143,9 +150,16 @@
           </li>
           <li>
             <router-link
+              v-if="!isLoggedIn"
               class="link sparkle u-hover--sparkle"
-              :to="{ name: 'access' }"
+              :to="{ name: 'login' }"
               >LOGIN</router-link
+            ><a
+              v-if="isLoggedIn"
+              class="link sparkle u-hover--sparkle"
+              to="#"
+              @click.prevent="logout"
+              >LOGOUT</a
             >
           </li>
         </div>
@@ -237,11 +251,17 @@
             </li>
             <li>
               <router-link
-                class="link sparkle u-hover--sparkle"
-                :to="{ name: 'access' }"
-                @click="toggleMobileNav"
-                >LOGIN</router-link
-              >
+              v-if="!isLoggedIn"
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'login' }"
+              >LOGIN</router-link
+            ><a
+              v-if="isLoggedIn"
+              class="link sparkle u-hover--sparkle"
+              to="#"
+              @click.prevent="logout"
+              >LOGOUT</a
+            >
             </li>
           </ul>
         </div>
@@ -251,7 +271,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -263,9 +283,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['screenWidth', 'mobile', 'segundoNav', 'primerNav']),
+    ...mapGetters(["screenWidth", "mobile", "segundoNav", "primerNav"]),
     categories() {
-      return this.$store.getters['categories/categories'];
+      return this.$store.getters["categories/categories"];
+    },
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
     },
   },
   methods: {
@@ -283,6 +306,10 @@ export default {
         this.scrolledNav = false;
       }
       this.scrollPosition = scrollPosition;
+    },
+    logout() {
+      this.$store.dispatch("logout");
+      this.$router.replace({ name: 'home' });
     },
   },
   mounted() {
@@ -556,11 +583,11 @@ header {
     width: 30px;
   }
 
-  header nav .name-title{
+  header nav .name-title {
     font-size: 2.5rem;
   }
 
-  header nav .photography-title{
+  header nav .photography-title {
     font-size: 0.5rem;
   }
 }

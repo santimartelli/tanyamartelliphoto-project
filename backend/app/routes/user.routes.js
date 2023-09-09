@@ -30,7 +30,7 @@ module.exports = (app) => {
             } else {
               // has hashed pw => add to database
               db.query(
-                `INSERT INTO users (username, password, registered) VALUES ('${uuid.v4()}', ${db.escape(
+                `INSERT INTO users (id, username, password, registered) VALUES ('${uuid.v4()}', ${db.escape(
                   req.body.username
                 )}, ${db.escape(hash)}, now())`,
                 (err, result) => {

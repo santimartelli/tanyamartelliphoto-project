@@ -6,11 +6,13 @@ import actions from "./actions";
 import getters from "./getters";
 import categoriesModule from "./modules/categories/index.js";
 import picturesModule from "./modules/pictures/index.js";
+import authModule from "./modules/auth/index.js";
 
 const store = createStore({
   modules: {
     categories: categoriesModule,
     pictures: picturesModule,
+    auth: authModule,
   },
   state: {
     screenWidth: window.innerWidth,
