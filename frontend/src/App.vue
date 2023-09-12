@@ -1,5 +1,6 @@
 <template>
-  <the-navigation></the-navigation>
+  <authenticated-nav v-if="isLoggedIn"></authenticated-nav>
+  <the-navigation v-else></the-navigation>
   <main id="page-wrap">
     <router-view v-slot="slotProps">
       <transition name="route" mode="out-in">
@@ -16,12 +17,19 @@ import TheNavigation from "./components/layout/TheNavigation.vue";
 import TheSocialNetworks from "./components/layout/TheSocialNetworks.vue";
 import FooterCredits from "./components/layout/FooterCredits.vue";
 import { mapActions } from "vuex";
+import AuthenticatedNav from "./components/layout/AuthenticatedNav.vue";
 
 export default {
   components: {
     TheNavigation,
     TheSocialNetworks,
     FooterCredits,
+    AuthenticatedNav
+},
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
+  },
   },
   created() {
     this.getCategories();

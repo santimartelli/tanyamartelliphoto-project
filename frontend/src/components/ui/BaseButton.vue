@@ -26,16 +26,14 @@ export default {
 
 <style scoped>
 /* Button */
-.btn {
-  display: inline-block;
-  padding: 1rem 0.5rem;
+/* .btn {
+  padding: 0.5rem;
   background-color: #fff;
   color: #000;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.1rem;
   transition: all 0.2s ease;
-  text-transform: uppercase;
   padding: 1rem;
   border: 1px solid #f79f9f;
   border-radius: 3px;
@@ -44,5 +42,24 @@ export default {
 
 .btn:hover {
   border: 1px solid #000;
+} */
+
+.btn {
+  font-family: Typewriter-light;
+  font-weight: 500;
+  letter-spacing: 0.05rem;
+  font-size: .8rem;
+  color: #000;
+  padding: 0.5rem 3rem;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 3px;
+  width: fit-content;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.btn:hover {
+  border: 1px solid #f79f9f;
 }
 </style>

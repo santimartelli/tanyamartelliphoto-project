@@ -1,27 +1,42 @@
 <template>
-  <div>
-    <form @submit.prevent="submitForm">
-      <input type="file" multiple @change="handleFileUpload" />
-      <select v-model="categoryID">
-        <option
-          v-for="cat in categories"
-          :key="cat.CategoryID"
-          :value="cat.CategoryID"
-        >
-          {{ cat.CategoryName }}
-        </option>
-      </select>
-      <button type="submit">Upload</button>
-    </form>
-    <div
-      v-show="categoryID"
-      v-for="file in files"
-      :key="file.name"
-      class="preview-container"
-    >
-      <div class="preview-pic">
-        <p>{{ file.name }}</p>
-        <img :src="file.preview" alt="Preview" />
+  <div class="panel-container">
+    <div class="left-menu">
+      <ul>
+        <li>
+          <a href="#">Manage Images</a>
+        </li>
+        <li>
+          <a href="#">Manage Categories</a>
+        </li>
+        <li>
+          <a href="#">Manage Requests</a>
+        </li>
+      </ul>
+    </div>
+    <div class="content">
+      <form @submit.prevent="submitForm">
+        <input type="file" multiple @change="handleFileUpload" />
+        <select v-model="categoryID">
+          <option
+            v-for="cat in categories"
+            :key="cat.CategoryID"
+            :value="cat.CategoryID"
+          >
+            {{ cat.CategoryName }}
+          </option>
+        </select>
+        <button type="submit">Upload</button>
+      </form>
+      <div
+        v-show="categoryID"
+        v-for="file in files"
+        :key="file.name"
+        class="preview-container"
+      >
+        <div class="preview-pic">
+          <p>{{ file.name }}</p>
+          <img :src="file.preview" alt="Preview" />
+        </div>
       </div>
     </div>
   </div>
@@ -73,6 +88,57 @@ export default {
 </script>
 
 <style scoped>
+.panel-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+.left-menu {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  height: 100vh;
+  background-color: #000;
+  color: #fff;
+}
+.left-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.left-menu ul li {
+  padding: 1rem;
+}
+.left-menu ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+.left-menu ul li a:hover {
+  color: #ccc;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 100%;
+  padding: 1rem;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+input[type="file"] {
+  margin-bottom: 1rem;
+}
+select {
+  margin-bottom: 1rem;
+}
+button {
+  margin-bottom: 1rem;
+}
 
 .preview-container {
   display: inline-flex;

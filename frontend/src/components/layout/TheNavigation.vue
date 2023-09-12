@@ -64,21 +64,15 @@
             <router-link
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'contact' }"
+              @click="toggleMobileNav"
               >CONTACTO</router-link
             >
           </li>
           <li>
             <router-link
-              v-if="!isLoggedIn"
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'login' }"
               >LOGIN</router-link
-            ><a
-              v-if="isLoggedIn"
-              class="link sparkle u-hover--sparkle"
-              to="#"
-              @click.prevent="logout"
-              >LOGOUT</a
             >
           </li>
         </div>
@@ -145,21 +139,15 @@
             <router-link
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'contact' }"
+              @click="toggleMobileNav"
               >CONTACTO</router-link
             >
           </li>
           <li>
             <router-link
-              v-if="!isLoggedIn"
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'login' }"
               >LOGIN</router-link
-            ><a
-              v-if="isLoggedIn"
-              class="link sparkle u-hover--sparkle"
-              to="#"
-              @click.prevent="logout"
-              >LOGOUT</a
             >
           </li>
         </div>
@@ -251,17 +239,11 @@
             </li>
             <li>
               <router-link
-              v-if="!isLoggedIn"
-              class="link sparkle u-hover--sparkle"
-              :to="{ name: 'login' }"
-              >LOGIN</router-link
-            ><a
-              v-if="isLoggedIn"
-              class="link sparkle u-hover--sparkle"
-              to="#"
-              @click.prevent="logout"
-              >LOGOUT</a
-            >
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'login' }"
+                @click="toggleMobileNav"
+                >LOGIN</router-link
+              >
             </li>
           </ul>
         </div>
@@ -309,7 +291,7 @@ export default {
     },
     logout() {
       this.$store.dispatch("logout");
-      this.$router.replace({ name: 'home' });
+      this.$router.replace({ name: "home" });
     },
   },
   mounted() {

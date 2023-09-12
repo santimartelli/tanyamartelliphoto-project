@@ -58,16 +58,17 @@ export default {
   height: 100vh;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.75);
-  z-index: 10;
+  z-index: 100;
 }
 
 dialog {
+  font-family: typewriter-light;
   position: fixed;
   top: 20vh;
   left: 10%;
   width: 80%;
   z-index: 100;
-  border-radius: 12px;
+  border-radius: 5px;
   border: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   padding: 0;
@@ -77,7 +78,7 @@ dialog {
 }
 
 header {
-  background-color: #3a0061;
+  background-color: #000;
   color: white;
   width: 100%;
   padding: 1rem;
@@ -88,7 +89,7 @@ header h2 {
 }
 
 section {
-  padding: 1rem;
+  padding: 1rem 1rem 0 1rem;
 }
 
 menu {
