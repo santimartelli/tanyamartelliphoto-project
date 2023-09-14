@@ -70,10 +70,19 @@
           </li>
           <li>
             <router-link
-              class="link sparkle u-hover--sparkle"
-              :to="{ name: 'login' }"
-              >LOGIN</router-link
-            >
+                v-if="!isLoggedIn"
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'login' }"
+                @click="toggleMobileNav"
+                >LOGIN</router-link
+              >
+              <router-link
+                v-else
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'admin' }"
+                @click="toggleMobileNav"
+                >ADMIN</router-link
+              >
           </li>
         </div>
       </ul>
@@ -145,10 +154,19 @@
           </li>
           <li>
             <router-link
-              class="link sparkle u-hover--sparkle"
-              :to="{ name: 'login' }"
-              >LOGIN</router-link
-            >
+                v-if="!isLoggedIn"
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'login' }"
+                @click="toggleMobileNav"
+                >LOGIN</router-link
+              >
+              <router-link
+                v-else
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'admin' }"
+                @click="toggleMobileNav"
+                >ADMIN</router-link
+              >
           </li>
         </div>
       </ul>
@@ -239,10 +257,18 @@
             </li>
             <li>
               <router-link
+                v-if="!isLoggedIn"
                 class="link sparkle u-hover--sparkle"
                 :to="{ name: 'login' }"
                 @click="toggleMobileNav"
                 >LOGIN</router-link
+              >
+              <router-link
+                v-else
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'admin' }"
+                @click="toggleMobileNav"
+                >ADMIN</router-link
               >
             </li>
           </ul>

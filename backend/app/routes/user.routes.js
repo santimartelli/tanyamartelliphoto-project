@@ -90,7 +90,7 @@ module.exports = (app) => {
                 },
                 secretKey,
                 {
-                  expiresIn: "7d",
+                  expiresIn: "2h",
                 }
               );
               db.query(
@@ -100,6 +100,7 @@ module.exports = (app) => {
                 msg: "Logged in!",
                 token,
                 user: result[0],
+                expiresIn:  7200,
               });
             }
 

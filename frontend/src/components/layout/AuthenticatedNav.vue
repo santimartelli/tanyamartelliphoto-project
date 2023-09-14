@@ -6,7 +6,12 @@
       </div>
     </div>
     <div class="right">
-      <li>
+      <li v-if="isAdminPanel">
+        <router-link :to="{ name: 'home' }" class="router-link btn-link"
+          >Home</router-link
+        >
+      </li>
+      <li v-else>
         <router-link :to="{ name: 'admin' }" class="router-link btn-link"
           >Admin Panel</router-link
         >
@@ -17,17 +22,25 @@
     </div>
   </div>
   <div class="welcome">
-      <h3>
-        {{ "Welcome " + username }}
-      </h3>
-    </div>
+    <h3>
+      {{ "Welcome " + username }}
+    </h3>
+  </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      adminPanelLink: false,
+    };
+  },
   computed: {
     username() {
       return this.$store.state.auth.user.username;
+    },
+    isAdminPanel() {
+      return this.$route.name === 'admin';
     },
   },
   methods: {

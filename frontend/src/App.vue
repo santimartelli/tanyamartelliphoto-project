@@ -1,5 +1,5 @@
 <template>
-  <authenticated-nav v-if="isLoggedIn"></authenticated-nav>
+  <authenticated-nav v-if="isLoggedIn && isAdminPanel"></authenticated-nav>
   <the-navigation v-else></the-navigation>
   <main id="page-wrap">
     <router-view v-slot="slotProps">
@@ -24,30 +24,43 @@ export default {
     TheNavigation,
     TheSocialNetworks,
     FooterCredits,
-    AuthenticatedNav
-},
+    AuthenticatedNav,
+  },
   computed: {
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
-  },
+    },
+    isAdminPanel() {
+      return this.$route.name === "admin";
+    },
+    didAutoLogout(){
+      return this.$store.getters.didAutoLogout;
+    }
   },
   created() {
     this.getCategories();
     this.getPictures();
-    this.$store.dispatch('tryLogin');
+    this.$store.dispatch("tryLogin");
+  },
+  watch: {
+    didAutoLogout(curValue, oldValue){
+      if(curValue && curValue !== oldValue){
+        this.$router.replace({name: "login"});
+      }
+    }
   },
   mounted() {
-    window.addEventListener('resize', this.updateScreenWidth);
+    window.addEventListener("resize", this.updateScreenWidth);
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.updateScreenWidth);
+    window.removeEventListener("resize", this.updateScreenWidth);
   },
   methods: {
     updateScreenWidth() {
-      this.$store.dispatch('onResize');
+      this.$store.dispatch("onResize");
     },
     ...mapActions("categories", ["getCategories"]),
-    ...mapActions("pictures", ["getPictures"] ),
+    ...mapActions("pictures", ["getPictures"]),
   },
 };
 </script>
@@ -69,8 +82,7 @@ export default {
 @font-face {
   font-family: "Thesignature";
   src: local("Thesignature"),
-    url(./assets/fonts/Thesignature.ttf)
-      format("truetype");
+    url(./assets/fonts/Thesignature.ttf) format("truetype");
 }
 
 * {
@@ -118,7 +130,7 @@ a {
 }
 
 :root {
-    --swiper-theme-color: #fff;
+  --swiper-theme-color: #fff;
 }
 
 .route-enter-from {
