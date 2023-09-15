@@ -1,43 +1,70 @@
 <template>
   <div class="tabs">
+    <base-dialog :show="!!error" title="Error" @close="handleError">
+      <p>{{ error }}</p></base-dialog
+    >
+    <!-- Tab 1 -->
     <input type="radio" name="tabs" id="tabone" checked="checked" />
     <label for="tabone">Pictures</label>
     <div class="tab">
       <!-- Inside the tab -->
       <!-- Botón para añadir imagenes -->
-      <base-button class="buttonAddPic" @click="addImages = !addImages">Add Images</base-button>
+      <base-button class="buttonAddPic" @click="addImages = !addImages"
+        >Add Images</base-button
+      >
       <div v-show="addImages" class="addPics">
-        <form @submit.prevent="submitForm">
-          <input type="file" multiple @change="handleFileUpload" @click="resteUpload"/>
-          <select v-model="categoryID">
-            <option
-              v-for="cat in categories"
-              :key="cat.CategoryID"
-              :value="cat.CategoryID"
-            >
-              {{ cat.CategoryName }}
-            </option>
-          </select>
-          <button type="submit">Upload</button>
-        </form>
-        <div v-show="categoryID" class="preview-container">
-          <div class="preview-pic" v-for="file in files" :key="file.name">
-            <div class="imgCont"><img :src="file.preview" alt="Preview" /></div>
-            <span>{{ file.name }}</span>
+        <div v-if="isLoading">
+          <p class="authenticating">Uploading images...</p>
+          <base-spinner />
+        </div>
+        <div v-else>
+          <form @submit.prevent="submitForm">
+            <input
+              type="file"
+              ref="fileInput"
+              multiple
+              @change="handleFileUpload"
+              @click="resetUpload"
+            />
+            <select v-model="categoryID" ref="categoryInput">
+              <option
+                v-for="cat in categories"
+                :key="cat.CategoryID"
+                :value="cat.CategoryID"
+              >
+                {{ cat.CategoryName }}
+              </option>
+            </select>
+            <base-button @click="submitForm">Upload</base-button>
+            <base-button @click="resetUpload">Cancel</base-button>
+          </form>
+
+          <div v-show="feedbackOk === 1" class="feedbackOk">
+            {{ feedbackMessage }}
+          </div>
+          <div v-show="feedbackOk === 2" class="feedbackError">
+            {{ feedbackMessage }}
+          </div>
+          <div v-show="categoryID" class="preview-container">
+            <div class="preview-pic" v-for="file in files" :key="file.name">
+              <div class="imgCont">
+                <img :src="file.preview" alt="Preview" />
+              </div>
+              <span>{{ file.name }}</span>
+            </div>
           </div>
         </div>
       </div>
-
       <!-- Table with pictures -->
       <div>
         <table>
           <thead>
             <tr>
-              <th @click="sort('id')">Image Id</th>
-              <th>Thumbnail</th>
-              <th @click="sort('category_id')">Category Id</th>
-              <th @click="sort('category_name')">Category Name</th>
-              <th>Actions</th>
+              <th class="th-1" @click="sort('id')">Image Id</th>
+              <th class="th-2">Preview</th>
+              <!-- <th @click="sort('category_id')">Category Id</th> -->
+              <th class="th-3" @click="sort('category_name')">Category</th>
+              <th class="th-4">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -51,11 +78,27 @@
                   @click="showModal(picture)"
                 />
               </td>
-              <td>{{ picture.categoryID }}</td>
+              <!-- <td>{{ picture.categoryID }}</td> -->
               <td>{{ picture.categoryName }}</td>
-              <td>
-                <button @click="editImage(picture.pictureID)">Edit</button>
-                <button @click="deleteImage(picture.pictureID)">Delete</button>
+              <td class="actions-container">
+                <button
+                  class="btn-action"
+                  @click="deleteImage(picture.pictureID)"
+                >
+                  Show
+                </button>
+                <button
+                  class="btn-action"
+                  @click="editImage(picture.pictureID)"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn-action"
+                  @click="deleteImage(picture.pictureID)"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           </tbody>
@@ -69,7 +112,7 @@
         </div>
       </div>
     </div>
-
+    <!-- Tab 2 -->
     <input type="radio" name="tabs" id="tabtwo" />
     <label for="tabtwo">Categories</label>
     <div class="tab">
@@ -84,7 +127,7 @@
         mollit anim id est laborum.
       </p>
     </div>
-
+    <!-- Tab 3 -->
     <input type="radio" name="tabs" id="tabthree" />
     <label for="tabthree">Requests</label>
     <div class="tab">
@@ -101,6 +144,11 @@ export default {
       files: [],
       categoryID: "",
       addImages: false,
+      feedbackMessage: "",
+      feedbackOk: 3,
+      showImageModal: false,
+      error: null,
+      isLoading: false,
     };
   },
   computed: {
@@ -123,6 +171,7 @@ export default {
       });
     },
     async submitForm() {
+      this.isLoading = true;
       const formData = new FormData();
       for (let i = 0; i < this.files.length; i++) {
         formData.append("images", this.files[i]);
@@ -130,21 +179,66 @@ export default {
       formData.append("categoryID", this.categoryID);
 
       try {
-        const response = await fetch("http://localhost:3000/api/pictures/", {
+        const response = await fetch("http://localhost:3000/api/pictures/log", {
           method: "POST",
           body: formData,
         });
-        console.log(await response.text());
-      } catch (error) {
-        console.error("Error uploading pictures:", error);
+        if (response.status >= 200 && response.status < 300) {
+          this.feedbackMessage = "Images uploaded successfully.";
+          this.feedbackOk = 1;
+          setTimeout(() => {
+            this.feedbackMessage = "";
+            this.feedbackOk = 3;
+          }, 5000);
+          // Clear the file input and reset categoryID after successful upload
+          //reset inputs
+          this.$refs.fileInput.value = "";
+          this.$refs.categoryInput.value = "";
+          this.files = [];
+          this.categoryID = "";
+          // Fetch updated pictures data from the server (you may need to implement this)
+          this.$store.dispatch("pictures/getPictures"); // Assuming you have a Vuex action for this
+        } else {
+          this.error = "Failed to upload images, please try again.";
+        }
+      } catch (err) {
+        this.error =
+          err.message ||
+          "Failed to upload images, please try again.";
+        console.err("Error uploading pictures:", err);
       }
+      this.isLoading = false;
+    },
+    handleError() {
+      this.error = null;
+      this.$refs.fileInput.value = "";
+      this.$refs.categoryInput.value = "";
+      this.files = [];
+      this.categoryID = "";
+    },
+    resetUpload() {
+      this.feedbackMessage = "";
+      this.feedbackOk = 3;
+      this.$refs.fileInput.value = "";
+      this.$refs.categoryInput.value = "";
+      this.files = [];
+      this.categoryID = "";
     },
   },
 };
 </script>
 
 <style scoped>
-
+.feedbackError {
+  color: rgb(136, 1, 1);
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+}
+.feedbackOk {
+  color: rgb(30, 98, 28);
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+}
 .buttonAddPic {
   margin-bottom: 1rem;
 }
@@ -190,7 +284,7 @@ export default {
 }
 
 .imgCont {
- width: 75px;
+  width: 75px;
   height: 75px;
 }
 .addPics .preview-pic img {
@@ -209,17 +303,29 @@ export default {
 table {
   border-collapse: collapse;
   width: 100%;
+  font-family: Typewriter-extralight;
+  letter-spacing: 0.02rem;
+  font-size: 0.8rem;
 }
 
+.th-1,
+.th-2,
+.th-3 {
+  width: 19%;
+}
 th,
 td {
   text-align: left;
-  padding: 8px;
+  padding: 0.5rem;
 }
 
 th {
-  background-color: #4caf50;
+  background-color: #98bb99;
   color: white;
+  cursor: pointer;
+}
+
+td > img {
   cursor: pointer;
 }
 
@@ -227,8 +333,32 @@ tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-tr:hover {
-  background-color: #ddd;
+.actions-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 70px;
+}
+.btn-action {
+  font-family: Typewriter-light;
+  font-weight: 500;
+  letter-spacing: 0.05rem;
+  font-size: 0.8rem;
+  color: #000;
+  width: 120px;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 3px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.btn-action:hover {
+  border: 1px solid #f79f9f;
 }
 
 .modal {
@@ -305,6 +435,24 @@ tr:hover {
   display: block;
 }
 
+/**
+ * Responsive
+ */
+/*media query 1035px*/
+@media (max-width: 1035px) {
+  .th-1,
+  .th-2,
+  .th-3 {
+    width: 15%;
+  }
+}
+@media (max-width: 820px) {
+  .th-1,
+  .th-2,
+  .th-3 {
+    width: 12%;
+  }
+}
 @media (max-width: 45em) {
   .tabs .tab,
   .tabs label {
@@ -314,6 +462,12 @@ tr:hover {
     width: 100%;
     margin-right: 0;
     margin-top: 0.2rem;
+  }
+
+  .th-1,
+  .th-2,
+  .th-3 {
+    width: 25%;
   }
 }
 

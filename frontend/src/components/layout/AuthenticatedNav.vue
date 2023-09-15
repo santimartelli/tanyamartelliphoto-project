@@ -85,8 +85,9 @@ export default {
 .welcome {
   display: flex;
   justify-content: center;
-  padding: 1rem;
+  padding: .5rem;
   font-family: Typewriter-extralight;
+  font-size: .8rem;
   font-weight: 500;
   letter-spacing: 0.05rem;
   background-color: #fadddd;

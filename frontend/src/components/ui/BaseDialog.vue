@@ -6,16 +6,18 @@
         <header>
           <slot name="header">
             <h2>{{ title }}</h2>
+            <slot name="actions">
+              <img src="../../assets/Icons/borrar.svg" @click="tryClose">
+            </slot>
           </slot>
+
+          <!-- <menu v-if="!fixed">
+           
+          </menu> -->
         </header>
-        <section>
+        <section class="content">
           <slot></slot>
         </section>
-        <menu v-if="!fixed">
-          <slot name="actions">
-            <base-button @click="tryClose">Close</base-button>
-          </slot>
-        </menu>
       </dialog>
     </transition>
   </teleport>
@@ -38,13 +40,13 @@ export default {
       default: false,
     },
   },
-  emits: ['close'],
+  emits: ["close"],
   methods: {
     tryClose() {
       if (this.fixed) {
         return;
       }
-      this.$emit('close');
+      this.$emit("close");
     },
   },
 };
@@ -70,18 +72,20 @@ dialog {
   z-index: 100;
   border-radius: 5px;
   border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 0;
   margin: 0;
   overflow: hidden;
-  background-color: white;
+  background-color: #fff;
 }
 
 header {
   background-color: #000;
-  color: white;
+  color: #fff;
   width: 100%;
-  padding: 1rem;
+  font-size: 0.7rem;
+  padding: 0.9rem;
+  border-bottom: 5px solid #f7bebe;
 }
 
 header h2 {
@@ -89,37 +93,52 @@ header h2 {
 }
 
 section {
-  padding: 1rem 1rem 0 1rem;
+  padding: 2rem;
 }
 
-menu {
+.content {
+  display: flex;
+  justify-content: center;
+}
+
+/* menu {
   padding: 1rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: right;
+  align-items: center;
   margin: 0;
+} */
+
+header img {
+  width: 25px;
+  height: auto;
+  cursor: pointer;
+  position: absolute;
+  right: 12px;
+  top: 12px;
 }
+
+
 
 .dialog-enter-from,
 .dialog-leave-to {
-  opacity: 1;
-  transform: scale(0);
+  opacity: 0;
+  /* transform: scale(0); */
 }
 
 .dialog-enter-active {
-  transition: all 0.3s ease-out;
+  transition: all 0.2s ease-out;
 }
 
 .dialog-leave-active {
-  transition: all 0.3s ease-in;
+  transition: all 0.2s ease-in;
 }
 
 .dialog-enter-to,
 .dialog-leave-from {
   opacity: 1;
-  transform: scale(1);
+  /* transform: scale(1); */
 }
-
-
 
 @media (min-width: 768px) {
   dialog {
