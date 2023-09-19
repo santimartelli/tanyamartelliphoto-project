@@ -116,8 +116,13 @@ header img {
   position: absolute;
   right: 12px;
   top: 12px;
+  transition: all 0.2s ease-in;
 }
 
+header img:hover {
+  transform: scale(1.2);
+  opacity: 1;
+}
 
 
 .dialog-enter-from,

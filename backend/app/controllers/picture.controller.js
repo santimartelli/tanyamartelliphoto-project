@@ -15,7 +15,10 @@ exports.uploadPictures = (req, res) => {
 
   PictureModel.create(values, (err, result) => {
     console.log("values", values);
-    if (err) throw err;
+    if (err){
+      console.log("Error while uploading pictures: ", err);
+      return res.status(500).json({ error: "Failed to upload pictures" });
+    }
     console.log("Pictures added to database");
     res.send("Pictures added to database");
   });

@@ -1,138 +1,163 @@
 <template>
-  <div class="tabs">
-    <base-dialog :show="!!error" title="Error" @close="handleError">
-      <p>{{ error }}</p></base-dialog
-    >
-    <!-- Tab 1 -->
-    <input type="radio" name="tabs" id="tabone" checked="checked" />
-    <label for="tabone">Pictures</label>
-    <div class="tab">
-      <!-- Inside the tab -->
-      <!-- Botón para añadir imagenes -->
-      <base-button class="buttonAddPic" @click="addImages = !addImages"
-        >Add Images</base-button
-      >
-      <div v-show="addImages" class="addPics">
-        <div v-if="isLoading">
-          <p class="authenticating">Uploading images...</p>
-          <base-spinner />
-        </div>
-        <div v-else>
-          <form @submit.prevent="submitForm">
-            <input
-              type="file"
-              ref="fileInput"
-              multiple
-              @change="handleFileUpload"
-              @click="resetUpload"
-            />
-            <select v-model="categoryID" ref="categoryInput">
-              <option
-                v-for="cat in categories"
-                :key="cat.CategoryID"
-                :value="cat.CategoryID"
-              >
-                {{ cat.CategoryName }}
-              </option>
-            </select>
-            <base-button @click="submitForm">Upload</base-button>
-            <base-button @click="resetUpload">Cancel</base-button>
-          </form>
+  <div>
+    <!--Feedback message dialog-->
+    <transition name="feedback" appear>
+      <div class="feedbackOk" v-if="feedbackOk === 1">
+        <img src="../assets/Icons/ok.png" alt="ok" />
+        <p>
+          {{ feedbackMessage }}
+        </p>
+      </div>
+    </transition>
+    <transition name="feedback" appear>
+      <div class="feedbackError" v-if="feedbackOk === 2">
+        <img src="../assets/Icons/error.png" alt="Error" />
+        <p>
+          {{ feedbackMessage }}
+        </p>
+      </div>
+    </transition>
 
-          <div v-show="feedbackOk === 1" class="feedbackOk">
-            {{ feedbackMessage }}
+    <div class="tabs">
+      <!-- Tab 1 -->
+      <input type="radio" name="tabs" id="tabone" />
+      <label for="tabone">Pictures</label>
+      <div class="tab">
+        <!-- Inside the tab -->
+        <!-- Botón para añadir imagenes -->
+        <base-button class="buttonAddPic" @click="addImages = !addImages"
+          >Add Images</base-button
+        >
+        <div v-show="addImages" class="addPics">
+          <div v-if="isLoading">
+            <p class="authenticating">Uploading images...</p>
+            <base-spinner />
           </div>
-          <div v-show="feedbackOk === 2" class="feedbackError">
-            {{ feedbackMessage }}
-          </div>
-          <div v-show="categoryID" class="preview-container">
-            <div class="preview-pic" v-for="file in files" :key="file.name">
-              <div class="imgCont">
-                <img :src="file.preview" alt="Preview" />
+          <div v-else>
+            <form @submit.prevent="submitForm">
+              <div class="inputs-container">
+                <input
+                  type="file"
+                  ref="fileInput"
+                  class="file-select"
+                  multiple
+                  @change="handleFileUpload"
+                  @click="resetUpload"
+                />
+                <div class="category-select">
+                  <select v-model="categoryID" ref="categoryInput">
+                    <option value="" disabled selected hidden>
+                      Choose a category
+                    </option>
+                    <option
+                      v-for="cat in categories"
+                      :key="cat.CategoryID"
+                      :value="cat.CategoryID"
+                    >
+                      {{ cat.CategoryName }}
+                    </option>
+                  </select>
+                </div>
               </div>
-              <span>{{ file.name }}</span>
+              <div v-show="categoryID" class="preview-container">
+                <div class="preview-pic" v-for="file in files" :key="file.name">
+                  <div class="img-container">
+                    <img :src="file.preview" alt="Preview" />
+                  </div>
+                  <span>{{ file.name }}</span>
+                </div>
+              </div>
+              <div
+                v-show="categoryID && files.length > 0"
+                class="buttons-container"
+              >
+                <base-button @click="submitForm">Upload</base-button>
+                <base-button @click="resetUpload">Cancel</base-button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- Table with pictures -->
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th class="th-1" @click="sort('id')">Image Id</th>
+                <th class="th-2">Preview</th>
+                <!-- <th @click="sort('category_id')">Category Id</th> -->
+                <th class="th-3" @click="sort('category_name')">Category</th>
+                <th class="th-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="picture in pictures" :key="picture.pictureID">
+                <td>{{ picture.pictureID }}</td>
+                <td>
+                  <img
+                    :src="picture.picturePath"
+                    alt="Thumbnail"
+                    class="thumbnail"
+                    @click="showModal(picture)"
+                  />
+                </td>
+                <td>{{ picture.categoryName }}</td>
+                <td class="actions-container">
+                  <button class="btn-action" @click="showModal(picture)">
+                    Show
+                  </button>
+                  <button
+                    class="btn-action"
+                    @click="editPicture(picture.pictureID)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    class="btn-action"
+                    @click="deletePicture(picture.pictureID)"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Modal -->
+        <div v-if="showImageModal" class="backdrop" @click="closeModal">
+          <div class="modal">
+            <div class="modal-content">
+              <img :src="selectedImage.picturePath" alt="Original Image" />
+              <img
+                src="../assets/Icons/closeB.png"
+                class="close"
+                @click="closeModal"
+              />
             </div>
           </div>
         </div>
       </div>
-      <!-- Table with pictures -->
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th class="th-1" @click="sort('id')">Image Id</th>
-              <th class="th-2">Preview</th>
-              <!-- <th @click="sort('category_id')">Category Id</th> -->
-              <th class="th-3" @click="sort('category_name')">Category</th>
-              <th class="th-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="picture in pictures" :key="picture.pictureID">
-              <td>{{ picture.pictureID }}</td>
-              <td>
-                <img
-                  :src="picture.picturePath"
-                  alt="Thumbnail"
-                  class="thumbnail"
-                  @click="showModal(picture)"
-                />
-              </td>
-              <!-- <td>{{ picture.categoryID }}</td> -->
-              <td>{{ picture.categoryName }}</td>
-              <td class="actions-container">
-                <button
-                  class="btn-action"
-                  @click="deleteImage(picture.pictureID)"
-                >
-                  Show
-                </button>
-                <button
-                  class="btn-action"
-                  @click="editImage(picture.pictureID)"
-                >
-                  Edit
-                </button>
-                <button
-                  class="btn-action"
-                  @click="deleteImage(picture.pictureID)"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div v-if="showImageModal" class="modal">
-          <div class="modal-content">
-            <span class="close" @click="closeModal">&times;</span>
-            <img :src="selectedImage.original" alt="Original Image" />
-          </div>
-        </div>
+      <!-- Tab 2 -->
+      <input type="radio" name="tabs" id="tabtwo" />
+      <label for="tabtwo">Categories</label>
+      <div class="tab">
+        <h1>Tab Two Content</h1>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
+        </p>
       </div>
-    </div>
-    <!-- Tab 2 -->
-    <input type="radio" name="tabs" id="tabtwo" />
-    <label for="tabtwo">Categories</label>
-    <div class="tab">
-      <h1>Tab Two Content</h1>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </p>
-    </div>
-    <!-- Tab 3 -->
-    <input type="radio" name="tabs" id="tabthree" />
-    <label for="tabthree">Requests</label>
-    <div class="tab">
-      <h1>Tab Three Content</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+      <!-- Tab 3 -->
+      <input type="radio" name="tabs" id="tabthree" />
+      <label for="tabthree">Requests</label>
+      <div class="tab">
+        <h1>Tab Three Content</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -146,9 +171,10 @@ export default {
       addImages: false,
       feedbackMessage: "",
       feedbackOk: 3,
-      showImageModal: false,
       error: null,
       isLoading: false,
+      selectedImage: null,
+      showImageModal: false,
     };
   },
   computed: {
@@ -179,33 +205,44 @@ export default {
       formData.append("categoryID", this.categoryID);
 
       try {
-        const response = await fetch("http://localhost:3000/api/pictures/log", {
+        const response = await fetch("http://localhost:3000/api/pictures", {
           method: "POST",
           body: formData,
         });
         if (response.status >= 200 && response.status < 300) {
-          this.feedbackMessage = "Images uploaded successfully.";
+          this.feedbackMessage = "Pictures uploaded successfully";
           this.feedbackOk = 1;
           setTimeout(() => {
             this.feedbackMessage = "";
             this.feedbackOk = 3;
-          }, 5000);
+          }, 3000);
           // Clear the file input and reset categoryID after successful upload
           //reset inputs
-          this.$refs.fileInput.value = "";
-          this.$refs.categoryInput.value = "";
           this.files = [];
           this.categoryID = "";
           // Fetch updated pictures data from the server (you may need to implement this)
           this.$store.dispatch("pictures/getPictures"); // Assuming you have a Vuex action for this
         } else {
-          this.error = "Failed to upload images, please try again.";
+          this.files = [];
+          this.categoryID = "";
+          this.feedbackOk = 2;
+          this.feedbackMessage = "Failed to upload pictures, please try again";
+          setTimeout(() => {
+            this.feedbackMessage = "";
+            this.feedbackOk = 3;
+          }, 3000);
         }
       } catch (err) {
+        this.files = [];
+        this.categoryID = "";
         this.error =
-          err.message ||
-          "Failed to upload images, please try again.";
-        console.err("Error uploading pictures:", err);
+          err.message || "Failed to upload images, please try again.";
+        this.feedbackOk = 2;
+        this.feedbackMessage = "Failed to upload images, please try again.";
+        setTimeout(() => {
+          this.feedbackMessage = "";
+          this.feedbackOk = 3;
+        }, 3000);
       }
       this.isLoading = false;
     },
@@ -224,21 +261,108 @@ export default {
       this.files = [];
       this.categoryID = "";
     },
+    async deletePicture(pictureID) {
+      try {
+        const response = await this.$store.dispatch(
+          "pictures/deletePicture",
+          pictureID
+        );
+        if (response && response.status >= 200 && response.status < 300) {
+          this.$store.commit("pictures/deletePicture", pictureID);
+          this.feedbackMessage = "Picture deleted successfully";
+          this.feedbackOk = 1;
+        } else {
+          this.feedbackOk = 2;
+          this.feedbackMessage = "Failed to delete picture, please try again";
+        }
+      } catch (error) {
+        this.feedbackOk = 2;
+        this.feedbackMessage = "Failed to delete picture, please try again";
+        console.log(error);
+      }
+      setTimeout(() => {
+        this.feedbackMessage = "";
+        this.feedbackOk = 3;
+      }, 3000);
+    },
+    showModal(picture) {
+      this.selectedImage = picture;
+      this.showImageModal = true;
+    },
+    closeModal() {
+      this.showImageModal = false;
+    },
   },
 };
 </script>
 
 <style scoped>
+/**
+ * Generic Styling
+*/
+body {
+  background: #eee;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-top: 10vh;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
+    Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+  line-height: 1.5;
+  max-width: 60rem;
+  margin: 0 auto;
+  font-size: 112%;
+}
+
+.feedbackOk,
 .feedbackError {
-  color: rgb(136, 1, 1);
+  position: fixed;
+  display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  top: 1rem;
+  right: 1rem;
+  border-radius: 4px;
+  padding: 0 1rem;
+  height: 75px;
   font-size: 0.8rem;
-  margin: 0.5rem 0;
+  opacity: 0.95;
 }
+
 .feedbackOk {
-  color: rgb(30, 98, 28);
-  font-size: 0.8rem;
-  margin: 0.5rem 0;
+  background-color: #e2efe1;
+  color: #016a3b;
 }
+
+.feedbackError {
+  background-color: #ebd4d4;
+  color: #ab0000;
+}
+.feedbackOk img,
+.feedbackError img {
+  opacity: 0.7;
+  width: 40px;
+  height: 40px;
+  margin-right: 1rem;
+}
+
+.feedbackOk p,
+.feedbackError p {
+  margin: 0; /* Remove default margin */
+  display: flex;
+  align-items: center; /* Center horizontally */
+}
+
+.feedback-enter-active,
+.feedback-leave-active {
+  transition: all 0.4s ease;
+}
+
+.feedback-enter-from,
+.feedback-leave-to {
+  opacity: 0;
+}
+
 .buttonAddPic {
   margin-bottom: 1rem;
 }
@@ -246,7 +370,7 @@ export default {
 .addPics {
   width: 100%;
   height: auto;
-  margin: 1.2rem 0;
+  margin-bottom: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 1.2rem;
@@ -256,17 +380,108 @@ export default {
 /* Form add images */
 .addPics form {
   display: flex;
-  overflow: auto;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.inputs-container {
+  display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1re;
 }
-.addPics .preview-container {
+
+.file-select {
+  width: 300px;
+  border-radius: 4px;
+  font-family: Typewriter-extralight;
+  font-size: 0.7rem;
+  letter-spacing: 0.02rem;
+  border: 1px solid #ccc;
+  background-color: #f3f2f2;
+}
+
+.file-select::file-selector-button {
+  border: 1px solid #000;
+  border-radius: 4px;
+  padding: 8px;
+  margin-right: 20px;
+  font-family: Typewriter-extralight;
+  font-size: 0.7rem;
+  letter-spacing: 0.02rem;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.file-select::file-selector-button:hover {
+  border: 1px solid #f79f9f;
+}
+
+.category-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 8px;
+  /* other styles for aesthetics */
+  width: 100%;
+  font-family: Typewriter-extralight;
+  font-size: 0.7rem;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #000;
+  cursor: pointer;
+  margin-left: 1rem;
+  letter-spacing: 0.02rem;
+}
+.category-select {
+  position: relative;
+  width: 300px;
+}
+
+.category-select::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-image: url("../assets/Icons/flecha-abajo.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+}
+
+select option {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.preview-container {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   width: 100%;
   align-items: center;
   justify-content: left;
+}
+.buttons-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/*space between buttons*/
+.buttons-container div {
+  margin: 0 0.5rem;
 }
 
 .addPics .preview-pic {
@@ -283,7 +498,7 @@ export default {
   margin-left: 1rem;
 }
 
-.imgCont {
+.img-container {
   width: 75px;
   height: 75px;
 }
@@ -336,7 +551,7 @@ tr:nth-child(even) {
 .actions-container {
   display: flex;
   flex-direction: row;
-  justify-content: left;
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   min-height: 70px;
@@ -349,7 +564,7 @@ tr:nth-child(even) {
   color: #000;
   width: 120px;
   padding: 0.5rem;
-  margin: 0.5rem;
+  /* margin: 0.5rem; */
   background-color: #fff;
   border: 1px solid #000;
   border-radius: 3px;
@@ -361,37 +576,54 @@ tr:nth-child(even) {
   border: 1px solid #f79f9f;
 }
 
-.modal {
-  display: block;
+.backdrop {
   position: fixed;
-  z-index: 1;
-  left: 0;
   top: 0;
+  left: 0;
+  height: 100vh;
   width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 99;
+}
+
+.modal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  min-height: 80vh;
+  width: 70%;
+  background-color: #fff;
 }
 
 .modal-content {
-  margin: auto;
-  display: block;
-  width: 80%;
-  max-width: 700px;
-  max-height: 80%;
+  position: relative;
+  padding: 2rem;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
-.close {
-  color: #fff;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+.modal-content img {
+  object-fit: contain;
+  width: auto;
+  height: auto;
+  max-height: 80vh;
 }
 
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
+.modal-content img.close {
+  position: absolute; /* Position the close image absolutely */
+  top: 15px; /* Adjust the top position as needed */
+  right: 15px; /* Adjust the right position as needed */
+  width: 20px;
+  height: 20px;
+  opacity: .7;
+  z-index: 1; /* Ensure the close image is on top */
+}
+
+.modal-content .close:hover,
+.modal-content .close:focus {
+  opacity: 1;
   cursor: pointer;
 }
 .thumbnail {
@@ -469,44 +701,5 @@ tr:nth-child(even) {
   .th-3 {
     width: 25%;
   }
-}
-
-/**
- * Generic Styling
-*/
-body {
-  background: #eee;
-  min-height: 100vh;
-  box-sizing: border-box;
-  padding-top: 10vh;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
-    Helvetica, Arial, "Lucida Grande", sans-serif;
-  font-weight: 300;
-  line-height: 1.5;
-  max-width: 60rem;
-  margin: 0 auto;
-  font-size: 112%;
-}
-
-.preview-container {
-  display: inline-flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-items: center;
-  width: 150px;
-}
-.preview-pic {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100px;
-  height: 100px;
-  margin: 1rem;
-}
-
-.preview-pic img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 </style>

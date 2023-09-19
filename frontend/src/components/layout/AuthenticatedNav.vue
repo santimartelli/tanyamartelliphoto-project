@@ -21,11 +21,10 @@
       </li>
     </div>
   </div>
-  <div class="welcome">
-    <h3>
-      {{ "Welcome " + username }}
-    </h3>
+    <div class="welcome">
+      <h1>ADMIN PANEL</h1>
   </div>
+
 </template>
 
 <script>
@@ -67,6 +66,7 @@ export default {
   z-index: 99;
   font-size: 0.7rem;
   color: #fff;
+  padding: .5rem;
 }
 
 .left,
@@ -84,13 +84,16 @@ export default {
 
 .welcome {
   display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
   justify-content: center;
-  padding: .5rem;
+  padding: 1rem;
   font-family: Typewriter-extralight;
-  font-size: .8rem;
-  font-weight: 500;
-  letter-spacing: 0.05rem;
-  background-color: #fadddd;
+  font-size: .6rem;
+  letter-spacing: 0.2rem;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
 }
 
 .right {

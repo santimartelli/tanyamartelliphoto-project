@@ -10,24 +10,6 @@ Picture.create = (pictureData, callback) => {
   const sql = 'INSERT INTO Pictures (picturePath, categoryID) VALUES ?';
   connection.query(sql, [pictureData], callback)
 };
-// Picture.create = (pictureData, callback) => {
-//   const sql = 'INSERT INTO Pictures (picturePath, categoryID) VALUES ?';
-//   connection.query(sql, [pictureData], callback);
-// };
-
-
-// Picture.create = (newPicture, result) => {
-//   sql.query("INSERT INTO Pictures SET ?", newPicture, (err, res) => {
-//     if (err) {
-//       console.log("error: ", err);
-//       result(err, null);
-//       return;
-//     }
-
-//     console.log("created picture: ", { id: res.insertId, ...newPicture });
-//     result(null, { id: res.insertId, ...newPicture });
-//   });
-// };
 
 // I would like to get all the pictures and also CategoryName for each picture
 
@@ -49,25 +31,10 @@ Picture.getAll = (result) => {
         result(null, { message: "No pictures found!" });
         return;
       }
-      console.log("pictures: ", res);
+      //console.log("pictures: ", res);
       result(null, res);
     }
   );
-
-  // Picture.getAll = (result) => {
-  //   sql.query("SELECT * FROM Pictures", (err, res) => {
-  //     if (err) {
-  //       console.log("error: ", err);
-  //       result(null, err);
-  //       return;
-  //     }else if(res.length == 0){
-  //       result(null, {message: "No pictures found!"});
-  //       return;
-  //     }
-  //     console.log("pictures: ", res);
-  //     result(null, res);
-  //   });
-  // };
 
   Picture.getByCategory = (categoryID, result) => {
     sql.query(
@@ -136,7 +103,7 @@ Picture.getAll = (result) => {
           return;
         }
 
-        console.log("deleted picture with id: ", pictureID);
+        console.log("Deleted picture with id:", pictureID);
         result(null, res);
       }
     );
