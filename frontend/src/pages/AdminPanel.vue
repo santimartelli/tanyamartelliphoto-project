@@ -97,36 +97,60 @@
                     :src="picture.picturePath"
                     alt="Thumbnail"
                     class="thumbnail"
-                    @click="showModal(picture)"
                   />
                 </td>
                 <td>{{ picture.categoryName }}</td>
                 <td class="actions-container">
-                  <button class="btn-action" @click="showModal(picture)">
-                    Show
-                  </button>
-                  <button
-                    class="btn-action"
-                    @click="editPicture(picture.pictureID)"
+                  <div v-if="iconsActions">
+                    <img
+                      class="icon"
+                      src="../assets/Icons/view.png"
+                      alt="Ver imagen"
+                      title="Ver imagen"
+                      @click="showModal(picture)"
+                    />
+                  </div>
+                  <div
+                    v-if="!iconsActions"
+                    class="icon-container view"
+                    @click="showModal(picture)"
                   >
-                    Edit
-                  </button>
-                  <button
-                    class="btn-action"
+                    <img src="../assets/Icons/view.png" alt="Ver imagen" />
+                    <div>VIEW IMAGE</div>
+                  </div>
+                  <div v-if="iconsActions">
+                    <img
+                      class="icon"
+                      src="../assets/Icons/delete.png"
+                      alt="Borrar imagen"
+                      title="Borrar imagen"
+                      @click="deletePicture(picture.pictureID)"
+                    />
+                  </div>
+                  <div
+                    v-if="!iconsActions"
+                    class="icon-container delete"
                     @click="deletePicture(picture.pictureID)"
                   >
-                    Delete
-                  </button>
+                    <img src="../assets/Icons/delete.png" alt="Borrar imagen" />
+                    <div>DELETE IMAGE</div>
+                  </div>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
         <!-- Modal -->
-        <div v-if="showImageModal" class="backdrop" @click="closeModal">
+        <div v-if="showImageModal">
+          <div class="backdrop" @click="closeModal"></div>
           <div class="modal">
             <div class="modal-content">
-              <img :src="selectedImage.picturePath" alt="Original Image" />
+              <div class="backdrop2" @click="closeModal"></div>
+              <img
+                :src="selectedImage.picturePath"
+                alt="Original Image"
+                class="imagen"
+              />
               <img
                 src="../assets/Icons/closeB.png"
                 class="close"
@@ -140,16 +164,85 @@
       <input type="radio" name="tabs" id="tabtwo" />
       <label for="tabtwo">Categories</label>
       <div class="tab">
-        <h1>Tab Two Content</h1>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </p>
+        <!-- Inside the tab -->
+        <!-- Botón para añadir imagenes -->
+        <base-button class="buttonAddPic" @click="addCategory = !addCategory"
+          >Add Category</base-button
+        >
+        <div v-show="addCategory" class="addPics">
+          <div v-if="isLoading">
+            <p>Adding category...</p>
+            <base-spinner />
+          </div>
+          <div v-else>
+            <form @submit.prevent="sendForm">
+              <div class="inputs-container">
+                <input
+                  type="text"
+                  name="cateogry"
+                  id="category-input"
+                  placeholder="Introduce el nombre de la nueva cateogria"
+                />
+                <base-button @click="sendForm">Upload</base-button>
+                <base-button @click="resetForm">Cancel</base-button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- Table with categories -->
+        <div>
+          <table class="categories">
+            <thead>
+              <tr>
+                <th class="th-1">Category Id</th>
+                <th class="th-2">Category Name</th>
+                <th class="th-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="category in categories" :key="category.categoryID">
+                <td>{{ category.CategoryID }}</td>
+                <td>{{ category.CategoryName }}</td>
+                <td class="actions-container">
+                  <div v-if="iconsActions">
+                    <img
+                      class="icon"
+                      src="../assets/Icons/pen.png"
+                      alt="Editar categoria"
+                      title="Editar categoria"
+                      @click="editCategory(category.categoryID)"
+                    />
+                  </div>
+                  <div
+                    v-if="!iconsActions"
+                    class="icon-container edit"
+                    @click="editCategory(category.categoryID)"
+                  >
+                    <img src="../assets/Icons/pen.png" alt="Editar categoria" />
+                    <div>EDIT CATEGORY</div>
+                  </div>
+                  <div v-if="iconsActions">
+                    <img
+                      class="icon"
+                      src="../assets/Icons/delete.png"
+                      alt="Eliminar categoria"
+                      title="Eliminar categoria"
+                      @click="deleteCategory(category.categoryID)"
+                    />
+                  </div>
+                  <div
+                    v-if="!iconsActions"
+                    class="icon-container delete"
+                    @click="deleteCategory(category.categoryID)"
+                  >
+                    <img src="../assets/Icons/delete.png" alt="Eliminar categoria" />
+                    <div>DELETE CATEGORY</div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <!-- Tab 3 -->
       <input type="radio" name="tabs" id="tabthree" />
@@ -169,12 +262,14 @@ export default {
       files: [],
       categoryID: "",
       addImages: false,
+      addCategory: false,
       feedbackMessage: "",
       feedbackOk: 3,
       error: null,
       isLoading: false,
       selectedImage: null,
       showImageModal: false,
+      iconsActions: false,
     };
   },
   computed: {
@@ -288,9 +383,30 @@ export default {
     showModal(picture) {
       this.selectedImage = picture;
       this.showImageModal = true;
+      document.body.style.overflow = "hidden";
     },
     closeModal() {
       this.showImageModal = false;
+      document.body.style.overflow = "auto";
+    },
+    showIconsActions() {
+      // Get the window width
+      const windowWidth = window.innerWidth;
+      // If width is less than or equal to 821px, set iconsActions to true
+      if (windowWidth <= 821) {
+        this.iconsActions = true;
+      } else {
+        this.iconsActions = false;
+      }
+    },
+  },
+  created() {
+    this.showIconsActions();
+  },
+  watch: {
+    // Watch for changes in the window width
+    "$store.getters.screenWidth"() {
+      this.showIconsActions();
     },
   },
 };
@@ -514,7 +630,7 @@ select option {
   max-width: 75px;
 }
 
-/* Table */
+/* Table pictures*/
 table {
   border-collapse: collapse;
   width: 100%;
@@ -526,7 +642,7 @@ table {
 .th-1,
 .th-2,
 .th-3 {
-  width: 19%;
+  width: 20%;
 }
 th,
 td {
@@ -540,75 +656,119 @@ th {
   cursor: pointer;
 }
 
-td > img {
-  cursor: pointer;
-}
-
 tr:nth-child(even) {
   background-color: #f2f2f2;
+}
+
+.thumbnail {
+  width: 50px;
+  height: 50px;
 }
 
 .actions-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: left;
   align-items: center;
   flex-wrap: wrap;
   min-height: 70px;
 }
-.btn-action {
-  font-family: Typewriter-light;
-  font-weight: 500;
-  letter-spacing: 0.05rem;
-  font-size: 0.8rem;
-  color: #000;
-  width: 120px;
-  padding: 0.5rem;
-  /* margin: 0.5rem; */
-  background-color: #fff;
-  border: 1px solid #000;
-  border-radius: 3px;
+.icon-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 0.6rem;
   text-align: center;
   transition: all 0.2s ease;
   cursor: pointer;
-}
-.btn-action:hover {
-  border: 1px solid #f79f9f;
+  opacity: 0.7;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
 }
 
+.icon-container div {
+  margin-left: 0.5rem;
+}
+
+.icon-container img {
+  width: 25px;
+  height: 25px;
+}
+.view:hover {
+  opacity: 1;
+  background-color: #ddedfb;
+}
+
+.delete:hover {
+  opacity: 1;
+  background-color: #f9d0cd;
+}
+
+.icon-container + .icon-container {
+  margin-left: 1rem;
+}
+.icon {
+  width: 25px;
+  height: 25px;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.icon {
+  margin: 0.5rem;
+}
+
+.icon:hover {
+  opacity: 1;
+}
+.icon-container:hover {
+  opacity: 1;
+}
 .backdrop {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
   width: 100%;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.75);
-  z-index: 99;
+  z-index: 90;
+}
+
+.backdrop2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: transparent;
+  z-index: 90;
 }
 
 .modal {
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   min-height: 80vh;
-  width: 70%;
-  background-color: #fff;
+  background-color: transparent;
+  z-index: 94;
 }
 
 .modal-content {
   position: relative;
-  padding: 2rem;
   justify-content: center;
   align-items: center;
   text-align: center;
+  z-index: 96;
 }
 
 .modal-content img {
+  position: relative;
   object-fit: contain;
-  width: auto;
-  height: auto;
   max-height: 80vh;
+  z-index: 98;
 }
 
 .modal-content img.close {
@@ -617,18 +777,14 @@ tr:nth-child(even) {
   right: 15px; /* Adjust the right position as needed */
   width: 20px;
   height: 20px;
-  opacity: .7;
-  z-index: 1; /* Ensure the close image is on top */
+  opacity: 0.7;
+  z-index: 100; /* Ensure the close image is on top */
 }
 
 .modal-content .close:hover,
 .modal-content .close:focus {
   opacity: 1;
   cursor: pointer;
-}
-.thumbnail {
-  width: 50px;
-  height: 50px;
 }
 
 /**
@@ -667,25 +823,22 @@ tr:nth-child(even) {
   display: block;
 }
 
+/*Table categories*/
+.categories .th-1,
+.categories .th-2
+ {
+  width: 25%;
+}
+
+.edit:hover {
+  opacity: 1;
+  background-color: #fdf6df;
+}
+
 /**
  * Responsive
  */
-/*media query 1035px*/
-@media (max-width: 1035px) {
-  .th-1,
-  .th-2,
-  .th-3 {
-    width: 15%;
-  }
-}
-@media (max-width: 820px) {
-  .th-1,
-  .th-2,
-  .th-3 {
-    width: 12%;
-  }
-}
-@media (max-width: 45em) {
+@media (max-width: 821px) {
   .tabs .tab,
   .tabs label {
     order: initial;
@@ -700,6 +853,35 @@ tr:nth-child(even) {
   .th-2,
   .th-3 {
     width: 25%;
+  }
+
+  .categories .th-1,
+  .categories .th-2,
+  .categories .th-3 {
+    width: 30%;
+  }
+
+  .modal {
+    max-width: 100%;
+    width: 100%;
+    z-index: 100;
+  }
+
+  .modal-content {
+    position: relative;
+    max-height: 100vh; /* Set the maximum height to 80% of the viewport height */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0; /* Remove padding to avoid extra space */
+    overflow: auto; /* Enable scroll if needed */
+  }
+
+  .modal-content img {
+    max-height: 100%; /* Allow the image to scale down as needed */
+    max-width: 100%; /* Allow the image to scale down as needed */
+    width: auto; /* Ensure the image maintains its original aspect ratio */
+    height: auto; /* Ensure the image maintains its original aspect ratio */
   }
 }
 </style>

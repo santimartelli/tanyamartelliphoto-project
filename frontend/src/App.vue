@@ -7,7 +7,7 @@
         <component :is="slotProps.Component"></component>
       </transition>
     </router-view>
-    <the-social-networks></the-social-networks>
+    <the-social-networks v-if="!isAdminPanel"></the-social-networks>
     <footer-credits></footer-credits>
   </main>
 </template>

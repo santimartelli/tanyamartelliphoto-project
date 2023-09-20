@@ -134,4 +134,39 @@ li {
   font-size: 2rem;
   margin-bottom: 0;
 }
+
+/** 
+/* Responsive
+*/
+@media (max-width: 450px) {
+  .auth-nav {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+  .left,
+  .right {
+    width: 100%;
+    justify-content: center;
+  }
+  .left {
+    justify-content: center;
+  }
+  .right {
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .btn-link {
+    font-size: 0.5rem;
+  }
+  .name-title {
+    font-size: 1.5rem;
+  }
+  .welcome {
+    font-size: 0.5rem;
+    justify-content: center;
+    text-align: center;
+  }
+}
 </style>
