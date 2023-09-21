@@ -64,33 +64,6 @@
       <p>"Loving photography since 1986"</p>
     </section>
     <section class="categories">
-      <!-- Mobile Version
-      <swiper
-        :navigation="true"
-        :loop="true"
-        :keyboard="{
-          enabled: true,
-        }"
-        :clickable="true"
-        :modules="modules"
-        class="mySwiper"
-        v-if="mobile"
-      >
-        <SwiperSlide v-for="picture in pictures" :key="picture.pictureID">
-          <div class="container-cat swiper-mobile">
-            <img :src="picture.picturePath" :alt="picture.pictureID" />
-            <div class="cat-link">
-              <p class="centered">{{ picture.categoryName }}</p>
-              <div class="space"></div>
-              <router-link
-                :to="'/portfolio/' + picture.categoryID"
-                class="btn-link"
-                >View portfolio</router-link
-              >
-            </div>
-          </div>
-        </SwiperSlide>
-      </swiper> -->
       <!--Desktop Version-->
       <swiper
         :navigation="true"
@@ -117,7 +90,7 @@
         :modules="modules"
         class="mySwiper"
       >
-        <SwiperSlide v-for="picture in pictures" :key="picture.pictureID">
+        <SwiperSlide v-for="picture in uniquePictures" :key="picture.pictureID">
           <div class="container-cat swiper-mobile">
             <img :src="picture.picturePath" :alt="picture.pictureID" />
             <div class="cat-link">
@@ -182,6 +155,12 @@ export default {
     pictures() {
       return this.$store.getters["pictures/pictures"];
     },
+    uniquePictures() {
+      return this.pictures.filter(
+        (picture, index, self) =>
+          self.findIndex((p) => p.categoryName === picture.categoryName) === index
+      );
+    }
   },
   created() {
     setInterval(this.changeImage, 9000); // Change image every 3 seconds
