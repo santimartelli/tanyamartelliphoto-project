@@ -54,7 +54,7 @@ exports.update = (req, res) => {
     return;
   }
 
-  CategoryModel.updateById(req.params.id, new Category(req.body), (err, data) => {
+  CategoryModel.updateById(req.params.id, new CategoryModel(req.body), (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({ message: `Category not found with id ${req.params.id}` });

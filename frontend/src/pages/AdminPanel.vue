@@ -28,9 +28,9 @@
         <base-button class="buttonAddPic" @click="addImages = !addImages"
           >Add Images</base-button
         >
-        <div v-show="addImages" class="addPics">
+        <div v-show="addImages" class="addItem">
           <div v-if="isLoading">
-            <p class="authenticating">Uploading images...</p>
+            <p>Uploading images...</p>
             <base-spinner />
           </div>
           <div v-else>
@@ -169,7 +169,7 @@
         <base-button class="buttonAddPic" @click="addCategory = !addCategory"
           >Add Category</base-button
         >
-        <div v-show="addCategory" class="addPics">
+        <div v-show="addCategory" class="addItem">
           <div v-if="isLoading">
             <p>Adding category...</p>
             <base-spinner />
@@ -200,7 +200,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="category in categories" :key="category.categoryID">
+              <tr v-for="category in categories" :key="category.CategoryID">
                 <td>{{ category.CategoryID }}</td>
                 <td>{{ category.CategoryName }}</td>
                 <td class="actions-container">
@@ -210,13 +210,13 @@
                       src="../assets/Icons/pen.png"
                       alt="Editar categoria"
                       title="Editar categoria"
-                      @click="editCategory(category.categoryID)"
+                      @click="editCategory(category.CategoryID)"
                     />
                   </div>
                   <div
                     v-if="!iconsActions"
                     class="icon-container edit"
-                    @click="editCategory(category.categoryID)"
+                    @click="editCategory(category.CategoryID)"
                   >
                     <img src="../assets/Icons/pen.png" alt="Editar categoria" />
                     <div>EDIT CATEGORY</div>
@@ -227,15 +227,18 @@
                       src="../assets/Icons/delete.png"
                       alt="Eliminar categoria"
                       title="Eliminar categoria"
-                      @click="deleteCategory(category.categoryID)"
+                      @click="deleteCategory(category.CategoryID)"
                     />
                   </div>
                   <div
                     v-if="!iconsActions"
                     class="icon-container delete"
-                    @click="deleteCategory(category.categoryID)"
+                    @click="deleteCategory(category.CategoryID)"
                   >
-                    <img src="../assets/Icons/delete.png" alt="Eliminar categoria" />
+                    <img
+                      src="../assets/Icons/delete.png"
+                      alt="Eliminar categoria"
+                    />
                     <div>DELETE CATEGORY</div>
                   </div>
                 </td>
@@ -260,9 +263,9 @@ export default {
   data() {
     return {
       files: [],
-      categoryID: "",
       addImages: false,
       addCategory: false,
+      categoryID: "",
       feedbackMessage: "",
       feedbackOk: 3,
       error: null,
@@ -399,6 +402,27 @@ export default {
         this.iconsActions = false;
       }
     },
+    async editCategory(categoryID) {
+      const categoryName = prompt("Enter the new category name");
+
+      if (categoryName) {
+        try {
+          await this.$store.dispatch("categories/updateCategory", {
+            categoryID,
+            categoryName,
+          });
+          this.feedbackMessage = "Category updated!";
+          this.feedbackOk = 1;
+        } catch (error) {
+          this.feedbackMessage = "Error updating category";
+          this.feedbackOk = 2;
+        }
+        setTimeout(() => {
+          this.feedbackMessage = "";
+          this.feedbackOk = 3;
+        }, 3000);
+      }
+    },
   },
   created() {
     this.showIconsActions();
@@ -483,7 +507,7 @@ body {
   margin-bottom: 1rem;
 }
 /* Container add images */
-.addPics {
+.addItem {
   width: 100%;
   height: auto;
   margin-bottom: 1rem;
@@ -494,7 +518,7 @@ body {
 }
 
 /* Form add images */
-.addPics form {
+.addItem form {
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -600,7 +624,7 @@ select option {
   margin: 0 0.5rem;
 }
 
-.addPics .preview-pic {
+.addItem .preview-pic {
   display: flex;
   width: 75px;
   box-sizing: border-box;
@@ -618,7 +642,7 @@ select option {
   width: 75px;
   height: 75px;
 }
-.addPics .preview-pic img {
+.addItem .preview-pic img {
   width: 75px;
   height: 75px;
   object-fit: cover;
@@ -825,8 +849,7 @@ tr:nth-child(even) {
 
 /*Table categories*/
 .categories .th-1,
-.categories .th-2
- {
+.categories .th-2 {
   width: 25%;
 }
 

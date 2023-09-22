@@ -24,8 +24,6 @@ Category.getAll = (result) => {
       result(null, err);
       return;
     }
-
-    console.log("categories: ", res);
     result(null, res);
   });
 };
