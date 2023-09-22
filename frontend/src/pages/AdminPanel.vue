@@ -411,10 +411,10 @@ export default {
             categoryID,
             categoryName,
           });
-          this.feedbackMessage = "Category updated!";
+          this.feedbackMessage = "Category updated succesfully";
           this.feedbackOk = 1;
         } catch (error) {
-          this.feedbackMessage = "Error updating category";
+          this.feedbackMessage = "Error updating category, please try again";
           this.feedbackOk = 2;
         }
         setTimeout(() => {
