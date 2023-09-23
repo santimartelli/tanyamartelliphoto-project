@@ -1,11 +1,10 @@
 module.exports = (app) => {
   const pictures = require("../controllers/picture.controller.js");
-
   var router = require("express").Router();
-  var upload = require('../config/multer.config.js');
+  var upload = require("../config/multer.config.js");
 
   // Upload a new Picture
-  router.post("/", upload.array('images', 10), pictures.uploadPictures);
+  router.post("/", upload.array("images", 10), pictures.uploadPictures);
 
   // Create a new Picture
   // router.post("/", pictures.create);

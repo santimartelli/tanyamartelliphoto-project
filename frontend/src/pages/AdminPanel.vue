@@ -25,7 +25,7 @@
       <div class="tab">
         <!-- Inside the tab -->
         <!-- Botón para añadir imagenes -->
-        <base-button class="buttonAddPic" @click="addImages = !addImages"
+        <base-button class="buttonAdd" @click="addImages = !addImages"
           >Add Images</base-button
         >
         <div v-show="addImages" class="addItem">
@@ -165,8 +165,8 @@
       <label for="tabtwo">Categories</label>
       <div class="tab">
         <!-- Inside the tab -->
-        <!-- Botón para añadir imagenes -->
-        <base-button class="buttonAddPic" @click="addCategory = !addCategory"
+        <!-- Botón para añadir categorias -->
+        <base-button class="buttonAdd" @click="addCategory = !addCategory"
           >Add Category</base-button
         >
         <div v-show="addCategory" class="addItem">
@@ -176,15 +176,18 @@
           </div>
           <div v-else>
             <form @submit.prevent="sendForm">
-              <div class="inputs-container">
+              <div class="inputs-container-categories">
                 <input
                   type="text"
                   name="cateogry"
                   id="category-input"
-                  placeholder="Introduce el nombre de la nueva cateogria"
+                  class="add-category-input"
+                  placeholder="Introduce el nombre de la nueva categoría"
                 />
-                <base-button @click="sendForm">Upload</base-button>
-                <base-button @click="resetForm">Cancel</base-button>
+                <div class="buttons-container">
+                  <base-button @click="sendForm">Add</base-button>
+                  <base-button @click="resetForm">Cancel</base-button>
+                </div>
               </div>
             </form>
           </div>
@@ -361,14 +364,29 @@ export default {
     },
     async deletePicture(pictureID) {
       try {
+        const picture = this.pictures.find((p) => p.pictureID === pictureID);
+        const picturePath = picture.picturePath;
+
         const response = await this.$store.dispatch(
           "pictures/deletePicture",
           pictureID
         );
         if (response && response.status >= 200 && response.status < 300) {
-          this.$store.commit("pictures/deletePicture", pictureID);
-          this.feedbackMessage = "Picture deleted successfully";
-          this.feedbackOk = 1;
+          const fileResponse = await fetch(
+            `http://localhost:3000/api/pictures/deleteFile?filepath=${picturePath}`,
+            {
+              method: "DELETE",
+            }
+          );
+
+          if (fileResponse.status === 200) {
+            this.$store.commit("pictures/deletePicture", pictureID);
+            this.feedbackMessage = "Picture deleted successfully";
+            this.feedbackOk = 1;
+          } else {
+            this.feedbackOk = 2;
+            this.feedbackMessage = "Failed to delete picture, please try again";
+          }
         } else {
           this.feedbackOk = 2;
           this.feedbackMessage = "Failed to delete picture, please try again";
@@ -503,7 +521,7 @@ body {
   opacity: 0;
 }
 
-.buttonAddPic {
+.buttonAdd {
   margin-bottom: 1rem;
 }
 /* Container add images */
@@ -535,6 +553,14 @@ body {
   padding: 1re;
 }
 
+.inputs-container-categories {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .file-select {
   width: 300px;
   border-radius: 4px;
@@ -545,6 +571,26 @@ body {
   background-color: #f3f2f2;
 }
 
+.add-category-input {
+  width: 40%;
+  border-radius: 4px;
+  font-family: Typewriter-extralight;
+  font-size: 0.7rem;
+  letter-spacing: 0.02rem;
+  padding: 8px;
+  border: 1px solid #e8e8e8;
+  background-color: #fff;
+  margin: .5rem;
+}
+
+.add-category-input:focus {
+  outline: none;
+  border: 1px solid #f79f9f;
+}
+
+#category-input{
+  text-align: center;
+}
 .file-select::file-selector-button {
   border: 1px solid #000;
   border-radius: 4px;
@@ -614,6 +660,7 @@ select option {
 .buttons-container {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -621,7 +668,7 @@ select option {
 
 /*space between buttons*/
 .buttons-container div {
-  margin: 0 0.5rem;
+  margin: 0.5rem;
 }
 
 .addItem .preview-pic {
@@ -905,6 +952,10 @@ tr:nth-child(even) {
     max-width: 100%; /* Allow the image to scale down as needed */
     width: auto; /* Ensure the image maintains its original aspect ratio */
     height: auto; /* Ensure the image maintains its original aspect ratio */
+  }
+
+  .add-category-input {
+  width: 90%;
   }
 }
 </style>
