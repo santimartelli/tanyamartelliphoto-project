@@ -30,7 +30,7 @@ Category.getAll = (result) => {
 
 Category.findById = (categoryId, result) => {
   sql.query(
-    "SELECT * FROM Categories WHERE CategoryID = ?",
+    "SELECT * FROM Categories WHERE categoryId = ?",
     categoryId,
     (err, res) => {
       if (err) {
@@ -53,7 +53,7 @@ Category.findById = (categoryId, result) => {
 
 Category.updateById = (categoryId, category, result) => {
   sql.query(
-    "UPDATE Categories SET CategoryName = ? WHERE CategoryID = ?",
+    "UPDATE Categories SET categoryName = ? WHERE categoryId = ?",
     [category.categoryName, categoryId],
     (err, res) => {
       if (err) {
@@ -75,7 +75,7 @@ Category.updateById = (categoryId, category, result) => {
 };
 
 Category.removeOne = (categoryId, result) => {
-  sql.query("DELETE FROM Categories WHERE CategoryID = ?", categoryId, (err, res) => {
+  sql.query("DELETE FROM Categories WHERE categoryId = ?", categoryId, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -86,7 +86,7 @@ Category.removeOne = (categoryId, result) => {
       result({ kind: "not_found" }, null);
       return;
     } else {
-      console.log("deleted category with id: ", categoryId);
+      console.log("deleted category with id:", categoryId);
       result(null, res);
     }
   });

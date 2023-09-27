@@ -45,21 +45,21 @@
                   @click="resetUpload"
                 />
                 <div class="category-select">
-                  <select v-model="categoryID" ref="categoryInput">
+                  <select v-model="categoryId" ref="categoryInput">
                     <option value="" disabled selected hidden>
                       Choose a category
                     </option>
                     <option
                       v-for="cat in categories"
-                      :key="cat.CategoryID"
-                      :value="cat.CategoryID"
+                      :key="cat.categoryId"
+                      :value="cat.categoryId"
                     >
-                      {{ cat.CategoryName }}
+                      {{ cat.categoryName }}
                     </option>
                   </select>
                 </div>
               </div>
-              <div v-show="categoryID" class="preview-container">
+              <div v-show="categoryId" class="preview-container">
                 <div class="preview-pic" v-for="file in files" :key="file.name">
                   <div class="img-container">
                     <img :src="file.preview" alt="Preview" />
@@ -68,7 +68,7 @@
                 </div>
               </div>
               <div
-                v-show="categoryID && files.length > 0"
+                v-show="categoryId && files.length > 0"
                 class="buttons-container"
               >
                 <base-button @click="submitForm">Upload</base-button>
@@ -90,8 +90,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="picture in pictures" :key="picture.pictureID">
-                <td>{{ picture.pictureID }}</td>
+              <tr v-for="picture in pictures" :key="picture.pictureId">
+                <td>{{ picture.pictureId }}</td>
                 <td>
                   <img
                     :src="picture.picturePath"
@@ -124,13 +124,13 @@
                       src="../assets/Icons/delete.png"
                       alt="Borrar imagen"
                       title="Borrar imagen"
-                      @click="deletePicture(picture.pictureID)"
+                      @click="deletePicture(picture.pictureId)"
                     />
                   </div>
                   <div
                     v-if="!iconsActions"
                     class="icon-container delete"
-                    @click="deletePicture(picture.pictureID)"
+                    @click="deletePicture(picture.pictureId)"
                   >
                     <img src="../assets/Icons/delete.png" alt="Borrar imagen" />
                     <div>DELETE IMAGE</div>
@@ -175,18 +175,20 @@
             <base-spinner />
           </div>
           <div v-else>
-            <form @submit.prevent="sendForm">
+            <form @submit.prevent="addNewCategory">
               <div class="inputs-container-categories">
                 <input
                   type="text"
                   name="cateogry"
                   id="category-input"
+                  ref="categoryInput"
+                  v-model="newCategoryName"
                   class="add-category-input"
                   placeholder="Introduce el nombre de la nueva categoría"
                 />
                 <div class="buttons-container">
-                  <base-button @click="sendForm">Add</base-button>
-                  <base-button @click="resetForm">Cancel</base-button>
+                  <base-button @click="addNewCategory">Add</base-button>
+                  <base-button @click="resetCategoryForm">Cancel</base-button>
                 </div>
               </div>
             </form>
@@ -203,9 +205,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="category in categories" :key="category.CategoryID">
-                <td>{{ category.CategoryID }}</td>
-                <td>{{ category.CategoryName }}</td>
+              <tr v-for="category in categories" :key="category.categoryId">
+                <td>{{ category.categoryId }}</td>
+                <td>{{ category.categoryName }}</td>
                 <td class="actions-container">
                   <div v-if="iconsActions">
                     <img
@@ -213,13 +215,13 @@
                       src="../assets/Icons/pen.png"
                       alt="Editar categoria"
                       title="Editar categoria"
-                      @click="editCategory(category.CategoryID)"
+                      @click="editCategory(category.categoryId)"
                     />
                   </div>
                   <div
                     v-if="!iconsActions"
                     class="icon-container edit"
-                    @click="editCategory(category.CategoryID)"
+                    @click="editCategory(category.categoryId)"
                   >
                     <img src="../assets/Icons/pen.png" alt="Editar categoria" />
                     <div>EDIT CATEGORY</div>
@@ -230,13 +232,13 @@
                       src="../assets/Icons/delete.png"
                       alt="Eliminar categoria"
                       title="Eliminar categoria"
-                      @click="deleteCategory(category.CategoryID)"
+                      @click="deleteCategory(category.categoryId)"
                     />
                   </div>
                   <div
                     v-if="!iconsActions"
                     class="icon-container delete"
-                    @click="deleteCategory(category.CategoryID)"
+                    @click="deleteCategory(category.categoryId)"
                   >
                     <img
                       src="../assets/Icons/delete.png"
@@ -262,13 +264,15 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
       files: [],
       addImages: false,
       addCategory: false,
-      categoryID: "",
+      categoryId: "",
       feedbackMessage: "",
       feedbackOk: 3,
       error: null,
@@ -276,6 +280,7 @@ export default {
       selectedImage: null,
       showImageModal: false,
       iconsActions: false,
+      newCategoryName: "",
     };
   },
   computed: {
@@ -303,56 +308,45 @@ export default {
       for (let i = 0; i < this.files.length; i++) {
         formData.append("images", this.files[i]);
       }
-      formData.append("categoryID", this.categoryID);
+      formData.append("categoryId", this.categoryId);
 
       try {
-        const response = await fetch("http://localhost:3000/api/pictures", {
-          method: "POST",
-          body: formData,
-        });
+        const response = await axios.post(
+          "http://localhost:3000/api/pictures",
+          formData
+        );
+
         if (response.status >= 200 && response.status < 300) {
           this.feedbackMessage = "Pictures uploaded successfully";
           this.feedbackOk = 1;
-          setTimeout(() => {
-            this.feedbackMessage = "";
-            this.feedbackOk = 3;
-          }, 3000);
-          // Clear the file input and reset categoryID after successful upload
-          //reset inputs
+          // Clear the file input and reset categoryId after successful upload
           this.files = [];
-          this.categoryID = "";
-          // Fetch updated pictures data from the server (you may need to implement this)
-          this.$store.dispatch("pictures/getPictures"); // Assuming you have a Vuex action for this
+          this.categoryId = "";
+          // Dispatch an action to get the pictures again
+          this.$store.dispatch("pictures/getPictures");
         } else {
-          this.files = [];
-          this.categoryID = "";
           this.feedbackOk = 2;
           this.feedbackMessage = "Failed to upload pictures, please try again";
-          setTimeout(() => {
-            this.feedbackMessage = "";
-            this.feedbackOk = 3;
-          }, 3000);
         }
       } catch (err) {
-        this.files = [];
-        this.categoryID = "";
         this.error =
           err.message || "Failed to upload images, please try again.";
         this.feedbackOk = 2;
         this.feedbackMessage = "Failed to upload images, please try again.";
+      } finally {
+        this.isLoading = false;
         setTimeout(() => {
           this.feedbackMessage = "";
           this.feedbackOk = 3;
         }, 3000);
       }
-      this.isLoading = false;
     },
     handleError() {
       this.error = null;
       this.$refs.fileInput.value = "";
       this.$refs.categoryInput.value = "";
       this.files = [];
-      this.categoryID = "";
+      this.categoryId = "";
     },
     resetUpload() {
       this.feedbackMessage = "";
@@ -360,16 +354,16 @@ export default {
       this.$refs.fileInput.value = "";
       this.$refs.categoryInput.value = "";
       this.files = [];
-      this.categoryID = "";
+      this.categoryId = "";
     },
-    async deletePicture(pictureID) {
+    async deletePicture(pictureId) {
       try {
-        const picture = this.pictures.find((p) => p.pictureID === pictureID);
+        const picture = this.pictures.find((p) => p.pictureId === pictureId);
         const picturePath = picture.picturePath;
 
         const response = await this.$store.dispatch(
           "pictures/deletePicture",
-          pictureID
+          pictureId
         );
         if (response && response.status >= 200 && response.status < 300) {
           const fileResponse = await fetch(
@@ -380,7 +374,7 @@ export default {
           );
 
           if (fileResponse.status === 200) {
-            this.$store.commit("pictures/deletePicture", pictureID);
+            this.$store.commit("pictures/deletePicture", pictureId);
             this.feedbackMessage = "Picture deleted successfully";
             this.feedbackOk = 1;
           } else {
@@ -420,13 +414,13 @@ export default {
         this.iconsActions = false;
       }
     },
-    async editCategory(categoryID) {
+    async editCategory(categoryId) {
       const categoryName = prompt("Enter the new category name");
 
       if (categoryName) {
         try {
           await this.$store.dispatch("categories/updateCategory", {
-            categoryID,
+            categoryId,
             categoryName,
           });
           this.feedbackMessage = "Category updated succesfully";
@@ -441,6 +435,65 @@ export default {
         }, 3000);
       }
     },
+    addNewCategory() {
+      this.isLoading = true;
+      const newCategoryName = this.newCategoryName;
+      if (newCategoryName) {
+        try {
+          this.$store.dispatch("categories/addNewCategory", newCategoryName);
+          this.feedbackMessage = "Category added succesfully";
+          this.feedbackOk = 1;
+          // Clear the ctaegoryInput input after successful upload
+          this.newCategoryName = "";
+        } catch (error) {
+          this.feedbackMessage = "Error adding category, please try again";
+          this.feedbackOk = 2;
+        }
+        setTimeout(() => {
+          this.feedbackMessage = "";
+          this.feedbackOk = 3;
+        }, 3000);
+      }else{
+        this.feedbackMessage = "Please enter a category name";
+        this.feedbackOk = 2;
+        setTimeout(() => {
+          this.feedbackMessage = "";
+          this.feedbackOk = 3;
+        }, 3000);
+      }
+      this.isLoading = false;
+    },
+    resetCategoryForm() {
+      this.newCategoryName = "";
+      this.addCategory = false;
+    },
+    deleteCategory(categoryId){
+      // Check if there are pictures with this category
+      const picturesWithCategory = this.pictures.filter(
+        (picture) => picture.categoryId == categoryId
+      );
+      if(picturesWithCategory.length > 0){
+        this.feedbackMessage = "There are pictures with this category, please delete them first";
+        this.feedbackOk = 2;
+        setTimeout(() => {
+          this.feedbackMessage = "";
+          this.feedbackOk = 3;
+        }, 3000);
+      }else{
+        try {
+          this.$store.dispatch("categories/deleteCategory", categoryId);
+          this.feedbackMessage = "Category deleted succesfully";
+          this.feedbackOk = 1;
+        } catch (error) {
+          this.feedbackMessage = "Error deleting category, please try again";
+          this.feedbackOk = 2;
+        }
+        setTimeout(() => {
+          this.feedbackMessage = "";
+          this.feedbackOk = 3;
+        }, 3000);
+      }
+    }
   },
   created() {
     this.showIconsActions();
@@ -485,6 +538,7 @@ body {
   height: 75px;
   font-size: 0.8rem;
   opacity: 0.95;
+  z-index: 100;
 }
 
 .feedbackOk {
@@ -580,7 +634,7 @@ body {
   padding: 8px;
   border: 1px solid #e8e8e8;
   background-color: #fff;
-  margin: .5rem;
+  margin: 0.5rem;
 }
 
 .add-category-input:focus {
@@ -588,7 +642,7 @@ body {
   border: 1px solid #f79f9f;
 }
 
-#category-input{
+#category-input {
   text-align: center;
 }
 .file-select::file-selector-button {
@@ -955,7 +1009,7 @@ tr:nth-child(even) {
   }
 
   .add-category-input {
-  width: 90%;
+    width: 90%;
   }
 }
 </style>

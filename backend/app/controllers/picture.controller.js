@@ -4,13 +4,13 @@ exports.uploadPictures = (req, res) => {
   const picturesUploaded = req.files.map((file) => {
     return {
       picturePath: `http://localhost:3000/resources/static/assets/uploads/${file.filename}`,
-      categoryID: req.body.categoryID,
+      categoryId: req.body.categoryId,
     };
   });
 
   const values = picturesUploaded.map((picture) => [
     picture.picturePath,
-    picture.categoryID,
+    picture.categoryId,
   ]);
 
   PictureModel.create(values, (err, result) => {
@@ -25,14 +25,14 @@ exports.uploadPictures = (req, res) => {
 };
 
 // exports.create = (req, res) => {
-//   if (!req.body.picturePath || !req.body.categoryID) {
+//   if (!req.body.picturePath || !req.body.categoryId) {
 //     res.status(400).send({ message: "Picture path and category ID are required!" });
 //     return;
 //   }
 
 //   const newPicture = new PictureModel({
 //     picturePath: req.body.picturePath,
-//     categoryID: req.body.categoryID,
+//     categoryId: req.body.categoryId,
 //   });
 
 //   PictureModel.create(newPicture, (err, data) => {
@@ -60,7 +60,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findByCategory = (req, res) => {
-  PictureModel.getByCategory(req.params.categoryID, (err, data) => {
+  PictureModel.getByCategory(req.params.categoryId, (err, data) => {
     if (err) {
       res.status(500).send({
         message:
@@ -136,7 +136,7 @@ exports.deleteAll = (req, res) => {
 };
 
 exports.deleteAllByCategory = (req, res) => {
-  PictureModel.deleteAllByCategory(req.params.categoryID, (err, data) => {
+  PictureModel.deleteAllByCategory(req.params.categoryId, (err, data) => {
     if (err) {
       res.status(500).send({
         message:
@@ -147,11 +147,11 @@ exports.deleteAllByCategory = (req, res) => {
       res
         .status(404)
         .send({
-          message: `No pictures found for category ${req.params.categoryID}`,
+          message: `No pictures found for category ${req.params.categoryId}`,
         });
     } else {
       res.send({
-        message: `All pictures for category ${req.params.categoryID} deleted successfully!`,
+        message: `All pictures for category ${req.params.categoryId} deleted successfully!`,
       });
     }
   });

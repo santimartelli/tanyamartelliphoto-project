@@ -3,11 +3,11 @@ const connection = require("./db.js");
 
 const Picture = function (picture) {
   this.picturePath = picture.picturePath;
-  this.categoryID = picture.categoryID;
+  this.categoryId = picture.categoryId;
 };
 
 Picture.create = (pictureData, callback) => {
-  const sql = 'INSERT INTO Pictures (picturePath, categoryID) VALUES ?';
+  const sql = 'INSERT INTO Pictures (picturePath, categoryId) VALUES ?';
   connection.query(sql, [pictureData], callback)
 };
 
@@ -17,10 +17,10 @@ Picture.getAll = (result) => {
   sql.query(
     `
   SELECT
-    p.pictureID, p.picturePath, p.categoryID, c.categoryName
+    p.pictureId, p.picturePath, p.categoryId, c.categoryName
   FROM Pictures p
   INNER JOIN Categories c
-    ON p.categoryID = c.categoryID
+    ON p.categoryId = c.categoryId
 `,
     (err, res) => {
       if (err) {
@@ -36,10 +36,10 @@ Picture.getAll = (result) => {
     }
   );
 
-  Picture.getByCategory = (categoryID, result) => {
+  Picture.getByCategory = (categoryId, result) => {
     sql.query(
-      "SELECT * FROM Pictures WHERE categoryID = ?",
-      categoryID,
+      "SELECT * FROM Pictures WHERE categoryId = ?",
+      categoryId,
       (err, res) => {
         if (err) {
           console.log("error: ", err);
@@ -63,10 +63,10 @@ Picture.getAll = (result) => {
     );
   };
 
-  Picture.updateById = (pictureID, updatedPicture, result) => {
+  Picture.updateById = (pictureId, updatedPicture, result) => {
     sql.query(
-      "UPDATE Pictures SET picturePath = ?, categoryID = ? WHERE pictureID = ?",
-      [updatedPicture.picturePath, updatedPicture.categoryID, pictureID],
+      "UPDATE Pictures SET picturePath = ?, categoryId = ? WHERE pictureId = ?",
+      [updatedPicture.picturePath, updatedPicture.categoryId, pictureId],
       (err, res) => {
         if (err) {
           console.log("error: ", err);
@@ -80,16 +80,16 @@ Picture.getAll = (result) => {
           return;
         }
 
-        console.log("updated picture: ", { id: pictureID, ...updatedPicture });
-        result(null, { id: pictureID, ...updatedPicture });
+        console.log("updated picture: ", { id: pictureId, ...updatedPicture });
+        result(null, { id: pictureId, ...updatedPicture });
       }
     );
   };
 
-  Picture.deleteById = (pictureID, result) => {
+  Picture.deleteById = (pictureId, result) => {
     sql.query(
-      "DELETE FROM Pictures WHERE pictureID = ?",
-      pictureID,
+      "DELETE FROM Pictures WHERE pictureId = ?",
+      pictureId,
       (err, res) => {
         if (err) {
           console.log("error: ", err);
@@ -103,16 +103,16 @@ Picture.getAll = (result) => {
           return;
         }
 
-        console.log("Deleted picture with id:", pictureID);
+        console.log("Deleted picture with id:", pictureId);
         result(null, res);
       }
     );
   };
 
-  Picture.deleteAllByCategory = (categoryID, result) => {
+  Picture.deleteAllByCategory = (categoryId, result) => {
     sql.query(
-      "DELETE FROM Pictures WHERE categoryID = ?",
-      categoryID,
+      "DELETE FROM Pictures WHERE categoryId = ?",
+      categoryId,
       (err, res) => {
         if (err) {
           console.log("error: ", err);
@@ -121,7 +121,7 @@ Picture.getAll = (result) => {
         }
 
         console.log(
-          `deleted ${res.affectedRows} pictures for category ${categoryID}`
+          `deleted ${res.affectedRows} pictures for category ${categoryId}`
         );
         result(null, res);
       }

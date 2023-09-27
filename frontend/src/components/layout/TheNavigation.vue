@@ -35,11 +35,11 @@
             /></a>
             <transition name="dropdown">
               <ul v-if="showDropdown" class="dropdown">
-                <li v-for="cat in categories" :key="cat.CategoryID">
+                <li v-for="cat in categories" :key="cat.categoryId">
                   <router-link
-                    :to="'/portfolio/' + cat.CategoryID"
+                    :to="'/portfolio/' + cat.categoryId"
                     class="li-a"
-                    >{{ cat.CategoryName }}</router-link
+                    >{{ cat.categoryName }}</router-link
                   >
                 </li>
               </ul>
@@ -127,11 +127,11 @@
             /></a>
             <transition name="dropdown">
               <ul v-if="showDropdown" class="dropdown">
-                <li v-for="cat in categories" :key="cat.CategoryID">
+                <li v-for="cat in categories" :key="cat.categoryId">
                   <router-link
-                    :to="'/portfolio/' + cat.CategoryID"
+                    :to="'/portfolio/' + cat.categoryId"
                     class="li-a"
-                    >{{ cat.CategoryName }}</router-link
+                    >{{ cat.categoryName }}</router-link
                   >
                 </li>
               </ul>
@@ -226,13 +226,13 @@
                 <ul v-if="showDropdown" class="dropdown">
                   <li
                     v-for="cat in categories"
-                    :key="cat.CategoryID"
+                    :key="cat.categoryId"
                     @click="toggleMobileNav"
                   >
                     <router-link
-                      :to="'/portfolio/' + cat.CategoryID"
+                      :to="'/portfolio/' + cat.categoryId"
                       class="li-a"
-                      >{{ cat.CategoryName }}</router-link
+                      >{{ cat.categoryName }}</router-link
                     >
                   </li>
                 </ul>

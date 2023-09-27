@@ -2,10 +2,10 @@
   <div>
     <h2 v-if="picturesForCategory.length > 0">{{ picturesForCategory[0].categoryName }}</h2>
     <h3 v-else>There are no pictures of this category</h3>
-    <div v-for="picture in picturesForCategory" :key="picture.pictureID">
+    <div v-for="picture in picturesForCategory" :key="picture.pictureId">
       <img
         :src="picture.picturePath"
-        :alt="'Foto com ID: ' + picture.pictureID"
+        :alt="'Foto com ID: ' + picture.pictureId"
       />
     </div>
   </div>
@@ -18,7 +18,7 @@ export default {
     ...mapGetters("pictures", ["pictures"]),
     picturesForCategory() {
       return this.pictures.filter(
-        (picture) => picture.categoryID == this.$route.params.id
+        (picture) => picture.categoryId == this.$route.params.id
       );
     },
   },

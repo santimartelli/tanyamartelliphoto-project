@@ -4,7 +4,7 @@
       <transition-group name="fade" tag="div">
         <div
           v-for="(picture, index) in pictures"
-          :key="picture.pictureID"
+          :key="picture.picrureId"
           class="image-container"
           v-show="index === currentImageIndex"
         >
@@ -90,14 +90,14 @@
         :modules="modules"
         class="mySwiper"
       >
-        <SwiperSlide v-for="picture in uniquePictures" :key="picture.pictureID">
+        <SwiperSlide v-for="picture in uniquePictures" :key="picture.picrureId">
           <div class="container-cat swiper-mobile">
-            <img :src="picture.picturePath" :alt="picture.pictureID" />
+            <img :src="picture.picturePath" :alt="picture.picrureId" />
             <div class="cat-link">
               <p class="centered">{{ picture.categoryName }}</p>
               <div class="space"></div>
               <router-link
-                :to="'/portfolio/' + picture.categoryID"
+                :to="'/portfolio/' + picture.categoryId"
                 class="btn-link"
                 >View portfolio</router-link
               >
@@ -111,10 +111,10 @@
         <h2 class="highlight">Featured Images</h2>
       </div>
       <div class="images">
-        <div v-for="picture in pictures" :key="picture.pictureID" class="image">
+        <div v-for="picture in pictures" :key="picture.picrureId" class="image">
           <img
             :src="picture.picturePath"
-            :alt="'Picture ' + picture.pictureID"
+            :alt="'Picture ' + picture.picrureId"
           />
         </div>
       </div>
