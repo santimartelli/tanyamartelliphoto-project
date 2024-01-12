@@ -8,24 +8,33 @@
       contact form below. I'll respond to your message as soon as possible.
     </p>
 
-    <base-card>
+    <div>
       <form>
-        <label for="name">Nombre:</label>
-        <input type="text" id="name" name="name" v-model="name" />
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email" v-model="email" />
-        <label for="message">Mensaje:</label>
+        <input
+          type="text"
+          v-model="name"
+          name="name"
+          id="name"
+          placeholder="Name"
+        />
+        <input
+          type="text"
+          v-model="email"
+          id="email"
+          placeholder="Email"
+          />
+          <label for="message">Message</label>
         <textarea
           id="message"
-          name="message"
           rows="10"
+          name="message"
           v-model="message"
         ></textarea>
         <div class="btn-container">
           <base-button @click="submitForm" value="Enviar">Enviar</base-button>
         </div>
       </form>
-    </base-card>
+    </div>
   </div>
 </template>
 
@@ -65,31 +74,55 @@ export default {
 </script>
 
 <style scoped>
-label {
-  letter-spacing: 0.1rem;
-  font-size: 0.8rem;
-  color: black;
-}
-input,
-textarea {
-  font-family: typewriter-extralight;
-  letter-spacing: 0.1rem;
-  border: none;
-  outline: none;
-  background-color: white;
-  border: 0.5px solid rgb(235, 228, 228);
-  font-size: 0.8rem;
-  padding: 5px;
-  margin-top: 12px;
-  margin-bottom: 2rem;
-  width: 100%;
-  color: black;
+.container {
+  width: 80%;
+  margin: 0 auto; /* Center the container */
+  padding: 20px; /* Add some padding for spacing */
 }
 
-input:focus,
-textarea:focus {
-  border: 0.5px solid slategray;
+h2 {
+  text-align: center;
+  padding-bottom: 1rem;
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+  margin: 0px auto;
+  padding-top: 20px;
+}
+
+input {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  margin-bottom: 1.5rem;
+  padding: 5px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+
+textarea {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  margin-bottom: 1.5rem;
+  padding: 5px;
+  border: 1px solid #ccc;;
+}
+
+label {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: .65;
+  padding: 0 5px 5px 5px;
+}
+
+input:focus {
+  outline: none;
+  border-bottom: 1px solid #f79f9f;
+}
+
+textarea:focus {
+  outline: none;
+  border: 1px solid #f79f9f;
+}S
 
 .btn-container {
   display: flex;

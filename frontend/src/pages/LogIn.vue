@@ -5,7 +5,7 @@
     >
     <div class="container-login">
       <img
-        src="https://scontent-bcn1-1.xx.fbcdn.net/v/t39.30808-6/290960090_430784209059409_970148872348183412_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=932fsWpOOwwAX_DkQSz&_nc_ht=scontent-bcn1-1.xx&oh=00_AfCiCtQJi-ehudI-pw9B2l9NJoTi0wZqYTnWbPMBlcJICg&oe=64FEFE5F"
+        src="../assets/images/logo.jpg"
         alt="Logo Tanya Martelli Photography"
       />
       <div v-if="isLoading">

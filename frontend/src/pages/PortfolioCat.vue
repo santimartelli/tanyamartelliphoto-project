@@ -1,13 +1,15 @@
 <template>
-  <div>
+  <div class="container">
     <h2 v-if="picturesForCategory.length > 0">{{ picturesForCategory[0].categoryName }}</h2>
-    <h3 v-else>There are no pictures of this category</h3>
+    <div class="container2">
+    <h3 v-if="picturesForCategory.length === 0">There are no pictures of this category</h3>
     <div v-for="picture in picturesForCategory" :key="picture.pictureId">
       <img
         :src="picture.picturePath"
         :alt="'Foto com ID: ' + picture.pictureId"
       />
     </div>
+  </div>
   </div>
 </template>
 
@@ -26,8 +28,27 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  width: 95%;
+  margin: 0 auto; /* Center the container */
+  padding: 20px; /* Add some padding for spacing */
+}
+
+.container2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+h2 {
+  text-align: center;
+  padding-bottom: 1rem;
+}
+
 img {
   width: 500px;
-  height: auto;
+  height: 500px;
+  object-fit: cover;
+  padding: 10px;
 }
 </style>
