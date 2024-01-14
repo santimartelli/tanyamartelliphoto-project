@@ -285,7 +285,7 @@ export default {
   data() {
     return {
       scrolledNav: null,
-      mobileNav: null,
+      mobileNav: false,
       scrollPosition: 0,
       showDropdown: false,
     };

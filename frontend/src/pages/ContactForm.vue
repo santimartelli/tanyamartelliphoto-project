@@ -75,7 +75,7 @@ export default {
 
 <style scoped>
 .container {
-  width: 80%;
+  width: 60%;
   margin: 0 auto; /* Center the container */
   padding: 20px; /* Add some padding for spacing */
 }
@@ -86,10 +86,11 @@ h2 {
 }
 
 form {
+  width: 80%;
   display: flex;
   flex-direction: column;
   margin: 0px auto;
-  padding-top: 20px;
+  padding-top: 3rem;
 }
 
 input {
@@ -122,10 +123,23 @@ input:focus {
 textarea:focus {
   outline: none;
   border: 1px solid #f79f9f;
-}S
-
+}
 .btn-container {
   display: flex;
   justify-content: center;
 }
+
+/* media queries */
+@media (max-width: 855px) {
+  .container{
+    width: 98%;
+  }
+}
+
+@media (max-width: 1235px) {
+  form{
+    width: 100%;
+  }
+}
+
 </style>

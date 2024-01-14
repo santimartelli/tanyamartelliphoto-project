@@ -1,10 +1,15 @@
 <template>
   <div class="container">
-    <h2><span class="highlight">Book Your Photosession!</span></h2>
+    <h2><span class="highlight">Book Your PhotoShoot!</span></h2>
     <p>
-      Thank you for your interest in booking a photosession with me! Please fill
+      Thank you for your interest in booking a photoshoot with me! Please fill
       out the form below with your details and preferences, and I will get back
       to you as soon as possible to finalize the details.
+    </p>
+    <p>
+      Feel free to include any additional information or specific requests you
+      may have. I want to ensure that your photosession is tailor-made to your
+      preferences and needs.
     </p>
     <p>
       Once I receive your booking request, I will review the form and contact
@@ -12,128 +17,88 @@
       dedicated to providing you with an exceptional experience and capturing
       beautiful moments that will be cherished for a lifetime.
     </p>
-    <base-card>
-      <div>
-        <label for="name"
-          ><strong>Full Name</strong>
-          <p>
-            Please provide your full name so that I can address you correctly.
-          </p></label
-        >
-
-        <input type="text" id="name" v-model="name" />
-      </div>
-      <div>
-        <label for="email"
-          ><strong>Email</strong>
-          <p>
-            Kindly enter your email address, and I will use it to communicate
-            with you regarding your booking.
-          </p></label
-        >
-        <input type="email" id="email" v-model="email" />
-      </div>
-      <div>
-        <label for="session"
-          ><strong>Session Type</strong>
-          <p>
-            Choose the type of session you are interested in, whether it be a
-            family portrait, event shoot, fashion photography, or any other
-            specific theme or occasion.
-          </p></label
-        >
-        <select id="session" v-model="sessionType">
-          <option value="option1">Pregnancy</option>
-          <option value="option2">Newborn</option>
-          <option value="option2">Family</option>
-          <option value="option2">Personal Book</option>
-          <option value="option2">Event</option>
-          <option value="option2">Fashion</option>
-          <option value="option2">E-commerce (product)</option>
-          <!-- Add more options here -->
-        </select>
-      </div>
-      <div>
-        <label for="location"
-          ><strong>Location</strong>
-          <p>
-            Let me know your preferred location for the photosession. Whether
-            you have a specific spot in mind or need suggestions, I am here to
-            help.
-          </p></label
-        >
-        <select id="location" v-model="location">
-          <option value="Barcelona">Barcelona</option>
-          <option value="Girona">Girona</option>
-          <option value="Lloret">Lloret de Mar</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
+    <form>
+      <input type="text" id="name" v-model="name" placeholder="Name" />
+      <input type="email" id="email" v-model="email" placeholder="Email" />
+      <select id="session" v-model="sessionType">
+        <option v-if="!sessionType" value="" disabled selected>
+          Select the photoshoot type
+        </option>
+        <option value="Couple">Couple</option>
+        <option value="Event">Event</option>
+        <option value="Family">Family</option>
+        <option value="Fashion">Fashion</option>
+        <option value="Female Portrait">Female Portrait</option>
+        <option value="Male Portrait">Male Portrait</option>
+        <option value="Newborn">Newborn</option>
+        <option value="Pregnancy">Pregnancy</option>
+        <option value="Product">Product</option>
+        <option value="Real State">Real State</option>
+        <!-- Add more options here -->
+      </select>
+      <select id="location" v-model="location">
+        <option v-if="!location" value="" disabled selected>
+          Select the preferred location
+        </option>
+        <option value="Barcelona">Barcelona</option>
+        <option value="Girona">Girona</option>
+        <option value="Lloret">Lloret de Mar</option>
+        <option value="Other">Other (especify in message)</option>
+      </select>
       <div class="envoirment">
-        <p>
-          <strong>Environment</strong>
-        </p>
-        <p>
-          Choose whether you would like your photosession to be in the comfort
-          of a studio or in the beauty of natural outdoor settings.
-        </p>
+        <p class="title">Choose a place:</p>
         <div class="radio-group">
           <label for="studio" class="radio-container">
-            <input type="radio" id="studio" v-model="inStudio" name="place" />
-            <span class="checkmark"></span>
-            <span class="radio-desc">In Studio</span>
+            <div class="sideRadio">
+              <input type="radio" id="studio" v-model="place" value="Studio" />
+              <span class="checkmark"></span>
+              <span class="radio-desc">In Studio</span>
+            </div>
           </label>
-        </div>
-        <div>
           <label for="outdoors" class="radio-container">
-            <input type="radio" id="outdoors" v-model="inStudio" name="place" />
-            <span class="checkmark"></span>
-            <span class="radio-desc">Outdoors</span>
+            <div class="sideRadio">
+              <input
+                type="radio"
+                id="outdoors"
+                v-model="place"
+                value="Outdoors"
+              />
+              <span class="checkmark"></span>
+              <span class="radio-desc">Outdoors</span>
+            </div>
+          </label>
+          <label for="other" class="radio-container">
+            <div class="sideRadio">
+              <input type="radio" id="other" v-model="place" value="Other" />
+              <span class="checkmark"></span>
+              <span class="radio-desc">Other</span>
+            </div>
           </label>
         </div>
       </div>
-      <div>
-        <p>
-          <strong>Date and Time</strong>
-        </p>
-        <p>
-          Select the desired date and time for your photosession. If you have
-          any flexibility or alternative options, please mention them in the
-          message section.
-        </p>
-
-        <label for="date">Date: <br /> </label>
-        <input
-          type="date"
-          id="date"
-          v-model="selectedDate"
-          :min="minDate"
-          :disabled="isDateDisabled(selectedDate)"
-        />
-      </div>
-      <div class="time-label-imput">
-        <label for="time">Time:</label>
-        <select id="time" v-model="selectedTime">
-          <option v-for="time in availableTimes" :value="time" :key="time">
-            {{ time }}
-          </option>
-        </select>
-      </div>
-      <div>
-        <label for="message"
-          ><strong>Message</strong>
-          <p>
-            Feel free to include any additional information or specific requests
-            you may have. I want to ensure that your photosession is tailor-made
-            to your preferences and needs.
-          </p></label
-        >
-        <textarea id="message" v-model="message" rows="10"></textarea>
-      </div>
+      <select id="date" v-model="selectedDate">
+        <option v-if="!selectedDate" value="" disabled selected>
+          Select the Date
+        </option>
+        <option v-for="date in availableDates" :value="date" :key="date">
+          {{ date }}
+        </option>
+        <option value="Other">Other (specify in the message)</option>
+      </select>
+      <select id="time" v-model="selectedTime">
+        <option v-if="!selectedTime" value="" disabled selected>
+          Select the Time
+        </option>
+        <option v-for="time in availableTimes" :value="time" :key="time">
+          {{ time }}
+        </option>
+      </select>
+      <label for="message">Message </label>
+      <textarea id="message" v-model="message" rows="10"></textarea>
       <div class="btn-container">
         <base-button @click="submitForm">Enviar</base-button>
       </div>
-    </base-card>
+    </form>
   </div>
 </template>
 
@@ -145,11 +110,10 @@ export default {
       email: "",
       sessionType: "",
       location: "",
-      inStudio: false,
+      place: "",
       selectedDate: "",
       selectedTime: "",
       message: "",
-      disabledDates: [],
       availableTimes: [
         "08:00",
         "09:00",
@@ -168,110 +132,135 @@ export default {
         "Other (especify in message)",
         // Add more available times here
       ],
+      availableDates: [],
     };
   },
   methods: {
+    calculateAvailableDates() {
+      this.availableDates = [];
+      const today = new Date();
+
+      for (let i = 0; i < 90; i++) {
+        const currentDate = new Date(today);
+        currentDate.setDate(today.getDate() + i);
+        // Check if the day is either Sunday (0) or Thursday (4)
+        if (currentDate.getDay() === 0 || currentDate.getDay() === 4) {
+          const year = currentDate.getFullYear();
+          let month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+          let day = currentDate.getDate().toString().padStart(2, "0");
+          this.availableDates.push(`${day}-${month}-${year}`);
+        }
+      }
+    },
     submitForm() {
       // Perform form submission logic here
       // Access the form data through the component's data properties
       console.log("Form submitted!");
     },
   },
-  computed: {
-    minDate() {
-      const today = new Date();
-      today.setDate(today.getDate() + 2); // Set minimum date to the day after tomorrow
-      const year = today.getFullYear();
-      let month = (today.getMonth() + 1).toString().padStart(2, "0");
-      let day = today.getDate().toString().padStart(2, "0");
-      return `${year}-${month}-${day}`;
-    },
-    isDateDisabled() {
-      return (date) => {
-        const selectedDate = new Date(date);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Set current date to the start of the day
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1); // Get tomorrow's date
-        return selectedDate < tomorrow;
-      };
-    },
+  created() {
+    this.$nextTick(() => {
+      this.calculateAvailableDates();
+    });
   },
 };
 </script>
 
 <style scoped>
-label {
-  letter-spacing: 0.1rem;
-  font-size: 0.8rem;
-  color: black;
+.container {
+  width: 60%;
+  margin: 0 auto; /* Center the container */
+  padding: 20px; /* Add some padding for spacing */
 }
 
-input[type="text"],
-input[type="email"],
+h2 {
+  text-align: center;
+  padding-bottom: 1rem;
+}
+
+form {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding-top: 3rem;
+}
+
 textarea {
-  font-family: typewriter-extralight;
-  letter-spacing: 0.1rem;
-  border: none;
-  outline: none;
-  background-color: white;
-  border: 0.5px solid rgb(235, 228, 228);
-  font-size: 0.8rem;
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  margin-bottom: 1.5rem;
   padding: 5px;
-  margin-bottom: 2rem;
-  width: 100%;
-  color: black;
+  border: 1px solid #ccc;
+}
+
+label {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.65;
+  padding: 0 0 0.3rem 0.3rem;
+}
+
+.title {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.65;
+  padding-left: 0.3rem;
+  letter-spacing: 0;
 }
 
 select,
 option {
   font-family: typewriter-extralight;
-  letter-spacing: 0.1rem;
   border: none;
   outline: none;
   background-color: white;
-  border: 0.5px solid rgb(235, 228, 228);
-  font-size: 0.8rem;
+  border-bottom: 1px solid #ccc;
+  font-size: 14px;
   padding: 5px 0;
-  margin-bottom: 2rem;
-  width: 30%;
+  margin-bottom: 1.5rem;
   color: black;
   display: block;
 }
 
-input:focus,
-textarea:focus {
-  border: 0.5px solid slategray;
+input[type="text"],
+input[type="email"] {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  margin-bottom: 1.5rem;
+  padding: 5px;
+  border: none;
+  border-bottom: 1px solid #ccc;
 }
 
-.btn-container {
-  display: flex;
-  justify-content: center;
-  margin-top: -1rem;
-}
-
-.envoirment {
-  margin-bottom: 2rem;
-}
-
+/* Radio buttons */
 .radio-group {
   margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
 }
 
 .radio-container {
+  flex: 1;
+  max-width: 33%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 1rem;
+  text-align: center; /* Center the text within the container */
 }
 
 .radio-container input[type="radio"] {
   position: absolute;
   opacity: 0;
 }
-
 .radio-desc {
-  padding-left: 0.8rem;
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.65;
+  padding-left: 0.3rem;
+  letter-spacing: 0;
+  margin-top: 5px; /* Add margin to separate radio button and text */
 }
+
 .radio-container .checkmark {
   position: relative;
   display: inline-block;
@@ -288,7 +277,7 @@ textarea:focus {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: slategray;
+  background-color: #f79f9f;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -296,54 +285,71 @@ textarea:focus {
 
 /* Date and time */
 
-input[type="date"]{
-  width: 30%;
-  font-family: typewriter-extralight;
-  letter-spacing: 0.1rem;
+input[type="date"] {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.65;
   border: none;
   outline: none;
   background-color: white;
-  border: 0.5px solid rgb(235, 228, 228);
-  font-size: 0.8rem;
-  padding: 5px 0;
-  color: black;}
+  border-bottom: 1px solid #ccc;
+  color: black;
+}
 
-input[type="time"] {
-  width: 30%;
-  font-family: typewriter-extralight;
-  letter-spacing: 0.1rem;
+#time {
+  width: 100%;
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.65;
   border: none;
   outline: none;
   background-color: white;
-  border: 0.5px solid rgb(235, 228, 228);
-  font-size: 0.8rem;
-  padding: 5px 0;
-  color: black;}
+  border-bottom: 1px solid #ccc;
+  color: black;
+}
 
-.time-label-imput {
-  margin-top: 1rem;
+.btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+textarea:focus {
+  outline: none;
+  border: 1px solid #f79f9f;
+}
+
+input:focus,
+#session:focus,
+#location:focus,
+#date:focus,
+#time:focus {
+  outline: none;
+  border-bottom: 1px solid #f79f9f;
 }
 
 /* Media queries */
-
-@media (max-width: 768px) {
-  select {
-    width: 50%;
+@media (max-width: 855px) {
+  .container {
+    width: 98%;
+  }
+  .radio-group {
+    flex-direction: column; /* Stack radio buttons vertically on smaller screens */
   }
 
-  input[type="date"],
-  .radio-container input[type="time"] {
-    width: 50%;
+  .radio-container {
+    align-items: flex-start;
+    text-align: left;
+    max-width: 100%;
+  }
+
+  .radio-container:nth-child(2) {
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 }
 
-@media (max-width: 425px) {
-  select {
-    width: 100%;
-  }
-
-  input[type="date"],
-  .radio-container input[type="time"] {
+@media (max-width: 1235px) {
+  form {
     width: 100%;
   }
 }
