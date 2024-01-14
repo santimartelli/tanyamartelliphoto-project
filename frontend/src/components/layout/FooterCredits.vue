@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <p>
-      Site by <a href="https://www.linkedin.com/in/santiagomartelli/" target="_blank">Santiago Martelli</a> &#169; 2023
+      Site by <a href="https://www.linkedin.com/in/santiagomartelli/" target="_blank">Santiago Martelli</a> &#169; 2024
     </p>
   </div>
 </template>

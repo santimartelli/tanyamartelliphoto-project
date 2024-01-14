@@ -20,11 +20,11 @@
       <div class="text-container">
         <h2><span class="highlight">Welcome!</span></h2>
         <p>
-          I am Tatiana, a passionate photographer based in Spain. From family
-          portraits to fashion shots, I specialize in capturing life's most
-          precious moments. Take a look at my portfolio and let's create
-          beautiful memories together. Book a session or reach out for more
-          information.
+          I am Tatiana, a passionate photographer based in Costa Brava, Spain. I specialize
+          in capturing life's most precious moments, from female and family
+          portraits to fashion and events shots. Take a look at my portfolio and
+          let's create beautiful memories together! Book a session or reach out
+          for more information.
         </p>
         <div class="desc-image">
           <img
@@ -39,11 +39,11 @@
         <div class="text-container">
           <h2><span class="highlight">Welcome!</span></h2>
           <p>
-            I am Tatiana, a passionate photographer based in Spain. From family
-            portraits to fashion shots, I specialize in capturing life's most
-            precious moments. Take a look at my portfolio and let's create
-            beautiful memories together. Book a session or reach out for more
-            information.
+            I am Tatiana, a passionate photographer based in Costa Brava, Spain. I specialize
+            in capturing life's most precious moments, from female and family
+            portraits to fashion and events shots. Take a look at my portfolio
+            and let's create beautiful memories together! Book a session or
+            reach out for more information.
           </p>
         </div>
         <div class="desc-image">
@@ -106,19 +106,6 @@
         </SwiperSlide>
       </swiper>
     </section>
-    <!-- <section class="featured-images">
-      <div class="title-wrapper">
-        <h2 class="highlight">Featured Images</h2>
-      </div>
-      <div class="images">
-        <div v-for="picture in pictures" :key="picture.picrureId" class="image">
-          <img
-            :src="picture.picturePath"
-            :alt="'Picture ' + picture.picrureId"
-          />
-        </div>
-      </div>
-    </section> -->
   </div>
 </template>
 
@@ -158,9 +145,10 @@ export default {
     uniquePictures() {
       return this.pictures.filter(
         (picture, index, self) =>
-          self.findIndex((p) => p.categoryName === picture.categoryName) === index
+          self.findIndex((p) => p.categoryName === picture.categoryName) ===
+          index
       );
-    }
+    },
   },
   created() {
     setInterval(this.changeImage, 9000); // Change image every 3 seconds
@@ -285,8 +273,8 @@ h2 {
   padding: 0 0 8rem 0;
 }
 
-.swiper{
-  height: 300px;
+.swiper {
+  height: 400px;
 }
 .swiper-mobile {
   width: 100%;
@@ -296,7 +284,7 @@ h2 {
 .swiper-slide img {
   width: 100%;
   height: auto;
-  min-height: 300px;
+  min-height: 400px;
   object-fit: cover;
 }
 

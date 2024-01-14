@@ -73,4 +73,19 @@ img {
   padding: .5rem 1rem .5rem 0;
   float: left;
 }
+
+/* media queries */
+@media (max-width: 855px) {
+  .container{
+    width: 98%;
+  }
+  img{
+    width: 100%;
+    height: auto;
+    float: none;
+    object-fit: cover;
+    padding: .5rem 0;
+  }
+}
+
 </style>

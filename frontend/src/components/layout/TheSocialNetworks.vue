@@ -35,6 +35,10 @@
       </li>
     </ul>
   </section>
+  <section class="contactDetails">
+      <p>+34 682 833 107</p>
+      <p>tanyamartelliphoto@gmail.com</p>
+  </section>
 </template>
 
 <script>
@@ -43,10 +47,10 @@ export default {};
 
 <style scoped>
 .redes-sociales {
-  height: 100px;
+  height: 85px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   width: 100%;
 }
 
@@ -70,6 +74,21 @@ export default {};
 
 .redes-sociales img:hover {
   opacity: 1;
+}
+
+.contactDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 85px;
+}
+
+.contactDetails p {
+  padding: 0 1rem;
+  font-size: 11px;
+  opacity: 0.7;
 }
 </style>
 
