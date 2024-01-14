@@ -51,4 +51,18 @@ img {
   object-fit: cover;
   padding: 10px;
 }
+
+/* media queries */
+@media (max-width: 855px) {
+  .container{
+    width: 98%;
+  }
+  img{
+    width: 100%;
+    height: auto;
+    float: none;
+    object-fit: cover;
+    padding: .5rem 0;
+  }
+}
 </style>
