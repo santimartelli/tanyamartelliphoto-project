@@ -49,11 +49,15 @@ CREATE TABLE IF NOT EXISTS bookings (
 -- Creación de la tabla "messages"
 CREATE TABLE IF NOT EXISTS messages (
   messageId INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  message TEXT,
+  messageName VARCHAR(255) NOT NULL,
+  messageEmail VARCHAR(255) NOT NULL,
+  messageContent TEXT,
   PRIMARY KEY (messageId)
 );
 
 -- consultas --
+select * from users;
+select * from categories;
 select * from pictures;
+select * from bookings;
+select * from messages;

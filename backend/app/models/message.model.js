@@ -32,7 +32,7 @@ Message.getAll = (result) => {
 
 Message.findById = (messageId, result) => {
   sql.query(
-    "SELECT * FROM message WHERE messageId = ?",
+    "SELECT * FROM messages WHERE messageId = ?",
     messageId,
     (err, res) => {
       if (err) {
