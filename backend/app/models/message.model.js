@@ -54,8 +54,8 @@ Message.findById = (messageId, result) => {
 
 Message.updateById = (messageId, message, result) => {
   sql.query(
-    "UPDATE messages SET messageName = ? WHERE messageId = ?",
-    [message.messageName, messageId],
+    "UPDATE messages SET messageName = ?, messageEmail = ?, messageContent = ? WHERE messageId = ?",
+    [message.messageName, message.messageEmail, message.messageContent, messageId],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
