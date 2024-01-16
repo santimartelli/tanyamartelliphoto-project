@@ -24,17 +24,9 @@
         <option v-if="!sessionType" value="" disabled selected>
           Select the photoshoot type
         </option>
-        <option value="Couple">Couple</option>
-        <option value="Event">Event</option>
-        <option value="Family">Family</option>
-        <option value="Fashion">Fashion</option>
-        <option value="Female Portrait">Female Portrait</option>
-        <option value="Male Portrait">Male Portrait</option>
-        <option value="Newborn">Newborn</option>
-        <option value="Pregnancy">Pregnancy</option>
-        <option value="Product">Product</option>
-        <option value="Real State">Real State</option>
-        <!-- Add more options here -->
+        <option v-for="cat in sortedCategories" :key="cat.categoryId">
+          {{ cat.categoryName }}
+        </option>
       </select>
       <select id="location" v-model="location">
         <option v-if="!location" value="" disabled selected>
@@ -135,11 +127,21 @@ export default {
       availableDates: [],
     };
   },
+  computed: {
+    sortedCategories() {
+      // Get the categories from the store
+      const categories = this.$store.getters["categories/categories"];
+
+      // Sort the categories alphabetically by categoryName
+      return categories.slice().sort((a, b) => {
+        return a.categoryName.localeCompare(b.categoryName);
+      });
+    },
+  },
   methods: {
     calculateAvailableDates() {
       this.availableDates = [];
       const today = new Date();
-
       for (let i = 0; i < 90; i++) {
         const currentDate = new Date(today);
         currentDate.setDate(today.getDate() + i);
