@@ -7,7 +7,7 @@
           <slot name="header">
             <h2>{{ title }}</h2>
             <slot name="actions">
-              <img src="../../assets/Icons/borrar.svg" @click="tryClose">
+              <img src="../../assets/Icons/x.png" @click="tryClose">
             </slot>
           </slot>
 
@@ -80,12 +80,12 @@ dialog {
 }
 
 header {
-  background-color: #000;
-  color: #fff;
+  background-color: #fff;
+  color: #d40303;
   width: 100%;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   padding: 0.9rem;
-  border-bottom: 5px solid #f7bebe;
+  border-bottom: 1px solid #c0c0c0;
 }
 
 header h2 {
@@ -110,12 +110,12 @@ section {
 } */
 
 header img {
-  width: 25px;
+  width: 15px;
   height: auto;
   cursor: pointer;
   position: absolute;
   right: 12px;
-  top: 12px;
+  top: 16px;
   transition: all 0.2s ease-in;
 }
 
