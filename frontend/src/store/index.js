@@ -7,12 +7,16 @@ import getters from "./getters";
 import categoriesModule from "./modules/categories/index.js";
 import picturesModule from "./modules/pictures/index.js";
 import authModule from "./modules/auth/index.js";
+import messagesModule from "./modules/messages/index.js";
+import bookingModule from "./modules/bookings/index.js";
 
 const store = createStore({
   modules: {
     categories: categoriesModule,
     pictures: picturesModule,
     auth: authModule,
+    messages: messagesModule,
+    booking: bookingModule,
   },
   state: {
     screenWidth: window.innerWidth,

@@ -1,74 +1,125 @@
 <template>
-  <div class="container">
-    <h2>I would love to hear from you!</h2>
-    <p>
-      I truly appreciate your interest and consideration in my photography
-      services! If you have any questions, want more information, or would like
-      to get in touch with me, please don't hesitate to reach out using the
-      contact form below. I'll respond to your message as soon as possible.
-    </p>
+  <div>
+    <ok-dialog :show="!!okMessage" @close="closeSuccessMessage">
+      <p>{{ okMessage }}</p>
+    </ok-dialog>
+    <div class="container">
+      <h2>I would love to hear from you!</h2>
+      <p>
+        I truly appreciate your interest and consideration in my photography
+        services! If you have any questions, want more information, or would
+        like to get in touch with me, please don't hesitate to reach out using
+        the contact form below. I'll respond to your message as soon as
+        possible.
+      </p>
 
-    <div>
-      <form>
-        <input
-          type="text"
-          v-model="name"
-          name="name"
-          id="name"
-          placeholder="Name"
-        />
-        <input
-          type="text"
-          v-model="email"
-          id="email"
-          placeholder="Email"
+      <div>
+        <form @submit.prevent="addNewMessage">
+          <input
+            type="text"
+            v-model.trim="newMessageName"
+            name="messageName"
+            id="messageName"
+            placeholder="Name"
           />
-          <label for="message">Message</label>
-        <textarea
-          id="message"
-          rows="10"
-          name="message"
-          v-model="message"
-        ></textarea>
-        <div class="btn-container">
-          <base-button @click="submitForm" value="Enviar">Enviar</base-button>
-        </div>
-      </form>
+          <div v-if="!formIsValidName" class="errors">
+            Please enter a valid name
+          </div>
+
+          <input
+            type="text"
+            v-model.trim="newMessageEmail"
+            id="messageEmail"
+            placeholder="Email"
+          />
+          <div v-if="!formIsValidEmail" class="errors">
+            Please enter a valid email address
+          </div>
+
+          <label for="messageContent">Message</label>
+          <textarea
+            id="messageContent"
+            rows="10"
+            name="messageContent"
+            v-model.trim="newMessageContent"
+          ></textarea>
+          <div v-if="!formIsValidContent" class="errors">
+            Please enter a message
+          </div>
+          <div class="btn-container">
+            <base-button @click="addNewMessage" value="Enviar"
+              >Enviar</base-button
+            >
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import useValidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import OkDialog from "../components/ui/OkDialog.vue";
 
 export default {
+  components: {
+    OkDialog,
+  },
   data() {
     return {
-      v$: useValidate(),
-      name: "",
-      email: "",
-      message: "",
-    };
-  },
-  validations() {
-    return {
-      name: { required },
-      email: { required },
-      message: { required },
+      newMessageName: "",
+      newMessageEmail: "",
+      newMessageContent: "",
+      formIsValidName: true,
+      formIsValidEmail: true,
+      formIsValidContent: true,
+      formIsValid: true,
+      okMessage: null,
     };
   },
   methods: {
-    submitForm() {
-      this.v$.$validate();
-      if (!this.v$.$error) {
-        alert("Mensaje enviado correctamente");
-      } else {
-        alert(
-          "Se ha producido un error, por favor rellena los campos correctamente"
-        );
+    addNewMessage() {
+      this.formIsValid = true;
+
+      // Validate Name
+      this.formIsValidName = !!this.newMessageName.trim();
+      // Validate Email
+      this.formIsValidEmail = this.isValidEmail(this.newMessageEmail.trim());
+      // Validate Message Content
+      this.formIsValidContent = !!this.newMessageContent.trim();
+
+      // Check overall form validity
+      this.formIsValid =
+        this.formIsValidName &&
+        this.formIsValidEmail &&
+        this.formIsValidContent;
+
+      if (this.formIsValid) {
+        this.$store.dispatch("messages/addNewMessage", {
+          messageName: this.newMessageName,
+          messageEmail: this.newMessageEmail,
+          messageContent: this.newMessageContent,
+        });
+        this.okMessage = "Your message has been sent successfully!";
       }
     },
+    isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
+    closeSuccessMessage() {
+      // Reset the form and hide the success message
+      this.newMessageName = "";
+      this.newMessageEmail = "";
+      this.newMessageContent = "";
+      this.formIsValidName = true;
+      this.formIsValidEmail = true;
+      this.formIsValidContent = true;
+      this.formIsValid = true;
+      this.okMessage = null;
+    },
+  },
+  created() {
+    this.okMessage = null;
   },
 };
 </script>
@@ -105,13 +156,13 @@ textarea {
   font-family: Typewriter-light, Helvetica, Arial, sans-serif;
   margin-bottom: 1.5rem;
   padding: 5px;
-  border: 1px solid #ccc;;
+  border: 1px solid #ccc;
 }
 
 label {
   font-family: Typewriter-light, Helvetica, Arial, sans-serif;
   font-size: 14px;
-  opacity: .65;
+  opacity: 0.65;
   padding: 0 5px 5px 5px;
 }
 
@@ -129,17 +180,29 @@ textarea:focus {
   justify-content: center;
 }
 
+.errors {
+  color: red;
+  font-size: 14px;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+ok-dialog p{
+  font-size: 1.2rem;
+  color: #00aa55;
+  padding: 1rem;
+}
+
 /* media queries */
 @media (max-width: 855px) {
-  .container{
+  .container {
     width: 98%;
   }
 }
 
 @media (max-width: 1235px) {
-  form{
+  form {
     width: 100%;
   }
 }
-
 </style>

@@ -3,16 +3,9 @@
     <div v-if="show" @click="tryClose" class="backdrop"></div>
     <transition name="dialog">
       <dialog open v-if="show">
-        <!-- <header>
-          <slot name="header">
-            <h2>{{ title }}</h2>
-            <slot name="actions">
-            </slot>
-          </slot>
-        </header> -->
         <section class="content">
           <slot></slot>
-          <base-button @click="tryClose">Close</base-button>
+            <base-button @click="closeSuccessMessage">Close</base-button>
         </section>
       </dialog>
     </transition>
@@ -30,18 +23,26 @@ export default {
       type: String,
       required: false,
     },
-    fixed: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
+  },
+  data() {
+    return {
+      alertOk: false,
+    };
   },
   emits: ["close"],
   methods: {
     tryClose() {
-      if (this.fixed) {
-        return;
+      if (this.alertOk) {
+        // Reset the success state and close the dialog
+        this.alertOk = 0;
+      } else {
+        // Close the dialog
+        this.$emit("close");
       }
+    },
+    closeSuccessMessage() {
+      // Reset the success state and close the dialog
+      this.alertOk = 0;
       this.$emit("close");
     },
   },
@@ -68,6 +69,7 @@ dialog {
   z-index: 100;
   border-radius: 5px;
   border: none;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 0;
   margin: 0;
   overflow: hidden;
@@ -79,7 +81,7 @@ section {
 }
 
 .content {
-  color: red;
+  color: #006016;
   display: flex;
   flex-direction: column;
   justify-content: center;
