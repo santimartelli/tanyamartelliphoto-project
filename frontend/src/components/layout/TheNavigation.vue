@@ -12,13 +12,6 @@
               >HOME</router-link
             >
           </li>
-          <li>
-            <router-link
-              class="link sparkle u-hover--sparkle"
-              :to="{ name: 'about' }"
-              >SOBRE MÍ</router-link
-            >
-          </li>
           <li
             @mouseover="showDropdown = true"
             @mouseleave="showDropdown = false"
@@ -45,6 +38,13 @@
               </ul>
             </transition>
           </li>
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'prices' }"
+              >PRICES</router-link
+            >
+          </li>
         </div>
         <li class="logo">
           <div class="title">
@@ -57,7 +57,7 @@
             <router-link
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'booking' }"
-              >RESERVAS</router-link
+              >BOOKINGS</router-link
             >
           </li>
           <li>
@@ -65,7 +65,7 @@
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'contact' }"
               @click="toggleMobileNav"
-              >CONTACTO</router-link
+              >CONTACT</router-link
             >
           </li>
           <li>
@@ -104,13 +104,6 @@
               >HOME</router-link
             >
           </li>
-          <li>
-            <router-link
-              class="link sparkle u-hover--sparkle"
-              :to="{ name: 'about' }"
-              >SOBRE MÍ</router-link
-            >
-          </li>
           <li
             @mouseover="showDropdown = true"
             @mouseleave="showDropdown = false"
@@ -140,8 +133,15 @@
           <li>
             <router-link
               class="link sparkle u-hover--sparkle"
+              :to="{ name: 'prices' }"
+              >PRICES</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              class="link sparkle u-hover--sparkle"
               :to="{ name: 'booking' }"
-              >RESERVAS</router-link
+              >BOOKINGS</router-link
             >
           </li>
           <li>
@@ -149,7 +149,7 @@
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'contact' }"
               @click="toggleMobileNav"
-              >CONTACTO</router-link
+              >CONTACT</router-link
             >
           </li>
           <li>
@@ -204,14 +204,6 @@
                 >HOME</router-link
               >
             </li>
-            <li>
-              <router-link
-                class="link sparkle u-hover--sparkle"
-                :to="{ name: 'about' }"
-                @click="toggleMobileNav"
-                >SOBRE MÍ</router-link
-              >
-            </li>
             <li @click="toggleShowDropdown">
               <a
                 class="link sparkle u-hover--sparkle porfolio-arrow-container"
@@ -238,13 +230,20 @@
                 </ul>
               </transition>
             </li>
-
+            <li>
+              <router-link
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'prices' }"
+                @click="toggleMobileNav"
+                >PRICES</router-link
+              >
+            </li>
             <li>
               <router-link
                 class="link sparkle u-hover--sparkle"
                 :to="{ name: 'booking' }"
                 @click="toggleMobileNav"
-                >RESERVAS</router-link
+                >BOOKINGS</router-link
               >
             </li>
             <li>
@@ -252,7 +251,7 @@
                 class="link sparkle u-hover--sparkle"
                 :to="{ name: 'contact' }"
                 @click="toggleMobileNav"
-                >CONTACTO</router-link
+                >CONTACT</router-link
               >
             </li>
             <li>

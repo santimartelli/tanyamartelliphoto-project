@@ -433,13 +433,13 @@ h2 {
 }
 
 @media (max-width: 854px) {
-  .welcome-message,
-  .featured-images {
+  .welcome-message {
     width: 100%;
     padding: 8rem 0;
   }
 
   .text-container {
+    margin-top: -3rem;
     display: flex;
     flex-direction: column;
     align-items: center;
