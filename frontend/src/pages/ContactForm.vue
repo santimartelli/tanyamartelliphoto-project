@@ -1,6 +1,7 @@
 <template>
   <div>
     <ok-dialog :show="!!okMessage" @close="closeSuccessMessage">
+      <h2>Message successfully sent!</h2>
       <p>{{ okMessage }}</p>
     </ok-dialog>
     <div class="container">
@@ -99,7 +100,7 @@ export default {
           messageEmail: this.newMessageEmail,
           messageContent: this.newMessageContent,
         });
-        this.okMessage = "Your message has been sent successfully!";
+        this.okMessage = "Thank you for conctact me! I will get back to you as soon as possible!";
       }
     },
     isValidEmail(email) {
@@ -131,7 +132,7 @@ export default {
   padding: 20px; /* Add some padding for spacing */
 }
 
-h2 {
+.container > h2 {
   text-align: center;
   padding-bottom: 1rem;
 }
@@ -187,11 +188,6 @@ textarea:focus {
   margin-bottom: 1rem;
 }
 
-ok-dialog p{
-  font-size: 1.2rem;
-  color: #00aa55;
-  padding: 1rem;
-}
 
 /* media queries */
 @media (max-width: 855px) {

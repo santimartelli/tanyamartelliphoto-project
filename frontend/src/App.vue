@@ -1,15 +1,19 @@
 <template>
-  <authenticated-nav v-if="isLoggedIn && isAdminPanel"></authenticated-nav>
-  <the-navigation v-else></the-navigation>
-  <main id="page-wrap">
-    <router-view v-slot="slotProps">
-      <transition name="route" mode="out-in">
-        <component :is="slotProps.Component"></component>
-      </transition>
-    </router-view>
-    <the-social-networks v-if="!isAdminPanel"></the-social-networks>
-    <footer-credits></footer-credits>
-  </main>
+  <div id="app">
+    <authenticated-nav v-if="isLoggedIn && isAdminPanel"></authenticated-nav>
+    <the-navigation v-else></the-navigation>
+    <main id="page-wrap">
+      <router-view v-slot="slotProps">
+        <transition name="route" mode="out-in">
+          <component :is="slotProps.Component"></component>
+        </transition>
+      </router-view>
+    </main>
+    <div id="footer">
+      <the-social-networks v-if="!isAdminPanel"></the-social-networks>
+      <footer-credits></footer-credits>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -33,9 +37,9 @@ export default {
     isAdminPanel() {
       return this.$route.name === "admin";
     },
-    didAutoLogout(){
+    didAutoLogout() {
       return this.$store.getters.didAutoLogout;
-    }
+    },
   },
   created() {
     this.getCategories();
@@ -43,11 +47,11 @@ export default {
     this.$store.dispatch("tryLogin");
   },
   watch: {
-    didAutoLogout(curValue, oldValue){
-      if(curValue && curValue !== oldValue){
-        this.$router.replace({name: "login"});
+    didAutoLogout(curValue, oldValue) {
+      if (curValue && curValue !== oldValue) {
+        this.$router.replace({ name: "login" });
       }
-    }
+    },
   },
   mounted() {
     window.addEventListener("resize", this.updateScreenWidth);
@@ -93,6 +97,20 @@ export default {
 
 html {
   font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#page-wrap {
+  flex: 1 0 auto;
+}
+
+#footer {
+  flex-shrink: 0;
 }
 
 h2 {

@@ -81,7 +81,6 @@ section {
 }
 
 .content {
-  color: #006016;
   display: flex;
   flex-direction: column;
   justify-content: center;

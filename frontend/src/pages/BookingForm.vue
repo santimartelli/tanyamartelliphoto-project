@@ -1,106 +1,149 @@
 <template>
-  <div class="container">
-    <h2><span class="highlight">Book Your PhotoShoot!</span></h2>
-    <p>
-      Thank you for your interest in booking a photoshoot with me! Please fill
-      out the form below with your details and preferences, and I will get back
-      to you as soon as possible to finalize the details.
-    </p>
-    <p>
-      Feel free to include any additional information or specific requests you
-      may have. I want to ensure that your photosession is tailor-made to your
-      preferences and needs.
-    </p>
-    <p>
-      Once I receive your booking request, I will review the form and contact
-      you to confirm the availability and discuss further details. I am
-      dedicated to providing you with an exceptional experience and capturing
-      beautiful moments that will be cherished for a lifetime.
-    </p>
-    <form>
-      <input type="text" id="name" v-model="name" placeholder="Name" />
-      <input type="email" id="email" v-model="email" placeholder="Email" />
-      <select id="session" v-model="sessionType">
-        <option v-if="!sessionType" value="" disabled selected>
-          Select the photoshoot type
-        </option>
-        <option v-for="cat in sortedCategories" :key="cat.categoryId">
-          {{ cat.categoryName }}
-        </option>
-      </select>
-      <select id="location" v-model="location">
-        <option v-if="!location" value="" disabled selected>
-          Select the preferred location
-        </option>
-        <option value="Barcelona">Barcelona</option>
-        <option value="Girona">Girona</option>
-        <option value="Lloret">Lloret de Mar</option>
-        <option value="Other">Other (especify in message)</option>
-      </select>
-      <div class="envoirment">
-        <p class="title">Choose a place:</p>
-        <div class="radio-group">
-          <label for="studio" class="radio-container">
-            <div class="sideRadio">
-              <input type="radio" id="studio" v-model="place" value="Studio" />
-              <span class="checkmark"></span>
-              <span class="radio-desc">In Studio</span>
-            </div>
-          </label>
-          <label for="outdoors" class="radio-container">
-            <div class="sideRadio">
-              <input
-                type="radio"
-                id="outdoors"
-                v-model="place"
-                value="Outdoors"
-              />
-              <span class="checkmark"></span>
-              <span class="radio-desc">Outdoors</span>
-            </div>
-          </label>
-          <label for="other" class="radio-container">
-            <div class="sideRadio">
-              <input type="radio" id="other" v-model="place" value="Other" />
-              <span class="checkmark"></span>
-              <span class="radio-desc">Other</span>
-            </div>
-          </label>
+  <div>
+    <ok-dialog :show="!!okMessage" @close="closeSuccessMessage">
+      <h2>Booking request successfully sent!</h2>
+      <p>{{ okMessage }}</p>
+    </ok-dialog>
+
+    <div class="container">
+      <h2><span class="highlight">Book Your PhotoShoot!</span></h2>
+      <p>
+        Thank you for your interest in booking a photoshoot with me! Please fill
+        out the form below with your details and preferences, and I will get
+        back to you as soon as possible to finalize the details.
+      </p>
+      <p>
+        Feel free to include any additional information or specific requests you
+        may have. I want to ensure that your photosession is tailor-made to your
+        preferences and needs.
+      </p>
+      <p>
+        Once I receive your booking request, I will review the form and contact
+        you to confirm the availability and discuss further details. I am
+        dedicated to providing you with an exceptional experience and capturing
+        beautiful moments that will be cherished for a lifetime.
+      </p>
+      <form @submit.prevent="submitForm">
+        <input type="text" id="name" v-model="name" placeholder="Name" />
+        <div v-if="!formIsValidName" class="errors">
+          Please enter a valid name.
         </div>
-      </div>
-      <select id="date" v-model="selectedDate">
-        <option v-if="!selectedDate" value="" disabled selected>
-          Select the Date
-        </option>
-        <option v-for="date in availableDates" :value="date" :key="date">
-          {{ date }}
-        </option>
-        <option value="Other">Other (specify in the message)</option>
-      </select>
-      <select id="time" v-model="selectedTime">
-        <option v-if="!selectedTime" value="" disabled selected>
-          Select the Time
-        </option>
-        <option v-for="time in availableTimes" :value="time" :key="time">
-          {{ time }}
-        </option>
-      </select>
-      <label for="message">Message </label>
-      <textarea id="message" v-model="message" rows="10"></textarea>
-      <div class="btn-container">
-        <base-button @click="submitForm">Enviar</base-button>
-      </div>
-    </form>
+        <input type="email" id="email" v-model="email" placeholder="Email" />
+        <div v-if="!formIsValidEmail" class="errors">
+          Please enter a valid email address.
+        </div>
+        <select id="session" v-model="categoryId">
+          <option v-if="!categoryId" value="" disabled selected>
+            Select the photoshoot type
+          </option>
+          <option
+            v-for="cat in sortedCategories"
+            :key="cat.categoryId"
+            :value="cat.categoryId"
+          >
+            {{ cat.categoryName }}
+          </option>
+        </select>
+        <div v-if="!formIsValidCategory" class="errors">
+          Please select a photoshoot type.
+        </div>
+        <select id="location" v-model="location">
+          <option v-if="!location" value="" disabled selected>
+            Select the preferred location
+          </option>
+          <option value="Barcelona">Barcelona</option>
+          <option value="Girona">Girona</option>
+          <option value="Lloret">Lloret de Mar</option>
+          <option value="Other">Other (especify in message)</option>
+        </select>
+        <div v-if="!formIsValidLocation" class="errors">
+          Please select a location.
+        </div>
+        <div class="envoirment">
+          <p class="title">Choose a place:</p>
+          <div class="radio-group">
+            <label for="studio" class="radio-container">
+              <div class="sideRadio">
+                <input
+                  type="radio"
+                  id="studio"
+                  v-model="place"
+                  value="Studio"
+                />
+                <span class="checkmark"></span>
+                <span class="radio-desc">In Studio</span>
+              </div>
+            </label>
+            <label for="outdoors" class="radio-container">
+              <div class="sideRadio">
+                <input
+                  type="radio"
+                  id="outdoors"
+                  v-model="place"
+                  value="Outdoors"
+                />
+                <span class="checkmark"></span>
+                <span class="radio-desc">Outdoors</span>
+              </div>
+            </label>
+            <label for="other" class="radio-container">
+              <div class="sideRadio">
+                <input type="radio" id="other" v-model="place" value="Other" />
+                <span class="checkmark"></span>
+                <span class="radio-desc">Other</span>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div v-if="!formIsValidPlace" class="errors">
+          Please select a place.
+        </div>
+        <select id="date" v-model="selectedDate">
+          <option v-if="!selectedDate" value="" disabled selected>
+            Select the Date
+          </option>
+          <option v-for="date in availableDates" :value="date" :key="date">
+            {{ date }}
+          </option>
+          <option value="Other">Other (specify in the message)</option>
+        </select>
+        <div v-if="!formIsValidDate" class="errors">Please select a date.</div>
+        <select id="time" v-model="selectedTime">
+          <option v-if="!selectedTime" value="" disabled selected>
+            Select the Time
+          </option>
+          <option v-for="time in availableTimes" :value="time" :key="time">
+            {{ time }}
+          </option>
+        </select>
+        <div v-if="!formIsValidTime" class="errors">
+          Please select a location.
+        </div>
+        <label for="message">Message </label>
+        <textarea id="message" v-model="message" rows="10"></textarea>
+        <div v-if="!formIsValidMessage" class="errors">
+          Please enter a message.
+        </div>
+        <div class="btn-container">
+          <base-button @click="submitForm">Enviar</base-button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
-<script>
+<script>8
+import OkDialog from "../components/ui/OkDialog.vue";
+
 export default {
+  components: {
+    OkDialog,
+  },
   data() {
     return {
       name: "",
       email: "",
-      sessionType: "",
+      categoryId: "",
       location: "",
       place: "",
       selectedDate: "",
@@ -125,6 +168,16 @@ export default {
         // Add more available times here
       ],
       availableDates: [],
+      formIsValidName: true,
+      formIsValidEmail: true,
+      formIsValidCategory: true,
+      formIsValidLocation: true,
+      formIsValidPlace: true,
+      formIsValidDate: true,
+      formIsValidTime: true,
+      formIsValidMessage: true,
+      formIsValid: true,
+      okMessage: null,
     };
   },
   computed: {
@@ -154,10 +207,97 @@ export default {
         }
       }
     },
+    isValidEmail(email) {
+      // Use a more comprehensive email validation regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
+    closeSuccessMessage(){
+      // Reset the form and hide the success message
+      this.name = "";
+      this.email = "";
+      this.categoryId = "";
+      this.location = "";
+      this.place = "";
+      this.selectedDate = "";
+      this.selectedTime = "";
+      this.message = "";
+      this.availableTimes = [
+        "08:00",
+        "09:00",
+        "10:00",
+        "11:00",
+        "12:00",
+        "13:00",
+        "14:00",
+        "15:00",
+        "16:00",
+        "17:00",
+        "18:00",
+        "19:00",
+        "20:00",
+        "21:00",
+        "Other (especify in message)",
+        // Add more available times here
+      ];
+      this.availableDates = [];
+      this.formIsValidName = true;
+      this.formIsValidEmail = true;
+      this.formIsValidCategory = true;
+      this.formIsValidLocation = true;
+      this.formIsValidPlace = true;
+      this.formIsValidDate = true;
+      this.formIsValidTime = true;
+      this.formIsValidMessage = true;
+      this.formIsValid = true;
+      this.okMessage = null;
+    },
     submitForm() {
       // Perform form submission logic here
       // Access the form data through the component's data properties
-      console.log("Form submitted!");
+      this.formIsValid = true;
+      // Validate Name
+      this.formIsValidName = !!this.name.trim();
+      // Validate Email
+      this.formIsValidEmail = this.isValidEmail(this.email.trim());
+      // Validate Category
+      this.formIsValidCategory = !!this.categoryId;
+      // Validate Location
+      this.formIsValidLocation = !!this.location.trim();
+      // Validate Place
+      this.formIsValidPlace = !!this.place.trim();
+      // Validate Date
+      this.formIsValidDate = !!this.selectedDate.trim();
+      // Validate Time
+      this.formIsValidTime = !!this.selectedTime.trim();
+      // Validate Message
+      this.formIsValidMessage = !!this.message.trim();
+      // Check overall form validity
+      this.formIsValid =
+        this.formIsValidName &&
+        this.formIsValidEmail &&
+        this.formIsValidCategory &&
+        this.formIsValidLocation &&
+        this.formIsValidPlace &&
+        this.formIsValidDate &&
+        this.formIsValidTime &&
+        this.formIsValidMessage;
+
+      // If form is valid, perform submission logic
+      if (this.formIsValid) {
+        // Your form submission logic here
+        this.$store.dispatch("bookings/addNewBooking", {
+          name: this.name,
+          email: this.email,
+          categoryId: this.categoryId,
+          location: this.location,
+          place: this.place,
+          selectedDate: this.selectedDate,
+          selectedTime: this.selectedTime,
+          message: this.message,
+        });
+        this.okMessage = "Thank you for your booking request! I will get back to you as soon as possible to finalize the details.";
+      }
     },
   },
   created() {
@@ -175,7 +315,7 @@ export default {
   padding: 20px; /* Add some padding for spacing */
 }
 
-h2 {
+.container > h2 {
   text-align: center;
   padding-bottom: 1rem;
 }
@@ -327,6 +467,13 @@ input:focus,
 #time:focus {
   outline: none;
   border-bottom: 1px solid #f79f9f;
+}
+
+.errors {
+  color: red;
+  font-size: 14px;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
 }
 
 /* Media queries */
