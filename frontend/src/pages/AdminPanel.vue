@@ -1,5 +1,10 @@
 <template>
   <div>
+    <ok-dialog :show="!!okMessage" @close="closeDialog">
+      <p><strong>Name:</strong> {{ selectedMessage.messageName }}</p>
+      <p><strong>Email:</strong> {{ selectedMessage.messageEmail }}</p>
+      <p><strong>Message: </strong>{{ okMessage }}</p>
+    </ok-dialog>
     <!--Feedback message dialog-->
     <transition name="feedback" appear>
       <div class="feedbackOk" v-if="feedbackOk === 1">
@@ -20,9 +25,19 @@
 
     <div class="tabs">
       <!-- Tab 1 -->
-      <input type="radio" name="tabs" id="tabone" />
-      <label for="tabone">Pictures</label>
-      <div class="tab">
+      <input
+        type="radio"
+        name="tabs"
+        id="tabone"
+        v-model="currentTab"
+        @click="toggleTab('tabone')"
+      />
+      <label
+        :style="{ background: currentTab === 'tabone' ? '#fff' : '' }"
+        for="tabone"
+        >Pictures</label
+      >
+      <div class="tab" v-show="currentTab === 'tabone'">
         <!-- Inside the tab -->
         <!-- Botón para añadir imagenes -->
         <base-button class="buttonAdd" @click="addImages = !addImages"
@@ -160,10 +175,20 @@
           </div>
         </div>
       </div>
-      <!-- Tab 2 -->
-      <input type="radio" name="tabs" id="tabtwo" />
-      <label for="tabtwo">Categories</label>
-      <div class="tab">
+      <!-- Tab 2 Categories -->
+      <input
+        type="radio"
+        name="tabs"
+        id="tabtwo"
+        v-model="currentTab"
+        @click="toggleTab('tabtwo')"
+      />
+      <label
+        :style="{ background: currentTab === 'tabtwo' ? '#fff' : '' }"
+        for="tabtwo"
+        >Categories</label
+      >
+      <div class="tab" v-show="currentTab === 'tabtwo'">
         <!-- Inside the tab -->
         <!-- Botón para añadir categorias -->
         <base-button class="buttonAdd" @click="addCategory = !addCategory"
@@ -252,11 +277,113 @@
           </table>
         </div>
       </div>
-      <!-- Tab 3 -->
-      <input type="radio" name="tabs" id="tabthree" />
-      <label for="tabthree">Requests</label>
-      <div class="tab">
-        <h1>Tab Three Content</h1>
+      <!-- Tab 3 Messages -->
+      <input
+        type="radio"
+        name="tabs"
+        id="tabthree"
+        v-model="currentTab"
+        @click="toggleTab('tabthree')"
+      />
+      <label
+        :style="{ background: currentTab === 'tabthree' ? '#fff' : '' }"
+        for="tabthree"
+        >Messages</label
+      >
+      <div class="tab" v-show="currentTab === 'tabthree'">
+        <div>
+          <table class="messages">
+            <thead>
+              <tr>
+                <th class="th-1">Id</th>
+                <th class="th-2">Name</th>
+                <th class="th-3">Email</th>
+                <th class="th-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="message in messages" :key="message.messageId">
+                <td>{{ message.messageId }}</td>
+                <td>{{ message.messageName }}</td>
+                <td>{{ message.messageEmail }}</td>
+                <td class="actions-container">
+                  <div v-if="iconsActionsMB">
+                    <img
+                      class="icon"
+                      src="../assets/Icons/view.png"
+                      alt="Open message"
+                      title="Open message"
+                      @click="viewMessage(message)"
+                    />
+                  </div>
+                  <div
+                    v-if="!iconsActionsMB"
+                    class="icon-container view"
+                    @click="viewMessage(message)"
+                  >
+                    <img src="../assets/Icons/view.png" alt="view message" />
+                    <div>OPEN MESSAGE</div>
+                  </div>
+                  <div v-if="iconsActionsMB">
+                    <img
+                      class="icon"
+                      src="../assets/Icons/responder.png"
+                      alt="Answer message"
+                      title="Answer message"
+                      @click="answerMessage(message.messageEmail)"
+                    />
+                  </div>
+                  <div
+                    v-if="!iconsActionsMB"
+                    class="icon-container view"
+                    @click="answerMessage(message.messageEmail)"
+                  >
+                    <img
+                      src="../assets/Icons/responder.png"
+                      alt="Answer message"
+                    />
+                    <div>REPLY MESSAGE</div>
+                  </div>
+                  <div v-if="iconsActionsMB">
+                    <img
+                      class="icon"
+                      src="../assets/Icons/delete.png"
+                      alt="Delete message"
+                      title="Delete message"
+                      @click="deleteMessage(message.messageId)"
+                    />
+                  </div>
+                  <div
+                    v-if="!iconsActionsMB"
+                    class="icon-container delete"
+                    @click="deleteMessage(message.messageId)"
+                  >
+                    <img
+                      src="../assets/Icons/delete.png"
+                      alt="Delete message"
+                    />
+                    <div>DELETE MESSAGE</div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <input
+        type="radio"
+        name="tabs"
+        id="tabfour"
+        v-model="currentTab"
+        @click="toggleTab('tabfour')"
+      />
+      <label
+        :style="{ background: currentTab === 'tabfour' ? '#fff' : '' }"
+        for="tabfour"
+        >Booking Requests</label
+      >
+      <div class="tab" v-show="currentTab === 'tabfour'">
+        <h1>Booking Requests</h1>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
       </div>
     </div>
@@ -265,10 +392,15 @@
 
 <script>
 import axios from "axios";
+import OkDialog from "../components/ui/OkDialog.vue";
 
 export default {
+  components: {
+    OkDialog,
+  },
   data() {
     return {
+      currentTab: "tabone",
       files: [],
       addImages: false,
       addCategory: false,
@@ -280,7 +412,11 @@ export default {
       selectedImage: null,
       showImageModal: false,
       iconsActions: false,
+      iconsActionsMB: false,
       newCategoryName: "",
+      messageEmail: null,
+      selectedMessage: null,
+      okMessage: null,
     };
   },
   computed: {
@@ -290,8 +426,41 @@ export default {
     pictures() {
       return this.$store.getters["pictures/pictures"];
     },
+    messages() {
+      return this.$store.getters["messages/messages"];
+    },
+    bookings() {
+      return this.$store.getters["bookings/bookings"];
+    },
   },
   methods: {
+    //GENERAL METHODS
+    toggleTab(tab) {
+      console.log("Clicked tab:", tab);
+      // Toggle the value of currentTab
+      this.currentTab = this.currentTab === tab ? "" : tab;
+    },
+    showIconsActions() {
+      // Get the window width
+      const windowWidth = window.innerWidth;
+      // If width is less than or equal to 821px, set iconsActions to true
+      if (windowWidth <= 821) {
+        this.iconsActions = true;
+      } else {
+        this.iconsActions = false;
+      }
+    },
+    showIconsActionsMB() {
+      // Get the window width
+      const windowWidth = window.innerWidth;
+      // If width is less than or equal to 821px, set iconsActions to true
+      if (windowWidth <= 1067) {
+        this.iconsActionsMB = true;
+      } else {
+        this.iconsActionsMB = false;
+      }
+    },
+    //PICTURES METHODS
     handleFileUpload(event) {
       this.files = Array.from(event.target.files).map((file) => {
         const reader = new FileReader();
@@ -404,16 +573,7 @@ export default {
       this.showImageModal = false;
       document.body.style.overflow = "auto";
     },
-    showIconsActions() {
-      // Get the window width
-      const windowWidth = window.innerWidth;
-      // If width is less than or equal to 821px, set iconsActions to true
-      if (windowWidth <= 821) {
-        this.iconsActions = true;
-      } else {
-        this.iconsActions = false;
-      }
-    },
+   //CATEGORIES METHODS
     async editCategory(categoryId) {
       const categoryName = prompt("Enter the new category name");
 
@@ -453,7 +613,7 @@ export default {
           this.feedbackMessage = "";
           this.feedbackOk = 3;
         }, 3000);
-      }else{
+      } else {
         this.feedbackMessage = "Please enter a category name";
         this.feedbackOk = 2;
         setTimeout(() => {
@@ -467,19 +627,20 @@ export default {
       this.newCategoryName = "";
       this.addCategory = false;
     },
-    deleteCategory(categoryId){
+    deleteCategory(categoryId) {
       // Check if there are pictures with this category
       const picturesWithCategory = this.pictures.filter(
         (picture) => picture.categoryId == categoryId
       );
-      if(picturesWithCategory.length > 0){
-        this.feedbackMessage = "There are pictures with this category, please delete them first";
+      if (picturesWithCategory.length > 0) {
+        this.feedbackMessage =
+          "There are pictures with this category, please delete them first";
         this.feedbackOk = 2;
         setTimeout(() => {
           this.feedbackMessage = "";
           this.feedbackOk = 3;
         }, 3000);
-      }else{
+      } else {
         try {
           this.$store.dispatch("categories/deleteCategory", categoryId);
           this.feedbackMessage = "Category deleted succesfully";
@@ -493,15 +654,45 @@ export default {
           this.feedbackOk = 3;
         }, 3000);
       }
-    }
+    },
+    //MESSAGES METHODS
+    viewMessage(message) {
+      console.log(message);
+      this.selectedMessage = message;
+      this.okMessage = message.messageContent;
+    },
+    closeDialog() {
+      this.okMessage = null;
+      this.selectedMessage = null;
+    },
+    answerMessage(messageEmail) {
+      // A implementar en el futuro
+      console.log(`Sending email to: ${messageEmail}`);
+    },
+    deleteMessage(messageId) {
+        try {
+          this.$store.dispatch("messages/deleteMessage", messageId);
+          this.feedbackMessage = "Message deleted succesfully";
+          this.feedbackOk = 1;
+        } catch (error) {
+          this.feedbackMessage = "Error deleting the message, please try again";
+          this.feedbackOk = 2;
+        }
+        setTimeout(() => {
+          this.feedbackMessage = "";
+          this.feedbackOk = 3;
+        }, 3000);
+      }
   },
   created() {
     this.showIconsActions();
+    this.showIconsActionsMB();
   },
   watch: {
     // Watch for changes in the window width
     "$store.getters.screenWidth"() {
       this.showIconsActions();
+      this.showIconsActionsMB();
     },
   },
 };
@@ -923,6 +1114,7 @@ tr:nth-child(even) {
   order: 1; /* Put the labels first */
   letter-spacing: 0.02rem;
   font-size: 0.8rem;
+  flex-grow: 1;
   display: block;
   padding: 1rem 2rem;
   margin-right: 0.2rem;
@@ -934,15 +1126,11 @@ tr:nth-child(even) {
   order: 99; /* Put the tabs last */
   flex-grow: 1;
   width: 100%;
-  display: none;
   padding: 1rem;
   background: #fff;
 }
 .tabs input[type="radio"] {
   display: none;
-}
-.tabs input[type="radio"]:checked + label {
-  background: #fff;
 }
 .tabs input[type="radio"]:checked + label + .tab {
   display: block;
@@ -959,9 +1147,24 @@ tr:nth-child(even) {
   background-color: #fdf6df;
 }
 
+/*Table messages*/
+.messages .th-1 {
+  width: 10%;
+}
+
+.messages .th-2,
+.messages .th-3 {
+  width: 20%;
+}
+
 /**
  * Responsive
  */
+@media (max-width: 1067px) {
+  .messages .actions-container {
+    justify-content: space-evenly;
+  }
+}
 @media (max-width: 821px) {
   .tabs .tab,
   .tabs label {
@@ -1010,6 +1213,10 @@ tr:nth-child(even) {
 
   .add-category-input {
     width: 90%;
+  }
+
+  .actions-container {
+    justify-content: space-evenly;
   }
 }
 </style>

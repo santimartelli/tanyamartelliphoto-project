@@ -44,6 +44,8 @@ export default {
   created() {
     this.getCategories();
     this.getPictures();
+    this.getMessages();
+    this.getBookings();
     this.$store.dispatch("tryLogin");
   },
   watch: {
@@ -65,6 +67,8 @@ export default {
     },
     ...mapActions("categories", ["getCategories"]),
     ...mapActions("pictures", ["getPictures"]),
+    ...mapActions("messages", ["getMessages"]),
+    ...mapActions("bookings", ["getBookings"]),
   },
 };
 </script>

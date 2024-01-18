@@ -1,6 +1,6 @@
 <template>
   <teleport to="body">
-    <div v-if="show" @click="tryClose" class="backdrop"></div>
+    <div v-if="show" @click="tryClose" class="backdrop1"></div>
     <transition name="dialog">
       <dialog open v-if="show">
         <section class="content">
@@ -18,10 +18,6 @@ export default {
     show: {
       type: Boolean,
       required: true,
-    },
-    title: {
-      type: String,
-      required: false,
     },
   },
   data() {
@@ -50,7 +46,7 @@ export default {
 </script>
 
 <style scoped>
-.backdrop {
+.backdrop1 {
   position: fixed;
   top: 0;
   left: 0;
@@ -66,7 +62,7 @@ dialog {
   top: 20vh;
   left: 10%;
   width: 80%;
-  z-index: 100;
+  z-index: 999;
   border-radius: 5px;
   border: none;
   /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
