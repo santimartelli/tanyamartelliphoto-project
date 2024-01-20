@@ -2,7 +2,6 @@ module.exports = (app) => {
   const express = require("express");
   const router = express.Router();
   const bcrypt = require("bcryptjs");
-  const uuid = require("uuid");
   const jwt = require("jsonwebtoken");
   const db = require("../models/db.js");
   const userMiddleware = require("../middleware/users.js");
@@ -30,7 +29,7 @@ module.exports = (app) => {
             } else {
               // has hashed pw => add to database
               db.query(
-                `INSERT INTO users (id, username, password, registered) VALUES ('${uuid.v4()}', ${db.escape(
+                `INSERT INTO users (username, password, registered) VALUES (${db.escape(
                   req.body.username
                 )}, ${db.escape(hash)}, now())`,
                 (err, result) => {

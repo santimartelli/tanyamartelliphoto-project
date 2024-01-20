@@ -1,5 +1,96 @@
 <template>
   <div>
+    <registration-admin
+      :show="!!openRegistration"
+      @close="closeRegistrationDialog"
+    >
+      <div class="container-registration">
+        <div v-if="isLoadingAdmin" class="form">
+          <p class="authenticating">Registering...</p>
+          <base-spinner />
+        </div>
+        <div
+          v-if="
+            registrationSuccess && !isLoadingAdmin && !adminRegistrationError
+          "
+          class="form"
+        >
+          <p style="color: green; padding-bottom: 1.5rem; font-size: 14px;">
+            Admin successfully registered!
+          </p>
+          <base-button
+            style="margin-botom=1.5rem;"
+            @click="closeRegistrationDialog"
+            >Close</base-button
+          >
+        </div>
+        <div
+          v-if="
+            adminRegistrationError && !registrationSuccess && !isLoadingAdmin
+          "
+          class="form"
+        >
+          <p style="color: red; padding-bottom: 1.5rem; font-size: 14px;">
+            Registration failed. Please try again!
+          </p>
+          <base-button
+            style="margin-botom=1.5rem;"
+            @click="closeRegistrationDialog"
+            >Close</base-button
+          >
+        </div>
+        <!-- Form registration -->
+        <div
+          v-if="
+            !isLoadingAdmin && !registrationSuccess && !adminRegistrationError
+          "
+          class="form"
+        >
+          <div @submit.prevent="submitForm" class="inputs-container">
+            <input
+              type="text"
+              v-model="newUsername"
+              id="newUsername"
+              placeholder="Username"
+            />
+            <div v-if="!formIsValidUsername" class="errors">
+              Please enter a valid username, minimum 3 characters.
+            </div>
+            <input
+              type="password"
+              v-model="newPassword"
+              id="newPassword"
+              placeholder="Password"
+            />
+            <div v-if="!formIsValidPassword" class="errors">
+              Please enter a valid password, minimum 6 characters.
+            </div>
+            <input
+              type="password"
+              v-model="newConfirmedPassword"
+              id="newConfirmedPassword"
+              placeholder="Confirm password"
+            />
+            <div v-if="!formIsValidConfirmedPassword" class="errors">
+              Error, the passwords must match.
+            </div>
+            <input
+              type="text"
+              v-model="newCodeVerification"
+              id="codeVerification"
+              placeholder="Code verification"
+            />
+            <div v-if="!formIsValidCodeVerification" class="errors">
+              Error, the code verification is not correct.
+            </div>
+            <div class="buttons-container">
+              <base-button @click="adminRegistration">Register</base-button>
+              <base-button @click="closeRegistrationDialog">Close</base-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </registration-admin>
     <base-dialog :show="!!error" title="Error!" @close="handleError">
       <p>{{ error }}</p></base-dialog
     >
@@ -26,23 +117,45 @@
             id="password"
             placeholder="Password"
           />
-          <div class="button-container">
+          <div class="buttons-container">
             <base-button @click="submitForm">Log In</base-button>
           </div>
         </form>
       </div>
+      <p class="registration">
+        To register as an admin click
+        <span @click="openRegistrationDialog" class="here">here!</span>
+      </p>
     </div>
   </div>
 </template>
 
 <script>
+import RegistrationAdmin from "../components/ui/RegistrationAdmin.vue";
+
 export default {
+  components: {
+    RegistrationAdmin,
+  },
   data() {
     return {
       username: "",
       password: "",
       isLoading: false,
       error: null,
+      openRegistration: false,
+      newUsername: "",
+      newPassword: "",
+      newConfirmedPassword: "",
+      newCodeVerification: "",
+      codeVerification: "uZ*S3AV6^EaAe6$JjvwwrpWP@F@7Q",
+      formIsValidUsername: true, //minumum 3 characters
+      formIsValidPassword: true, // minimum 6 characters
+      formIsValidConfirmedPassword: true, // minimum 6 characters
+      formIsValidCodeVerification: true, // provided from another admin
+      formIsValid: true,
+      registrationSuccess: null,
+      adminRegistrationError: null,
     };
   },
   methods: {
@@ -64,6 +177,63 @@ export default {
     handleError() {
       this.error = null;
     },
+    openRegistrationDialog() {
+      this.openRegistration = true;
+    },
+    closeRegistrationDialog() {
+      // Reset the form and hide the success message
+      this.openRegistration = false;
+      this.newUsername = "";
+      this.newPassword = "";
+      this.newConfirmedPassword = "";
+      this.newCodeVerification = "";
+      this.formIsValidUsername = true; //minumum 3 characters
+      this.formIsValidPassword = true; // minimum 6 characters
+      this.formIsValidConfirmedPassword = true; // minimum 6 characters
+      this.formIsValidCodeVerification = true; // provided from another admin
+      this.formIsValid = true;
+      this.isLoadingAdmin = null;
+      this.registrationSuccess = null;
+      this.adminRegistrationError = null;
+    },
+    async adminRegistration() {
+      this.formIsValid = true;
+      // Validations
+      this.formIsValidUsername = this.newUsername.trim().length >= 3;
+      this.formIsValidPassword = this.newPassword.trim().length >= 6;
+      this.formIsValidConfirmedPassword =
+        this.newPassword.trim() === this.newConfirmedPassword.trim();
+      this.formIsValidCodeVerification =
+        this.newCodeVerification.trim() === this.codeVerification;
+      // Check overall form validity
+      this.formIsValid =
+        this.formIsValidUsername &&
+        this.formIsValidPassword &&
+        this.formIsValidConfirmedPassword &&
+        this.formIsValidCodeVerification;
+
+      if (this.formIsValid) {
+        this.isLoadingAdmin = true;
+        try {
+          console.log("Registering the admin...");
+          await this.$store.dispatch("adminRegistration", {
+            username: this.newUsername,
+            password: this.newPassword,
+            password_repeat: this.newConfirmedPassword,
+          });
+          console.log("Admin registered successfully!");
+          this.isLoadingAdmin = null;
+          this.registrationSuccess = true;
+          this.adminRegistrationError = null;
+        } catch (error) {
+          console.error("Error registering the admin:", error);
+          this.isLoadingAdmin = null;
+          this.registrationSucces = null;
+          this.adminRegistrationError = true;
+        }
+      }
+      this.isLoadingAdmin = false;
+    },
   },
 };
 </script>
@@ -80,7 +250,7 @@ export default {
 .container-login img {
   width: 120px;
   height: auto;
-  margin-bottom: 30px;
+  margin: 30px;
   border-radius: 15px;
 }
 
@@ -110,9 +280,69 @@ input:focus {
   border-bottom: 1px solid #f79f9f;
 }
 
-.button-container {
+.registration {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  margin-top: 1rem;
+  padding: 5px;
+  text-align: center;
+}
+
+.here {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.here:hover {
+  color: #f79f9f;
+}
+
+.container-registration {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem;
+}
+
+.buttons-container div {
+  margin: 0.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.inputs-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.inputs-container input {
+  width: 100%;
+}
+
+.errors {
+  width: 100%;
+  color: red;
+  font-size: 14px;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
 }
 </style>

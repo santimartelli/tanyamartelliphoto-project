@@ -1,3 +1,5 @@
+import axios from "axios";
+
 let timer;
 
 export default {
@@ -8,42 +10,44 @@ export default {
   },
 
   async auth(context, payload) {
-    const response = await fetch("http://localhost:3000/api/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: payload.username,
-        password: payload.password,
-      }),
-    });
-    const responseData = await response.json();
-
-    if (!response.ok) {
-      console.log(responseData);
-      const error = new Error(
-        responseData.message || "Failed to authenticate. Check your login data."
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/users/login",
+        {
+          username: payload.username,
+          password: payload.password,
+        }
       );
-      throw error;
+      // Extracting response data
+      const responseData = response.data;
+      // Calculating token expiration time
+      const expiresIn = responseData.expiresIn * 1000; // Convert to milliseconds
+      const tokenExpirationDate = new Date().getTime() + expiresIn;
+      // Storing token and user information in localStorage
+      localStorage.setItem("token", responseData.token);
+      localStorage.setItem("user", JSON.stringify(responseData.user));
+      localStorage.setItem("tokenExpiration", tokenExpirationDate);
+      // Setting up a timer for auto logout
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        context.dispatch("autoLogout");
+      }, expiresIn);
+      // Committing user data to the Vuex store
+      context.commit("setUser", {
+        token: responseData.token,
+        user: responseData.user,
+      });
+    } catch (error) {
+      // Handling errors
+      console.error(error.response ? error.response.data : error);
+      // Extracting error message from response, with a fallback default message
+      const errorMessage =
+        error.response && error.response.data && error.response.data.message
+          ? error.response.data.message
+          : "Failed to authenticate. Check your login data.";
+      // Throwing an error to be handled by the caller of the function
+      throw new Error(errorMessage);
     }
-
-    const expiresIn = responseData.expiresIn * 1000; // Convierte a milisegundos
-    const tokenExpirationDate = new Date().getTime() + expiresIn;
-
-    localStorage.setItem("token", responseData.token);
-    localStorage.setItem("user", JSON.stringify(responseData.user));
-    localStorage.setItem("tokenExpiration", tokenExpirationDate);
-
-    clearTimeout(timer);
-    timer = setTimeout(function(){
-      context.dispatch("autoLogout")
-    }, expiresIn);
-
-    context.commit("setUser", {
-      token: responseData.token,
-      user: responseData.user,
-    });
   },
 
   tryLogin(context) {
@@ -58,7 +62,7 @@ export default {
 
     clearTimeout(timer);
     timer = setTimeout(function () {
-      context.dispatch("autoLogout")
+      context.dispatch("autoLogout");
     }, expiresIn);
 
     if (token && user) {
@@ -87,26 +91,25 @@ export default {
     });
   },
 
-  // async signUp(context, payload){
-  //   fetch('http://localhost:3000/api/users/sign-up', {
-  //     method: 'POST',
-  //     body: JSON.stringify({
-  //       username: payload.username,
-  //       password: payload.password,
-  //     })
-  //   });
-
-  //   const responseData = await response.json();
-
-  //   if(!response.ok){
-  //     console.log(responseData);
-  //     const error = new Error(responseData.message || 'Failed to authenticate. Check your login data.');
-  //     throw error;
-  //   }
-
-  //   console.log(responseData);
-  //   context.commit('setUser', {
-  //     userId: responseData.id,
-  //   });
-  // }
+  async adminRegistration(context, payload) {
+    try {
+      console.log(payload);
+      const response = await axios.post(
+        "http://localhost:3000/api/users/sign-up",
+        {
+          username: payload.username,
+          password: payload.password,
+          password_repeat: payload.password_repeat,
+        }
+      );
+      console.log("response data: " + response.data);
+      context.commit("setUser", {
+        userId: response.data.id,
+      });
+    } catch (error) {
+      console.log(error.response.data);
+      const errorMessage = error.response.data.message;
+      throw new Error(errorMessage);
+    }
+  },
 };

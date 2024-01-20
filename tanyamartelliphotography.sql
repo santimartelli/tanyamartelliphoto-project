@@ -22,11 +22,12 @@ CREATE TABLE IF NOT EXISTS pictures (
 
 -- Creación de la tabla "users"
 CREATE TABLE IF NOT EXISTS users (
-    id INT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     registered datetime NOT NULL,
-    last_login datetime NOT NULL
+    last_login datetime NOT NULL,
+    PRIMARY KEY (id)
 );
 
 -- Creación de la tabla "bookings"
