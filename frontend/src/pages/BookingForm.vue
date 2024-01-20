@@ -1,6 +1,10 @@
 <template>
   <div>
-    <ok-dialog :show="!!okMessage" @close="closeSuccessMessage">
+    <ok-dialog :show="!!errorMessage" @close="closeDialog">
+      <h2>Error!</h2>
+      <p>{{ errorMessage }}</p>
+    </ok-dialog>
+    <ok-dialog :show="!!okMessage" @close="closeDialog">
       <h2>Booking request successfully sent!</h2>
       <p>{{ okMessage }}</p>
     </ok-dialog>
@@ -117,7 +121,7 @@
           </option>
         </select>
         <div v-if="!formIsValidTime" class="errors">
-          Please select a location.
+          Please select the time.
         </div>
         <label for="message">Message </label>
         <textarea id="message" v-model="message" rows="10"></textarea>
@@ -132,7 +136,8 @@
   </div>
 </template>
 
-<script>8
+<script>
+8;
 import OkDialog from "../components/ui/OkDialog.vue";
 
 export default {
@@ -178,6 +183,7 @@ export default {
       formIsValidMessage: true,
       formIsValid: true,
       okMessage: null,
+      errorMessage: null,
     };
   },
   computed: {
@@ -212,7 +218,7 @@ export default {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
     },
-    closeSuccessMessage(){
+    closeDialog() {
       // Reset the form and hide the success message
       this.name = "";
       this.email = "";
@@ -251,28 +257,19 @@ export default {
       this.formIsValidMessage = true;
       this.formIsValid = true;
       this.okMessage = null;
+      this.errorMessage = null;
     },
-    submitForm() {
-      // Perform form submission logic here
-      // Access the form data through the component's data properties
+    async submitForm() {
       this.formIsValid = true;
-      // Validate Name
+      // Validaciones
       this.formIsValidName = !!this.name.trim();
-      // Validate Email
       this.formIsValidEmail = this.isValidEmail(this.email.trim());
-      // Validate Category
       this.formIsValidCategory = !!this.categoryId;
-      // Validate Location
       this.formIsValidLocation = !!this.location.trim();
-      // Validate Place
       this.formIsValidPlace = !!this.place.trim();
-      // Validate Date
       this.formIsValidDate = !!this.selectedDate.trim();
-      // Validate Time
       this.formIsValidTime = !!this.selectedTime.trim();
-      // Validate Message
       this.formIsValidMessage = !!this.message.trim();
-      // Check overall form validity
       this.formIsValid =
         this.formIsValidName &&
         this.formIsValidEmail &&
@@ -283,20 +280,24 @@ export default {
         this.formIsValidTime &&
         this.formIsValidMessage;
 
-      // If form is valid, perform submission logic
+      // Si el formulario es valido, se envia
       if (this.formIsValid) {
-        // Your form submission logic here
-        this.$store.dispatch("bookings/addNewBooking", {
-          name: this.name,
-          email: this.email,
-          categoryId: this.categoryId,
-          location: this.location,
-          place: this.place,
-          selectedDate: this.selectedDate,
-          selectedTime: this.selectedTime,
-          message: this.message,
-        });
-        this.okMessage = "Thank you for your booking request! I will get back to you as soon as possible to finalize the details.";
+        try {
+          await this.$store.dispatch("bookings/addNewBooking", {
+            name: this.name,
+            email: this.email,
+            categoryId: this.categoryId,
+            location: this.location,
+            place: this.place,
+            selectedDate: this.selectedDate,
+            selectedTime: this.selectedTime,
+            message: this.message,
+          });
+          this.okMessage = "Thank you for your booking request! I will get back to you as soon as possible to finalize the details.";
+        } catch (error) {
+          console.error("Error submitting the form:", error);
+          this.errorMessage = "An error occurred while processing your request. Please try again later.";
+        }
       }
     },
   },

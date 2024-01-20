@@ -1,8 +1,13 @@
 <template>
   <div>
-    <ok-dialog :show="!!okMessage" @close="closeSuccessMessage">
+    <!--Generate one ok-dialog and depends if okMessage is true or errorMessage is true show one message or another-->
+    <ok-dialog :show="!!okMessage" @close="closeDialog">
       <h2>Message successfully sent!</h2>
       <p>{{ okMessage }}</p>
+    </ok-dialog>
+    <ok-dialog :show="!!errorMessage" @close="closeDialog">
+      <h2>Error!</h2>
+      <p>{{ errorMessage }}</p>
     </ok-dialog>
     <div class="container">
       <h2>I would love to hear from you!</h2>
@@ -75,10 +80,11 @@ export default {
       formIsValidContent: true,
       formIsValid: true,
       okMessage: null,
+      errorMessage: null,
     };
   },
   methods: {
-    addNewMessage() {
+    async addNewMessage() {
       this.formIsValid = true;
 
       // Validate Name
@@ -95,19 +101,24 @@ export default {
         this.formIsValidContent;
 
       if (this.formIsValid) {
-        this.$store.dispatch("messages/addNewMessage", {
-          messageName: this.newMessageName,
-          messageEmail: this.newMessageEmail,
-          messageContent: this.newMessageContent,
-        });
-        this.okMessage = "Thank you for conctact me! I will get back to you as soon as possible!";
+        try {
+          await this.$store.dispatch("messages/addNewMessage", {
+            messageName: this.newMessageName,
+            messageEmail: this.newMessageEmail,
+            messageContent: this.newMessageContent,
+          });
+          this.okMessage = "Thank you for contacting me! I will get back to you as soon as possible!";
+        } catch (error) {
+          console.error("Error sending the message:", error);
+          this.errorMessage = "An error occurred while sending the message. Please try again later.";
+        }
       }
     },
     isValidEmail(email) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
     },
-    closeSuccessMessage() {
+    closeDialog() {
       // Reset the form and hide the success message
       this.newMessageName = "";
       this.newMessageEmail = "";
@@ -117,6 +128,7 @@ export default {
       this.formIsValidContent = true;
       this.formIsValid = true;
       this.okMessage = null;
+      this.errorMessage = null;
     },
   },
   created() {
@@ -187,7 +199,6 @@ textarea:focus {
   margin-top: -0.5rem;
   margin-bottom: 1rem;
 }
-
 
 /* media queries */
 @media (max-width: 855px) {

@@ -1,6 +1,6 @@
 export default {
-  setBookings(state, messages) {
-    state.messages = messages;
+  setBookings(state, bookings) {
+    state.bookings = bookings;
   },
   updateBooking(state, {bookingId, name, email, categoryId, location, place, selectedDate, selectedTime, message}) {
     const index = state.bookings.findIndex(b => b.bookingId === bookingId);

@@ -1,10 +1,192 @@
 <template>
   <div>
-    <ok-dialog :show="!!okMessage" @close="closeDialog">
-      <p><strong>Name:</strong> {{ selectedMessage.messageName }}</p>
-      <p><strong>Email:</strong> {{ selectedMessage.messageEmail }}</p>
-      <p><strong>Message: </strong>{{ okMessage }}</p>
+    <!-- Dialog view messages and view booking details-->
+    <ok-dialog :show="!!okMessage" @close="closeDialog" class="nameEmail">
+      <div class="dataContainer">
+        <!-- Data message -->
+        <p v-if="dialogMessage">
+          <strong>Name:</strong> {{ selectedMessage.messageName }}
+        </p>
+        <p v-if="dialogMessage">
+          <strong>Email:</strong> {{ selectedMessage.messageEmail }}
+        </p>
+        <p v-if="dialogMessage"><strong>Message:</strong></p>
+        <p v-if="dialogMessage" class="message">{{ okMessage }}</p>
+        <!-- Data booking-->
+        <p v-if="dialogBooking">
+          <strong>Booking Id:</strong> {{ selectedBooking.bookingId }}
+        </p>
+        <p v-if="dialogBooking">
+          <strong>Date of creation:</strong>
+          {{ formatDate(selectedBooking.createdAt) }}
+        </p>
+        <p v-if="dialogBooking">
+          <strong>Name:</strong> {{ selectedBooking.name }}
+        </p>
+        <p v-if="dialogBooking">
+          <strong>Email:</strong> {{ selectedBooking.email }}
+        </p>
+        <p v-if="dialogBooking">
+          <strong>Category:</strong>
+          {{ getCategoryName(selectedBooking.categoryId) }}
+        </p>
+        <p v-if="dialogBooking">
+          <strong>Location:</strong> {{ selectedBooking.location }}
+        </p>
+        <p v-if="dialogBooking">
+          <strong>Place:</strong> {{ selectedBooking.place }}
+        </p>
+        <p v-if="dialogBooking">
+          <strong>Date:</strong> {{ selectedBooking.selectedDate }}
+        </p>
+        <p v-if="dialogBooking">
+          <strong>Time:</strong> {{ selectedBooking.selectedTime }}
+        </p>
+        <p v-if="dialogBooking"><strong>Message:</strong></p>
+        <p v-if="dialogBooking" class="message">{{ okMessage }}</p>
+      </div>
     </ok-dialog>
+    <!-- Edit category dialog-->
+    <edit-category-dialog
+      :show="!!openEditCategoryDialog"
+      :category="selectedCategory"
+      @close="closeEditCategoryDialog"
+    >
+      <div class="form">
+        <input type="text" id="categoryName" v-model="updatedCategoryName" />
+        <div v-if="!formIsValidCategoryName" class="errors">
+          Please enter a valid category name.
+        </div>
+        <div class="buttons-container">
+          <base-button @click="editCategory">Save</base-button>
+          <base-button @click="closeEditCategoryDialog">Cancel</base-button>
+        </div>
+      </div>
+    </edit-category-dialog>
+
+    <!-- Update booking dialog-->
+    <edit-booking-dialog
+      :show="!!openUpdateDialog"
+      :booking="selectedBooking"
+      @close="closeBookingUpdateDialog"
+    >
+      <div class="form">
+        <input type="text" id="name" v-model="updatedName" placeholder="Name" />
+        <div v-if="!formIsValidName" class="errors">
+          Please enter a valid name.
+        </div>
+        <input
+          type="email"
+          id="email"
+          v-model="updatedEmail"
+          placeholder="Email"
+        />
+        <div v-if="!formIsValidEmail" class="errors">
+          Please enter a valid email address.
+        </div>
+        <select id="session" v-model="updatedCategoryId">
+          <option v-if="!updatedCategoryId" value="" disabled selected>
+            Select the photoshoot type
+          </option>
+          <option
+            v-for="cat in sortedCategories"
+            :key="cat.categoryId"
+            :value="cat.categoryId"
+          >
+            {{ cat.categoryName }}
+          </option>
+        </select>
+        <div v-if="!formIsValidCategory" class="errors">
+          Please select a photoshoot type.
+        </div>
+        <select id="location" v-model="updatedLocation">
+          <option v-if="!location" value="" disabled selected>
+            Select the preferred location
+          </option>
+          <option value="Barcelona">Barcelona</option>
+          <option value="Girona">Girona</option>
+          <option value="Lloret">Lloret de Mar</option>
+          <option value="Other">Other (especify in message)</option>
+        </select>
+        <div v-if="!formIsValidLocation" class="errors">
+          Please select a location.
+        </div>
+        <div class="envoirment">
+          <p class="title">Choose a place:</p>
+          <div class="radio-group">
+            <label for="studio" class="radio-container">
+              <div class="sideRadio">
+                <input
+                  type="radio"
+                  id="studio"
+                  v-model="updatedPlace"
+                  value="Studio"
+                />
+                <span class="checkmark"></span>
+                <span class="radio-desc">In Studio</span>
+              </div>
+            </label>
+            <label for="outdoors" class="radio-container">
+              <div class="sideRadio">
+                <input
+                  type="radio"
+                  id="outdoors"
+                  v-model="updatedPlace"
+                  value="Outdoors"
+                />
+                <span class="checkmark"></span>
+                <span class="radio-desc">Outdoors</span>
+              </div>
+            </label>
+            <label for="other" class="radio-container">
+              <div class="sideRadio">
+                <input
+                  type="radio"
+                  id="other"
+                  v-model="updatedPlace"
+                  value="Other"
+                />
+                <span class="checkmark"></span>
+                <span class="radio-desc">Other</span>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div v-if="!formIsValidPlace" class="errors">
+          Please select a place.
+        </div>
+        <select id="date" v-model="updatedSelectedDate">
+          <option v-if="!updatedSelectedDate" value="" disabled selected>
+            Select the Date
+          </option>
+          <option v-for="date in availableDates" :value="date" :key="date">
+            {{ date }}
+          </option>
+          <option value="Other">Other (specify in the message)</option>
+        </select>
+        <div v-if="!formIsValidDate" class="errors">Please select a date.</div>
+        <select id="time" v-model="updatedSelectedTime">
+          <option v-if="!updatedSelectedTime" value="" disabled selected>
+            Select the Time
+          </option>
+          <option v-for="time in availableTimes" :value="time" :key="time">
+            {{ time }}
+          </option>
+        </select>
+        <div v-if="!formIsValidTime" class="errors">
+          Please select the time.
+        </div>
+        <label for="message">Message </label>
+        <textarea id="message" v-model="updatedMessage" rows="10"></textarea>
+        <div v-if="!formIsValidMessage" class="errors">
+          Please enter a message.
+        </div>
+        <div class="buttons-container">
+          <base-button @click="editBooking">Save</base-button>
+          <base-button @click="closeBookingUpdateDialog">Cancel</base-button>
+        </div>
+      </div>
+    </edit-booking-dialog>
     <!--Feedback message dialog-->
     <transition name="feedback" appear>
       <div class="feedbackOk" v-if="feedbackOk === 1">
@@ -22,7 +204,6 @@
         </p>
       </div>
     </transition>
-
     <div class="tabs">
       <!-- Tab 1 -->
       <input
@@ -97,10 +278,9 @@
           <table>
             <thead>
               <tr>
-                <th class="th-1" @click="sort('id')">Image Id</th>
+                <th class="th-1">Id</th>
                 <th class="th-2">Preview</th>
-                <!-- <th @click="sort('category_id')">Category Id</th> -->
-                <th class="th-3" @click="sort('category_name')">Category</th>
+                <th class="th-3">Category</th>
                 <th class="th-4">Actions</th>
               </tr>
             </thead>
@@ -224,7 +404,7 @@
           <table class="categories">
             <thead>
               <tr>
-                <th class="th-1">Category Id</th>
+                <th class="th-1">Id</th>
                 <th class="th-2">Category Name</th>
                 <th class="th-4">Actions</th>
               </tr>
@@ -240,13 +420,13 @@
                       src="../assets/Icons/pen.png"
                       alt="Editar categoria"
                       title="Editar categoria"
-                      @click="editCategory(category.categoryId)"
+                      @click="openUpdateCategoryDialog(category)"
                     />
                   </div>
                   <div
                     v-if="!iconsActions"
                     class="icon-container edit"
-                    @click="editCategory(category.categoryId)"
+                    @click="openUpdateCategoryDialog(category)"
                   >
                     <img src="../assets/Icons/pen.png" alt="Editar categoria" />
                     <div>EDIT CATEGORY</div>
@@ -307,7 +487,7 @@
                 <td>{{ message.messageName }}</td>
                 <td>{{ message.messageEmail }}</td>
                 <td class="actions-container">
-                  <div v-if="iconsActionsMB">
+                  <div v-if="iconsActions">
                     <img
                       class="icon"
                       src="../assets/Icons/view.png"
@@ -317,14 +497,14 @@
                     />
                   </div>
                   <div
-                    v-if="!iconsActionsMB"
+                    v-if="!iconsActions"
                     class="icon-container view"
                     @click="viewMessage(message)"
                   >
                     <img src="../assets/Icons/view.png" alt="view message" />
                     <div>OPEN MESSAGE</div>
                   </div>
-                  <div v-if="iconsActionsMB">
+                  <div v-if="iconsActions">
                     <img
                       class="icon"
                       src="../assets/Icons/responder.png"
@@ -334,7 +514,7 @@
                     />
                   </div>
                   <div
-                    v-if="!iconsActionsMB"
+                    v-if="!iconsActions"
                     class="icon-container view"
                     @click="answerMessage(message.messageEmail)"
                   >
@@ -344,7 +524,7 @@
                     />
                     <div>REPLY MESSAGE</div>
                   </div>
-                  <div v-if="iconsActionsMB">
+                  <div v-if="iconsActions">
                     <img
                       class="icon"
                       src="../assets/Icons/delete.png"
@@ -354,7 +534,7 @@
                     />
                   </div>
                   <div
-                    v-if="!iconsActionsMB"
+                    v-if="!iconsActions"
                     class="icon-container delete"
                     @click="deleteMessage(message.messageId)"
                   >
@@ -370,6 +550,7 @@
           </table>
         </div>
       </div>
+      <!-- Tab 4 Booking Requests -->
       <input
         type="radio"
         name="tabs"
@@ -383,8 +564,85 @@
         >Booking Requests</label
       >
       <div class="tab" v-show="currentTab === 'tabfour'">
-        <h1>Booking Requests</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+        <div>
+          <table class="bookings">
+            <thead>
+              <tr>
+                <th class="th-1">Id</th>
+                <th class="th-2">Name</th>
+                <th class="th-3">Type</th>
+                <th class="th-4">Date</th>
+                <th class="th-5">Time</th>
+                <th class="th-6">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="booking in bookings" :key="booking.bookingId">
+                <td>{{ booking.bookingId }}</td>
+                <td>{{ booking.name }}</td>
+                <td>{{ getCategoryName(booking.categoryId) }}</td>
+                <td>{{ booking.selectedDate }}</td>
+                <td>{{ booking.selectedTime }}</td>
+                <td class="actions-container">
+                  <div v-if="iconsActions">
+                    <img
+                      class="icon"
+                      src="../assets/Icons/view.png"
+                      alt="Open details"
+                      title="Open details"
+                      @click="viewDetails(booking)"
+                    />
+                  </div>
+                  <div
+                    v-if="!iconsActions"
+                    class="icon-container view"
+                    @click="viewDetails(booking)"
+                  >
+                    <img src="../assets/Icons/view.png" alt="view message" />
+                    <div>OPEN DETAILS</div>
+                  </div>
+                  <div v-if="iconsActions">
+                    <img
+                      class="icon"
+                      src="../assets/Icons/pen.png"
+                      alt="Edit booking"
+                      title="Edit booking"
+                      @click="openEditBookingDialog(booking)"
+                    />
+                  </div>
+                  <div
+                    v-if="!iconsActions"
+                    class="icon-container edit"
+                    @click="openEditBookingDialog(booking)"
+                  >
+                    <img src="../assets/Icons/pen.png" alt="Answer message" />
+                    <div>EDIT BOOKING</div>
+                  </div>
+                  <div v-if="iconsActions">
+                    <img
+                      class="icon"
+                      src="../assets/Icons/delete.png"
+                      alt="Delete booking"
+                      title="Delete booking"
+                      @click="deleteBooking(booking.bookingId)"
+                    />
+                  </div>
+                  <div
+                    v-if="!iconsActions"
+                    class="icon-container delete"
+                    @click="deleteBooking(booking.bookingId)"
+                  >
+                    <img
+                      src="../assets/Icons/delete.png"
+                      alt="Delete booking"
+                    />
+                    <div>DELETE BOOKING</div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -393,14 +651,18 @@
 <script>
 import axios from "axios";
 import OkDialog from "../components/ui/OkDialog.vue";
+import EditBookingDialog from "../components/ui/EditBookingDialog.vue";
+import EditCategoryDialog from "../components/ui/EditCategoryDialog.vue";
 
 export default {
   components: {
     OkDialog,
+    EditBookingDialog,
+    EditCategoryDialog,
   },
   data() {
     return {
-      currentTab: "tabone",
+      currentTab: "",
       files: [],
       addImages: false,
       addCategory: false,
@@ -411,12 +673,55 @@ export default {
       isLoading: false,
       selectedImage: null,
       showImageModal: false,
-      iconsActions: false,
-      iconsActionsMB: false,
+      iconsActions: true,
       newCategoryName: "",
+      openEditCategoryDialog: false,
+      selectedCategory: null,
+      updatedCategoryName: "",
       messageEmail: null,
       selectedMessage: null,
       okMessage: null,
+      dialogMessage: false,
+      dialogBooking: false,
+      openUpdateDialog: false,
+      selectedBooking: null,
+      updatedName: "",
+      updatedEmail: "",
+      updatedCategoryId: "",
+      updatedLocation: "",
+      updatedPlace: "",
+      updatedSelectedDate: "",
+      updatedSelectedTime: "",
+      updatedMessage: "",
+      availableTimes: [
+        "08:00",
+        "09:00",
+        "10:00",
+        "11:00",
+        "12:00",
+        "13:00",
+        "14:00",
+        "15:00",
+        "16:00",
+        "17:00",
+        "18:00",
+        "19:00",
+        "20:00",
+        "21:00",
+        "Other (especify in message)",
+        // Add more available times here
+      ],
+      availableDates: [],
+      formIsValidCategoryName: true,
+      formIsValidName: true,
+      formIsValidEmail: true,
+      formIsValidCategory: true,
+      formIsValidLocation: true,
+      formIsValidPlace: true,
+      formIsValidDate: true,
+      formIsValidTime: true,
+      formIsValidMessage: true,
+      formIsValid: true,
     };
   },
   computed: {
@@ -432,11 +737,21 @@ export default {
     bookings() {
       return this.$store.getters["bookings/bookings"];
     },
+    sortedCategories() {
+      // Get the categories from the store
+      const categories = this.$store.getters["categories/categories"];
+
+      // Sort the categories alphabetically by categoryName
+      return categories.slice().sort((a, b) => {
+        return a.categoryName.localeCompare(b.categoryName);
+      });
+    },
   },
   methods: {
     //GENERAL METHODS
     toggleTab(tab) {
       console.log("Clicked tab:", tab);
+      this.showIconsActions();
       // Toggle the value of currentTab
       this.currentTab = this.currentTab === tab ? "" : tab;
     },
@@ -444,22 +759,13 @@ export default {
       // Get the window width
       const windowWidth = window.innerWidth;
       // If width is less than or equal to 821px, set iconsActions to true
-      if (windowWidth <= 821) {
+      if (windowWidth <= 1080) {
         this.iconsActions = true;
       } else {
         this.iconsActions = false;
       }
     },
-    showIconsActionsMB() {
-      // Get the window width
-      const windowWidth = window.innerWidth;
-      // If width is less than or equal to 821px, set iconsActions to true
-      if (windowWidth <= 1067) {
-        this.iconsActionsMB = true;
-      } else {
-        this.iconsActionsMB = false;
-      }
-    },
+
     //PICTURES METHODS
     handleFileUpload(event) {
       this.files = Array.from(event.target.files).map((file) => {
@@ -573,19 +879,44 @@ export default {
       this.showImageModal = false;
       document.body.style.overflow = "auto";
     },
-   //CATEGORIES METHODS
-    async editCategory(categoryId) {
-      const categoryName = prompt("Enter the new category name");
 
-      if (categoryName) {
+    //CATEGORIES METHODS
+    openUpdateCategoryDialog(category) {
+      this.openEditCategoryDialog = true;
+      this.selectedCategory = category;
+      console.log(this.selectedCategory);
+      this.dialogMessage = false;
+      this.dialogBooking = false;
+      this.okMessage = null;
+      this.errorMessage = null;
+      this.openUpdateDialog = false;
+    },
+
+    closeEditCategoryDialog() {
+      this.openEditCategoryDialog = false;
+      this.selectedCategory = null;
+      this.updatedCategoryName = "";
+      this.formIsValidCategoryName = true;
+      this.formIsValid = true;
+      this.okMessage = null;
+      this.errorMessage = null;
+    },
+    async editCategory() {
+      this.formIsValid = true;
+      // Validations
+      this.formIsValidCategoryName = !!this.updatedCategoryName.trim();
+      this.formIsValid = this.formIsValidCategoryName;
+      if (this.formIsValid) {
         try {
           await this.$store.dispatch("categories/updateCategory", {
-            categoryId,
-            categoryName,
+            categoryId: this.selectedCategory.categoryId,
+            categoryName: this.updatedCategoryName,
           });
+          this.closeEditCategoryDialog();
           this.feedbackMessage = "Category updated succesfully";
           this.feedbackOk = 1;
         } catch (error) {
+          this.closeEditCategoryDialog();
           this.feedbackMessage = "Error updating category, please try again";
           this.feedbackOk = 2;
         }
@@ -655,27 +986,138 @@ export default {
         }, 3000);
       }
     },
+
     //MESSAGES METHODS
     viewMessage(message) {
-      console.log(message);
+      this.dialogMessage = true;
       this.selectedMessage = message;
       this.okMessage = message.messageContent;
     },
     closeDialog() {
       this.okMessage = null;
       this.selectedMessage = null;
+      this.selectedBooking = null;
+      this.dialogMessage = null;
+      this.dialogBooking = null;
+    },
+    closeBookingUpdateDialog() {
+      this.openUpdateDialog = false;
+      this.updatedName = "";
+      this.updatedEmail = "";
+      this.updatedCategoryId = "";
+      this.updatedLocation = "";
+      this.updatedPlace = "";
+      this.updatedSelectedDate = "";
+      this.updatedSelectedTime = "";
+      this.updatedMessage = "";
+      this.formIsValidName = true;
+      this.formIsValidEmail = true;
+      this.formIsValidCategory = true;
+      this.formIsValidLocation = true;
+      this.formIsValidPlace = true;
+      this.formIsValidDate = true;
+      this.formIsValidTime = true;
+      this.formIsValidMessage = true;
+      this.formIsValid = true;
+      this.selectedBooking = null;
+      this.okMessage = null;
+      this.errorMessage = null;
     },
     answerMessage(messageEmail) {
       // A implementar en el futuro
       console.log(`Sending email to: ${messageEmail}`);
     },
     deleteMessage(messageId) {
+      try {
+        this.$store.dispatch("messages/deleteMessage", messageId);
+        this.feedbackMessage = "Message deleted succesfully";
+        this.feedbackOk = 1;
+      } catch (error) {
+        this.feedbackMessage = "Error deleting the message, please try again";
+        this.feedbackOk = 2;
+      }
+      setTimeout(() => {
+        this.feedbackMessage = "";
+        this.feedbackOk = 3;
+      }, 3000);
+    },
+
+    //BOOKINGS METHODS
+    getCategoryName(categoryId) {
+      const category = this.categories.find(
+        (category) => category.categoryId === categoryId
+      );
+      return category.categoryName;
+    },
+    formatDate(dateStr) {
+      const date = new Date(dateStr);
+      const day = date.getDate().toString().padStart(2, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+      const seconds = date.getSeconds().toString().padStart(2, "0");
+      return `${day}/${month}/${year} at ${hours}:${minutes}:${seconds}h.`;
+    },
+    viewDetails(booking) {
+      this.dialogBooking = true;
+      this.selectedBooking = booking;
+      this.okMessage = booking.message;
+    },
+    isValidEmail(email) {
+      // Use a more comprehensive email validation regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
+    openEditBookingDialog(booking) {
+      this.openUpdateDialog = true;
+      this.calculateAvailableDates();
+      this.selectedBooking = booking;
+      console.log(this.selectedBooking);
+      this.dialogBooking = false;
+      this.dialogMessage = false;
+    },
+    async editBooking() {
+      this.formIsValid = true;
+      // Validations
+      this.formIsValidName = !!this.updatedName.trim();
+      this.formIsValidEmail = this.isValidEmail(this.updatedEmail.trim());
+      this.formIsValidCategory = !!this.updatedCategoryId;
+      this.formIsValidLocation = !!this.updatedLocation.trim();
+      this.formIsValidPlace = !!this.updatedPlace.trim();
+      this.formIsValidDate = !!this.updatedSelectedDate.trim();
+      this.formIsValidTime = !!this.updatedSelectedTime.trim();
+      this.formIsValidMessage = !!this.updatedMessage.trim();
+      this.formIsValid =
+        this.formIsValidName &&
+        this.formIsValidEmail &&
+        this.formIsValidCategory &&
+        this.formIsValidLocation &&
+        this.formIsValidPlace &&
+        this.formIsValidDate &&
+        this.formIsValidTime &&
+        this.formIsValidMessage;
+
+      // Si el formulario es valido, se envia
+      if (this.formIsValid) {
         try {
-          this.$store.dispatch("messages/deleteMessage", messageId);
-          this.feedbackMessage = "Message deleted succesfully";
+          await this.$store.dispatch("bookings/updateBooking", {
+            bookingId: this.selectedBooking.bookingId,
+            name: this.updatedName,
+            email: this.updatedEmail,
+            categoryId: this.updatedCategoryId,
+            location: this.updatedLocation,
+            place: this.updatedPlace,
+            selectedDate: this.updatedSelectedDate,
+            selectedTime: this.updatedSelectedTime,
+            message: this.updatedMessage,
+          });
+          this.closeBookingUpdateDialog();
+          this.feedbackMessage = "Booking updated succesfully";
           this.feedbackOk = 1;
         } catch (error) {
-          this.feedbackMessage = "Error deleting the message, please try again";
+          this.closeBookingUpdateDialog();
+          this.feedbackMessage = "Error updating category, please try again";
           this.feedbackOk = 2;
         }
         setTimeout(() => {
@@ -683,25 +1125,55 @@ export default {
           this.feedbackOk = 3;
         }, 3000);
       }
-  },
-  created() {
-    this.showIconsActions();
-    this.showIconsActionsMB();
+    },
+    deleteBooking(bookingId) {
+      try {
+        this.$store.dispatch("bookings/deleteBooking", bookingId);
+        this.feedbackMessage = "Booking request deleted succesfully";
+        this.feedbackOk = 1;
+      } catch (error) {
+        this.feedbackMessage =
+          "Error deleting the booking request, please try again";
+        this.feedbackOk = 2;
+      }
+      setTimeout(() => {
+        this.feedbackMessage = "";
+        this.feedbackOk = 3;
+      }, 3000);
+    },
+    calculateAvailableDates() {
+      this.availableDates = [];
+      const today = new Date();
+      for (let i = 0; i < 90; i++) {
+        const currentDate = new Date(today);
+        currentDate.setDate(today.getDate() + i);
+        // Check if the day is either Sunday (0) or Thursday (4)
+        if (currentDate.getDay() === 0 || currentDate.getDay() === 4) {
+          const year = currentDate.getFullYear();
+          let month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+          let day = currentDate.getDate().toString().padStart(2, "0");
+          this.availableDates.push(`${day}-${month}-${year}`);
+        }
+      }
+    },
+    created() {
+      this.showIconsActions();
+      this.okMessage = null;
+      this.$nextTick(() => {
+        this.calculateAvailableDates();
+      });
+    },
   },
   watch: {
-    // Watch for changes in the window width
     "$store.getters.screenWidth"() {
       this.showIconsActions();
-      this.showIconsActionsMB();
     },
   },
 };
 </script>
 
 <style scoped>
-/**
- * Generic Styling
-*/
+/* GENERAL STYLES*/
 body {
   background: #eee;
   min-height: 100vh;
@@ -716,6 +1188,38 @@ body {
   font-size: 112%;
 }
 
+/* Tabs */
+.tabs {
+  display: flex;
+  flex-wrap: wrap; /* make sure it wraps */
+}
+.tabs label {
+  order: 1; /* Put the labels first */
+  letter-spacing: 0.02rem;
+  font-size: 0.8rem;
+  flex-grow: 1;
+  display: block;
+  padding: 1rem 2rem;
+  margin-right: 0.2rem;
+  cursor: pointer;
+  background: #eee;
+  transition: background ease 0.5s;
+}
+.tabs .tab {
+  order: 99; /* Put the tabs last */
+  flex-grow: 1;
+  width: 100%;
+  padding: 1rem;
+  background: #fff;
+}
+.tabs input[type="radio"] {
+  display: none;
+}
+.tabs input[type="radio"]:checked + label + .tab {
+  display: block;
+}
+
+/* Feedback dialog */
 .feedbackOk,
 .feedbackError {
   position: fixed;
@@ -766,10 +1270,27 @@ body {
   opacity: 0;
 }
 
+/* ok dialog */
+.dataContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  /* margin-bottom: 1rem; */
+}
+
+.message {
+  border: 1px solid #eee;
+  height: 100px;
+  padding: 0 0.5rem;
+  overflow-y: scroll;
+}
+
+/* Pictures */
 .buttonAdd {
   margin-bottom: 1rem;
 }
-/* Container add images */
+
 .addItem {
   width: 100%;
   height: auto;
@@ -962,7 +1483,7 @@ table {
 }
 th,
 td {
-  text-align: left;
+  text-align: center;
   padding: 0.5rem;
 }
 
@@ -984,7 +1505,7 @@ tr:nth-child(even) {
 .actions-container {
   display: flex;
   flex-direction: row;
-  justify-content: left;
+  justify-content: space-evenly;
   align-items: center;
   flex-wrap: wrap;
   min-height: 70px;
@@ -1103,39 +1624,7 @@ tr:nth-child(even) {
   cursor: pointer;
 }
 
-/**
- * Tabs
- */
-.tabs {
-  display: flex;
-  flex-wrap: wrap; /* make sure it wraps */
-}
-.tabs label {
-  order: 1; /* Put the labels first */
-  letter-spacing: 0.02rem;
-  font-size: 0.8rem;
-  flex-grow: 1;
-  display: block;
-  padding: 1rem 2rem;
-  margin-right: 0.2rem;
-  cursor: pointer;
-  background: #eee;
-  transition: background ease 0.5s;
-}
-.tabs .tab {
-  order: 99; /* Put the tabs last */
-  flex-grow: 1;
-  width: 100%;
-  padding: 1rem;
-  background: #fff;
-}
-.tabs input[type="radio"] {
-  display: none;
-}
-.tabs input[type="radio"]:checked + label + .tab {
-  display: block;
-}
-
+/* CATEGORIES STYLES */
 /*Table categories*/
 .categories .th-1,
 .categories .th-2 {
@@ -1147,6 +1636,7 @@ tr:nth-child(even) {
   background-color: #fdf6df;
 }
 
+/* MESSAGES STYLES */
 /*Table messages*/
 .messages .th-1 {
   width: 10%;
@@ -1157,14 +1647,23 @@ tr:nth-child(even) {
   width: 20%;
 }
 
-/**
- * Responsive
- */
-@media (max-width: 1067px) {
-  .messages .actions-container {
-    justify-content: space-evenly;
-  }
+/* BOOKINGS STYLES */
+.bookings .th-1 {
+  width: 5%;
 }
+
+.bookings .th-2,
+.bookings .th-3 {
+  width: 15%;
+}
+
+.bookings .th-4,
+.bookings .th-5 {
+  width: 8%;
+}
+
+/* MEDIA QUERIES */
+
 @media (max-width: 821px) {
   .tabs .tab,
   .tabs label {
@@ -1218,5 +1717,183 @@ tr:nth-child(even) {
   .actions-container {
     justify-content: space-evenly;
   }
+}
+
+@media (max-width: 500px) {
+  table {
+    font-size: 0.7rem;
+  }
+
+  .tabs .tab {
+    padding: 1rem 0;
+  }
+}
+
+/* Dialog edit booking */
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding-top: 1rem;
+}
+
+textarea {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+label {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.65;
+  padding: 0 0 0.3rem 0.3rem;
+}
+
+.title {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.65;
+  padding-left: 0.3rem;
+  letter-spacing: 0;
+}
+
+select,
+option {
+  font-family: typewriter-extralight;
+  border: none;
+  outline: none;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+  font-size: 14px;
+  padding: 5px 0;
+  margin-bottom: 1.5rem;
+  color: black;
+  display: block;
+}
+
+input[type="text"],
+input[type="email"] {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  margin-bottom: 1.5rem;
+  padding: 5px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Radio buttons */
+.radio-group {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.radio-group{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sideRadio{
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: .3rem 0;
+}
+
+.radio-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.radio-container input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+.radio-desc {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.65;
+  padding-left: 0.3rem;
+  letter-spacing: 0;
+}
+
+.radio-container .checkmark {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+}
+
+.radio-container input[type="radio"]:checked + .checkmark::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #f79f9f;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Date and time */
+
+input[type="date"] {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.65;
+  border: none;
+  outline: none;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+  color: black;
+}
+
+#time {
+  width: 100%;
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.65;
+  border: none;
+  outline: none;
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+  color: black;
+}
+
+.buttons-container {
+  padding: 1rem 0;
+}
+
+textarea:focus {
+  outline: none;
+  border: 1px solid #f79f9f;
+}
+
+input:focus,
+#session:focus,
+#location:focus,
+#date:focus,
+#time:focus {
+  outline: none;
+  border-bottom: 1px solid #f79f9f;
+}
+
+.errors {
+  color: red;
+  font-size: 14px;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
 }
 </style>

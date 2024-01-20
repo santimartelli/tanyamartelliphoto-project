@@ -1,15 +1,17 @@
 <template>
   <teleport to="body">
-    <div v-if="show" @click="tryClose" class="backdrop1"></div>
+  <div v-if="show" @click="close" class="backdrop4"></div>
     <transition name="dialog">
       <dialog open v-if="show">
-        <section class="content">
-          <slot></slot>
-            <base-button @click="closeSuccessMessage">Close</base-button>
-        </section>
+        <div class="section">
+          <h3>Enter the new booking details</h3>
+          <form @submit.prevent="editCategory">
+            <slot></slot>
+          </form>
+        </div>
       </dialog>
     </transition>
-  </teleport>
+</teleport>
 </template>
 
 <script>
@@ -20,25 +22,9 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      alertOk: false,
-    };
-  },
   emits: ["close"],
   methods: {
-    tryClose() {
-      if (this.alertOk) {
-        // Reset the success state and close the dialog
-        this.alertOk = 0;
-      } else {
-        // Close the dialog
-        this.$emit("close");
-      }
-    },
-    closeSuccessMessage() {
-      // Reset the success state and close the dialog
-      this.alertOk = 0;
+    close() {
       this.$emit("close");
     },
   },
@@ -46,7 +32,12 @@ export default {
 </script>
 
 <style scoped>
-.backdrop1 {
+h3 {
+  text-align: center;
+  padding: 1rem;
+}
+
+.backdrop4 {
   position: fixed;
   top: 0;
   left: 0;
@@ -62,17 +53,19 @@ dialog {
   top: 12vh;
   left: 10%;
   width: 80%;
+  height: 75vh;
   z-index: 999;
   border-radius: 5px;
   border: none;
   padding: 0;
   margin: 0;
-  overflow: hidden;
+  overflow-y: scroll;
   background-color: #fff;
 }
 
-section {
-  padding: 2rem;
+.section {
+  width: 80%;
+  margin: 0px auto;
 }
 
 .content {
