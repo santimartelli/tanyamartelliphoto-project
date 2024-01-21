@@ -1,4 +1,5 @@
 const BookingModel = require("../models/booking.model.js");
+const emailService = require("../services/emailService.js");
 
 exports.create = (req, res) => {
   console.log(req.body);
@@ -12,7 +13,6 @@ exports.create = (req, res) => {
     res.status(400).send({ message: "Please complete all the fields" });
     return;
   }
-
   const newBooking = new BookingModel({
     name: req.body.name,
     email: req.body.email,
@@ -23,13 +23,16 @@ exports.create = (req, res) => {
     selectedTime: req.body.selectedTime,
     message: req.body.message,
   });
-
   BookingModel.create(newBooking, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || "Some error occurred while creating the booking.",
       });
     } else {
+      // Send email to the client
+      emailService.sendBookingRequestConfirmationEmail(req.body.email, req.body);
+      // Send email to the admin
+      emailService.sendBookingRequestNotificationEmail(req.body);
       res.send(data);
     }
   });
