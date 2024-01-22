@@ -129,7 +129,7 @@
           Please enter a message.
         </div>
         <div class="btn-container">
-          <base-button @click="submitForm">Enviar</base-button>
+          <base-button @click="submitForm">Send</base-button>
         </div>
       </form>
     </div>
@@ -283,6 +283,7 @@ export default {
       // Si el formulario es valido, se envia
       if (this.formIsValid) {
         try {
+          console.log("Dispatching addNewBooking");
           await this.$store.dispatch("bookings/addNewBooking", {
             name: this.name,
             email: this.email,
@@ -293,10 +294,14 @@ export default {
             selectedTime: this.selectedTime,
             message: this.message,
           });
+          console.log("Dispatch completed");
           this.okMessage = "Thank you for your booking request! I will get back to you as soon as possible to finalize the details.";
+          console.log("Form submitted:", this.okMessage);
         } catch (error) {
           console.error("Error submitting the form:", error);
+          console.log("Before error message");
           this.errorMessage = "An error occurred while processing your request. Please try again later.";
+          console.log("After error message");
         }
       }
     },

@@ -63,7 +63,23 @@
         </div>
       </div>
     </edit-category-dialog>
-
+    <!-- Reply message dialog-->
+    <reply-message :show="!!replyMessageEmail" @close="closeReplyMessage">
+      <p><strong>From:</strong> {{ selectedMessage.messageName }}</p>
+      <p><strong>Email:</strong> {{ selectedMessage.messageEmail }}</p>
+      <p><strong>Message:</strong> {{ okMessage }}</p>
+      <div class="form">
+        <p>Reply:</p>
+        <textarea id="messageToReply" v-model="messageToReply" rows="10" />
+        <div v-if="!formIsValidReplyMessage" class="errors">
+          Message can not be empty.
+        </div>
+        <div class="buttons-container">
+          <base-button @click="replyMessage">Send</base-button>
+          <base-button @click="closeReplyMessage">Cancel</base-button>
+        </div>
+      </div>
+    </reply-message>
     <!-- Update booking dialog-->
     <edit-booking-dialog
       :show="!!openUpdateDialog"
@@ -510,13 +526,13 @@
                       src="../assets/Icons/responder.png"
                       alt="Answer message"
                       title="Answer message"
-                      @click="answerMessage(message.messageEmail)"
+                      @click="replyMessageDialog(message)"
                     />
                   </div>
                   <div
                     v-if="!iconsActions"
                     class="icon-container view"
-                    @click="answerMessage(message.messageEmail)"
+                    @click="replyMessageDialog(message)"
                   >
                     <img
                       src="../assets/Icons/responder.png"
@@ -653,12 +669,14 @@ import axios from "axios";
 import OkDialog from "../components/ui/OkDialog.vue";
 import EditBookingDialog from "../components/ui/EditBookingDialog.vue";
 import EditCategoryDialog from "../components/ui/EditCategoryDialog.vue";
+import ReplyMessage from "../components/ui/ReplyMessage.vue";
 
 export default {
   components: {
     OkDialog,
     EditBookingDialog,
     EditCategoryDialog,
+    ReplyMessage,
   },
   data() {
     return {
@@ -722,6 +740,9 @@ export default {
       formIsValidTime: true,
       formIsValidMessage: true,
       formIsValid: true,
+      replyMessageEmail: null,
+      messageToReply: "",
+      formIsValidReplyMessage: true,
     };
   },
   computed: {
@@ -831,25 +852,63 @@ export default {
       this.files = [];
       this.categoryId = "";
     },
+    // async deletePicture(pictureId) {
+    //   try {
+    //     const picture = this.pictures.find((p) => p.pictureId === pictureId);
+    //     const picturePath = picture.picturePath;
+
+    //     const response = await this.$store.dispatch(
+    //       "pictures/deletePicture",
+    //       pictureId
+    //     );
+    //     if (response && response.status >= 200 && response.status < 300) {
+    //       const fileResponse = await fetch(
+    //         `http://localhost:3000/api/pictures/deleteFile?filepath=${picturePath}`,
+    //         {
+    //           method: "DELETE",
+    //         }
+    //       );
+
+    //       if (fileResponse.status === 200) {
+    //         this.$store.commit("pictures/deletePicture", pictureId);
+    //         this.feedbackMessage = "Picture deleted successfully";
+    //         this.feedbackOk = 1;
+    //       } else {
+    //         this.feedbackOk = 2;
+    //         this.feedbackMessage = "Failed to delete picture, please try again";
+    //       }
+    //     } else {
+    //       this.feedbackOk = 2;
+    //       this.feedbackMessage = "Failed to delete picture, please try again";
+    //     }
+    //   } catch (error) {
+    //     this.feedbackOk = 2;
+    //     this.feedbackMessage = "Failed to delete picture, please try again";
+    //     console.log(error);
+    //   }
+    //   setTimeout(() => {
+    //     this.feedbackMessage = "";
+    //     this.feedbackOk = 3;
+    //   }, 3000);
+    // },
     async deletePicture(pictureId) {
       try {
         const picture = this.pictures.find((p) => p.pictureId === pictureId);
-        const picturePath = picture.picturePath;
-
+        const url = new URL(picture.picturePath);
+        const filePath = url.pathname; // extrae el path de la url
         const response = await this.$store.dispatch(
           "pictures/deletePicture",
           pictureId
         );
         if (response && response.status >= 200 && response.status < 300) {
-          const fileResponse = await fetch(
-            `http://localhost:3000/api/pictures/deleteFile?filepath=${picturePath}`,
+          const fileResponse = await axios.delete(
+            `http://localhost:3000/api/pictures/deleteFile`,
             {
-              method: "DELETE",
+              params: { filepath: filePath },
             }
           );
 
           if (fileResponse.status === 200) {
-            this.$store.commit("pictures/deletePicture", pictureId);
             this.feedbackMessage = "Picture deleted successfully";
             this.feedbackOk = 1;
           } else {
@@ -863,13 +922,13 @@ export default {
       } catch (error) {
         this.feedbackOk = 2;
         this.feedbackMessage = "Failed to delete picture, please try again";
-        console.log(error);
       }
       setTimeout(() => {
         this.feedbackMessage = "";
         this.feedbackOk = 3;
       }, 3000);
     },
+
     showModal(picture) {
       this.selectedImage = picture;
       this.showImageModal = true;
@@ -1000,32 +1059,49 @@ export default {
       this.dialogMessage = null;
       this.dialogBooking = null;
     },
-    closeBookingUpdateDialog() {
-      this.openUpdateDialog = false;
-      this.updatedName = "";
-      this.updatedEmail = "";
-      this.updatedCategoryId = "";
-      this.updatedLocation = "";
-      this.updatedPlace = "";
-      this.updatedSelectedDate = "";
-      this.updatedSelectedTime = "";
-      this.updatedMessage = "";
-      this.formIsValidName = true;
-      this.formIsValidEmail = true;
-      this.formIsValidCategory = true;
-      this.formIsValidLocation = true;
-      this.formIsValidPlace = true;
-      this.formIsValidDate = true;
-      this.formIsValidTime = true;
-      this.formIsValidMessage = true;
-      this.formIsValid = true;
-      this.selectedBooking = null;
-      this.okMessage = null;
-      this.errorMessage = null;
+    replyMessageDialog(message) {
+      this.replyMessageEmail = true;
+      this.selectedMessage = message;
+      this.okMessage = this.selectedMessage.messageContent;
     },
-    answerMessage(messageEmail) {
-      // A implementar en el futuro
-      console.log(`Sending email to: ${messageEmail}`);
+    async replyMessage() {
+      this.formIsValid = true;
+      // Validations
+      this.formIsValidReplyMessage = !!this.messageToReply.trim();
+      this.formIsValid = this.formIsValidReplyMessage;
+      // Si el formulario es valido, se envia
+      if (this.formIsValid) {
+        try {
+          await this.$store.dispatch("messages/replyMessage", {
+            name: this.selectedMessage.messageName,
+            email: this.selectedMessage.messageEmail,
+            message: this.messageToReply,
+            messageContent: this.selectedMessage.messageContent,
+          });
+          console.log("Message replied succesfully");
+          this.feedbackMessage = "Message replied succesfully";
+          this.feedbackOk = 1;
+          console.log("closing dialog");
+          this.closeReplyMessage();
+          console.log("dialog closed");
+        } catch (error) {
+          this.feedbackMessage = "Error replying the message, please try again";
+          this.feedbackOk = 2;
+          this.closeReplyMessage();
+        }
+        setTimeout(() => {
+          this.feedbackMessage = "";
+          this.feedbackOk = 3;
+        }, 3000);
+      }
+    },
+    closeReplyMessage() {
+      this.replyMessageEmail = null;
+      this.okMessage = null;
+      this.selectedMessage = null;
+      this.messageToReply = "";
+      this.formIsValidReplyMessage = true;
+      this.formIsValid = true;
     },
     deleteMessage(messageId) {
       try {
@@ -1076,6 +1152,29 @@ export default {
       console.log(this.selectedBooking);
       this.dialogBooking = false;
       this.dialogMessage = false;
+    },
+    closeBookingUpdateDialog() {
+      this.openUpdateDialog = false;
+      this.updatedName = "";
+      this.updatedEmail = "";
+      this.updatedCategoryId = "";
+      this.updatedLocation = "";
+      this.updatedPlace = "";
+      this.updatedSelectedDate = "";
+      this.updatedSelectedTime = "";
+      this.updatedMessage = "";
+      this.formIsValidName = true;
+      this.formIsValidEmail = true;
+      this.formIsValidCategory = true;
+      this.formIsValidLocation = true;
+      this.formIsValidPlace = true;
+      this.formIsValidDate = true;
+      this.formIsValidTime = true;
+      this.formIsValidMessage = true;
+      this.formIsValid = true;
+      this.selectedBooking = null;
+      this.okMessage = null;
+      this.errorMessage = null;
     },
     async editBooking() {
       this.formIsValid = true;
@@ -1389,6 +1488,7 @@ body {
   color: #000;
   cursor: pointer;
   margin-left: 1rem;
+  margin-top: 1.5rem;
   letter-spacing: 0.02rem;
 }
 .category-select {
@@ -1790,19 +1890,19 @@ input[type="email"] {
   margin-bottom: 1.5rem;
 }
 
-.radio-group{
+.radio-group {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.sideRadio{
+.sideRadio {
   display: flex;
   flex: 1;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: .3rem 0;
+  padding: 0.3rem 0;
 }
 
 .radio-container {
@@ -1895,5 +1995,10 @@ input:focus,
   font-size: 14px;
   margin-top: -0.5rem;
   margin-bottom: 1rem;
+}
+
+/* set the class errors that comes after a textarea to have marign-top 1rem */
+textarea + .errors {
+  margin-top: 1rem;
 }
 </style>

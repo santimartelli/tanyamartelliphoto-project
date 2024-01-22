@@ -56,6 +56,26 @@ export default {
         throw error;
       });
   },
+  replyMessage(context, { name, email, message, messageContent }) {
+    return axios
+      .post(`http://localhost:3000/api/email/reply`, {
+        name,
+        email,
+        message,
+        messageContent,
+      })
+      .then((response) => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log("Successfully sent reply email");
+        } else {
+          console.error(`Reply request failed with status: ${response.status}`);
+        }
+        return response;
+      })
+      .catch((error) => {
+        console.error("Reply request failed with error:", error);
+      });
+  },
   deleteMessage({ commit, dispatch }, messageId) {
     return axios
       .delete(`http://localhost:3000/api/messages/${messageId}`)

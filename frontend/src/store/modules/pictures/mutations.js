@@ -2,9 +2,9 @@ export default {
   setPictures(state, pictures) {
     state.pictures = pictures;
   },
-  deletePicture(state, pictureID) {
+  deletePicture(state, pictureId) {
     state.pictures = state.pictures.filter(
-      p => p.id !== pictureID
+      p => p.id !== pictureId
     );
   }
 }
