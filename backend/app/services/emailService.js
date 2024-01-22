@@ -13,15 +13,18 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = (mailOptions) => {
-  transporter.sendMail(mailOptions, (error, info) => {
+  return new Promise((resolve, reject)=> {
+    transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error("Error sending email:", error);
+      reject(error);
     } else {
       console.log("Email sent:", info.response);
+      resolve(info.response);
     }
   });
+});
 };
-
 exports.sendMessageConfirmationEmail = (recipentEmail, messageData) => {
   const mailOptions = {
     from: {
@@ -32,9 +35,9 @@ exports.sendMessageConfirmationEmail = (recipentEmail, messageData) => {
       "santimartelli@gmail.com",
       "tanyamartelliphoto@gmail.com",
       recipentEmail,
-    ], //Agregar el email del cliente req.body.messageEmail
+    ],
     subject: "We received your message!",
-    text: `Hello ${messageData.messageName},\n\nThank you for reaching out to us. We have received your message and will get back to you soon.\n\nBest regards,\nTatiana from Tanya Martelli Photography Team`,
+    text: `Hello ${messageData.messageName},\n\nThank you for reaching out to us. We have received your message and will get back to you soon.\n\nBest regards,\n\nTatiana from Tanya Martelli Photography Team`,
   };
   sendEmail(mailOptions);
 };
@@ -49,7 +52,7 @@ exports.sendMessageNotificationEmail = (messageData) => {
     subject:
       "Tanya Martelli Photography - New message received from " +
       messageData.messageName,
-    text: `You have received a new message from ${messageData.messageName} (${messageData.messageEmail}): ${messageData.messageContent}`,
+    text: `You have received a new message from ${messageData.messageName} (${messageData.messageEmail}):\n\n${messageData.messageContent}`,
   };
   sendEmail(mailOptions);
 };
@@ -62,7 +65,7 @@ exports.sendBookingRequestConfirmationEmail = (to, bookingData) => {
     },
     to: to,
     subject: "We received your booking request!",
-    text: `Hello ${bookingData.name},\n\nThank you for your booking request. We will get back to you soon to finalize the details.\n\nBest regards,\nTatiana\nfrom Tanya Martelli Photography Team`,
+    text: `Hello ${bookingData.name},\n\nThank you for your booking request. We will get back to you soon to finalize the details.\n\nBest regards!\n\nTatiana, from Tanya Martelli Photography Team`,
   };
   sendEmail(mailOptions);
 };
@@ -81,5 +84,19 @@ exports.sendBookingRequestNotificationEmail = (bookingData) => {
   };
   sendEmail(mailOptions);
 };
+
+exports.replyEmail = (to, messageData) => {
+  const mailOptions = {
+    from: {
+      name: "Tanya Martelli Photography",
+      address: "santimartelli@gmail.com",
+    },
+    to: to,
+    subject: `Hello, ${messageData.name}!`,
+    text: `${messageData.message}\n\nBest regards!\n\nTatiana, from Tanya Martelli Photography Team\n\n\n***This is an answer to the message below***\n\n${messageData.name}\n${messageData.email}\n${messageData.messageContent}`,
+  };
+  sendEmail(mailOptions);
+}
+
 
 exports.updated

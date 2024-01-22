@@ -1,4 +1,7 @@
 const PictureModel = require("../models/picture.model.js");
+const fs = require('fs');
+const path = require('path');
+
 exports.uploadPictures = (req, res) => {
   console.log("req.files", req.files);
   const picturesUploaded = req.files.map((file) => {
@@ -23,28 +26,6 @@ exports.uploadPictures = (req, res) => {
     res.send("Pictures added to database");
   });
 };
-
-// exports.create = (req, res) => {
-//   if (!req.body.picturePath || !req.body.categoryId) {
-//     res.status(400).send({ message: "Picture path and category ID are required!" });
-//     return;
-//   }
-
-//   const newPicture = new PictureModel({
-//     picturePath: req.body.picturePath,
-//     categoryId: req.body.categoryId,
-//   });
-
-//   PictureModel.create(newPicture, (err, data) => {
-//     if (err) {
-//       res.status(500).send({
-//         message: err.message || "Some error occurred while creating the Picture.",
-//       });
-//     } else {
-//       res.send(data);
-//     }
-//   });
-// };
 
 exports.findAll = (req, res) => {
   PictureModel.getAll((err, data) => {
@@ -154,5 +135,52 @@ exports.deleteAllByCategory = (req, res) => {
         message: `All pictures for category ${req.params.categoryId} deleted successfully!`,
       });
     }
+  });
+};
+
+// exports.deleteFile = (req, res) => {
+//   const filePath = req.query.filepath;
+//   console.log("filePath", filePath);
+//   // Check if the file path is provided
+//   if (!filePath) {
+//     return res.status(400).send({ message: "File path is required" });
+//   }
+//   // Construct the full path (if needed) and delete the file
+//   const fullPath = path.join(__dirname, '../../resources/static/assets/uploads/', filePath);
+
+//   fs.unlink(fullPath, (err) => {
+//     if (err) {
+//       console.error("Error while deleting file:", err);
+//       return res.status(500).send({ message: "Failed to delete file" });
+//     }
+//     res.send({ message: "File deleted successfully" });
+//   });
+// };
+
+exports.deleteFile = (req, res) => {
+  const filePath = req.query.filepath;
+
+  if (!filePath) {
+    return res.status(400).send({ message: "File path is required" });
+  }
+
+  const fullPath = path.join(__dirname, '../../', filePath);
+
+  // Security check: Prevent directory traversal
+  if (!fullPath.startsWith(path.join(__dirname, '../../resources/static/assets/uploads/'))) {
+    return res.status(400).send({ message: "Invalid file path" });
+  }
+
+  // Check if file exists
+  if (!fs.existsSync(fullPath)) {
+    return res.status(404).send({ message: "File not found" });
+  }
+
+  fs.unlink(fullPath, (err) => {
+    if (err) {
+      console.error("Error while deleting file:", err);
+      return res.status(500).send({ message: "Failed to delete file" });
+    }
+    res.send({ message: "File deleted successfully" });
   });
 };

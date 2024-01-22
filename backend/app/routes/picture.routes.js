@@ -6,9 +6,6 @@ module.exports = (app) => {
   // Upload a new Picture
   router.post("/", upload.array("images", 10), pictures.uploadPictures);
 
-  // Create a new Picture
-  // router.post("/", pictures.create);
-
   // Retrieve all Pictures
   router.get("/", pictures.findAll);
 
@@ -17,6 +14,9 @@ module.exports = (app) => {
 
   // Update a Picture with id
   router.put("/:id", pictures.update);
+
+  // Delete a Picture file
+  router.delete("/deleteFile", pictures.deleteFile);
 
   // Delete a Picture with id
   router.delete("/:id", pictures.delete);
