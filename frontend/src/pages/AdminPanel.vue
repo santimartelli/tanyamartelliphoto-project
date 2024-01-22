@@ -1415,7 +1415,7 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1re;
+  padding: 1rem;
 }
 
 .inputs-container-categories {
@@ -1442,7 +1442,7 @@ body {
   font-family: Typewriter-extralight;
   font-size: 0.7rem;
   letter-spacing: 0.02rem;
-  padding: 8px;
+  padding: 3rem;
   border: 1px solid #e8e8e8;
   background-color: #fff;
   margin: 0.5rem;
@@ -1455,6 +1455,9 @@ body {
 
 #category-input {
   text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  padding: .7rem;
 }
 .file-select::file-selector-button {
   border: 1px solid #000;
