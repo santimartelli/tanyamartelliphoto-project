@@ -1,3 +1,4 @@
+<!--Barra de navegación cuando el usuario está autenticado-->
 <template>
   <div class="auth-nav">
     <div class="left">
@@ -21,28 +22,42 @@
       </li>
     </div>
   </div>
-    <div class="welcome">
-      <h1>ADMIN PANEL</h1>
+  <div class="welcome">
+    <h1>ADMIN PANEL</h1>
   </div>
-
 </template>
 
 <script>
 export default {
+  /**
+   * Data properties para el componente AuthenticatedNav.
+   * @returns {Object} Objeto "data" que contiene la propiedad adminPanelLink.
+   */
   data() {
     return {
       adminPanelLink: false,
     };
   },
   computed: {
+    /**
+     * Obtiene el nombre de usuario del usuario autenticado.
+     * @returns {string} Nombre de usuario del usuario autenticado.
+     */
     username() {
       return this.$store.state.auth.user.username;
     },
+    /**
+     * Comprueba si la ruta actual es la del panel de administración.
+     * @returns {boolean} Verdadero si la ruta actual es la del panel de administración, falso de lo contrario.
+     */
     isAdminPanel() {
-      return this.$route.name === 'admin';
+      return this.$route.name === "admin";
     },
   },
   methods: {
+    /**
+     * Cierra sesión de usuario y redirige a la página de inicio.
+     */
     logout() {
       this.$store.dispatch("logout");
       this.$router.replace({ name: "home" });
@@ -66,7 +81,7 @@ export default {
   z-index: 99;
   font-size: 0.7rem;
   color: #fff;
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
 .left,
@@ -90,7 +105,7 @@ export default {
   justify-content: center;
   padding: 1rem;
   font-family: Typewriter-extralight;
-  font-size: .6rem;
+  font-size: 0.6rem;
   letter-spacing: 0.2rem;
   background-color: #fff;
   border-bottom: 1px solid #ccc;

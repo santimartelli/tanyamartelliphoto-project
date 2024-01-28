@@ -1,5 +1,5 @@
 <template>
-  <div class="container-hero">
+  <div class="container-landing-page">
     <section class="hero">
       <transition-group name="fade" tag="div">
         <div
@@ -172,7 +172,7 @@ h2 {
 }
 
 /* Hero section */
-.container-hero {
+.container-landing-page {
   width: 100%;
 }
 .hero {
