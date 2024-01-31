@@ -1,5 +1,6 @@
 /**
- * @fileoverview Funciones middleware para validar los datos de los usuarios.
+ * @fileoverview Este archivo contiene el middleware de usuarios para validar los datos
+ * del formulario de registro y comprobar si el usuario está logueado.
  * @module usersMiddleware
  */
 const jwt = require("jsonwebtoken");

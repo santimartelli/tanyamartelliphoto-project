@@ -1,5 +1,5 @@
 /**
- * @description Rutas para gestionar las solicitudes de reservas.
+ * @fileoverview Este archivo contiene las rutas para gestionar las solicitudes de reserva.
  */
 module.exports = (app) => {
   const bookings = require("../controllers/booking.controller.js");

@@ -1,6 +1,7 @@
 /**
- * @description Rutas para las gestionar categorías.
+ * @fileoverview Este archivo contiene las rutas para gestionar las categorías.
  */
+
 module.exports = (app) => {
   const categories = require("../controllers/category.controller.js");
   var router = require("express").Router();

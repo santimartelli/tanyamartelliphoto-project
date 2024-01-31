@@ -1,6 +1,5 @@
 /**
  * @fileoverview Este archivo contiene el controlador de las imágenes.
- * @module pictureController
  */
 
 const PictureModel = require("../models/picture.model.js");
@@ -192,9 +191,7 @@ exports.deleteFile = (req, res) => {
   if (!filePath) {
     return res.status(400).send({ message: "File path is required" });
   }
-
   const fullPath = path.join(__dirname, "../../", filePath);
-
   // Comprobación de seguridad para evitar que se eliminen archivos fuera de la carpeta de uploads
   if (
     !fullPath.startsWith(
@@ -203,12 +200,11 @@ exports.deleteFile = (req, res) => {
   ) {
     return res.status(400).send({ message: "Invalid file path" });
   }
-
   // Comprobación de si el archivo existe
   if (!fs.existsSync(fullPath)) {
     return res.status(404).send({ message: "File not found" });
   }
-
+  // Eliminación del archivo
   fs.unlink(fullPath, (err) => {
     if (err) {
       console.error("Error while deleting file:", err);

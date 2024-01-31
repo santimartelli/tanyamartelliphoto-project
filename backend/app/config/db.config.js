@@ -1,4 +1,6 @@
-// Configuracion de la base de datos
+/**
+ * @fileoverview Este archivo contiene la configuración de la base de datos.
+ */
 
 require('dotenv').config();
 module.exports = {

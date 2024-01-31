@@ -1,6 +1,5 @@
 /**
- * Modulo que envia emails a traves de nodemailer.
- * @module emailService
+ * @fileoverview Este archivo contiene el servicio para el envío de emails.
  */
 
 require("dotenv").config();

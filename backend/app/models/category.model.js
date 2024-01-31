@@ -1,7 +1,12 @@
+/**
+ * @fileoverview Modelo de la tabla Categories. Se definen los atributos de la tabla y
+ * el nombre de la tabla a la que hace referencia.
+ */
+
 const sql = require("./db.js");
 
 /**
- * Representa el modelo categoría.
+ * Representación del modelo categoría.
  * @constructor
  * @param {object} category - El objeto de la categoría.
  * @param {string} category.categoryName - El nombre de la categoría.
@@ -14,7 +19,6 @@ const Category = function (category) {
  * Crea una nueva categoría, la guarda en la base de datos y devuelve el resultado.
  * @param {object} newCategory - El objeto de la nueva categoría.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Category.create = (newCategory, result) => {
   sql.query("INSERT INTO Categories SET ?", newCategory, (err, res) => {
@@ -31,7 +35,6 @@ Category.create = (newCategory, result) => {
 /**
  * Obtiene todas las categorías de la base de datos y devuelve el resultado.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Category.getAll = (result) => {
   sql.query("SELECT * FROM Categories", (err, res) => {
@@ -48,7 +51,6 @@ Category.getAll = (result) => {
  * Busca una categoría por su ID y Devuelve el resultado.
  * @param {number} categoryId - El ID de la categoría a buscar.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Category.findById = (categoryId, result) => {
   sql.query(
@@ -76,7 +78,6 @@ Category.findById = (categoryId, result) => {
  * @param {number} categoryId - El ID de la categoría a actualizar.
  * @param {object} category - El objeto de la categoria actualizado.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Category.updateById = (categoryId, category, result) => {
   sql.query(
@@ -102,7 +103,6 @@ Category.updateById = (categoryId, category, result) => {
  * Elimina una categoría de la base de datos por su ID y devuelve el resultado.
  * @param {number} categoryId - El ID de la categoría a eliminar.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Category.removeOne = (categoryId, result) => {
   sql.query("DELETE FROM Categories WHERE categoryId = ?", categoryId, (err, res) => {
@@ -124,7 +124,6 @@ Category.removeOne = (categoryId, result) => {
 /**
  * Elimina todas las categorías de la base de datos y devuelve el resultado.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Category.removeAll = (result) => {
   sql.query("DELETE FROM Categories", (err, res) => {

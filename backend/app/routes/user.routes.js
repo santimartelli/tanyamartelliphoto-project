@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Este archivo contiene las rutas para la gestión de usuarios.
+ */
+
 module.exports = (app) => {
   const express = require("express");
   const router = express.Router();
@@ -8,7 +12,9 @@ module.exports = (app) => {
   require('dotenv').config();
   const secretKey = process.env.JWT_SECRET_KEY;
 
-  // Register
+  /**
+   * @description Ruta para registrar un nuevo usuario.
+   */
   router.post("/sign-up", userMiddleware.validateRegister, (req, res, next) => {
     db.query(
       `SELECT * FROM users WHERE LOWER(username) = LOWER(${db.escape(
@@ -51,7 +57,9 @@ module.exports = (app) => {
     );
   });
 
-  // Login
+  /**
+   * @description Ruta para iniciar sesión de usuario.
+   */
   router.post("/login", (req, res, next) => {
     db.query(
       `SELECT * FROM users WHERE username = ${db.escape(req.body.username)};`,

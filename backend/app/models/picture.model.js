@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Modelo de la tabla Pictures. Se definen los atributos de la tabla y
+ * el nombre de la tabla a la que hace referencia.
+ */
+
 const sql = require("./db.js");
 
 /**
@@ -16,7 +21,6 @@ const Picture = function (picture) {
  * Crea una nueva imagen, la guarda en la base de datos y devuelve el resultado.
  * @param {array} pictureData - Los datos de la imagen a crear.
  * @param {function} callback - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Picture.create = (pictureData, callback) => {
   const query = 'INSERT INTO Pictures (picturePath, categoryId) VALUES ?';
@@ -26,7 +30,6 @@ Picture.create = (pictureData, callback) => {
 /**
  * Obtiene todas las imágenes de la base de datos y devuelve el resultado.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Picture.getAll = (result) => {
   sql.query(
@@ -51,7 +54,6 @@ Picture.getAll = (result) => {
  * Obtiene una imagen por su ID y devuelve el resultado.
  * @param {number} categoryId - El ID de la imagen a buscar.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 
 Picture.getByCategory = (categoryId, result) => {
@@ -80,7 +82,6 @@ Picture.getByCategory = (categoryId, result) => {
  * @param {string} updatedPicture.picturePath - La ruta de la imagen actualizada.
  * @param {number} updatedPicture.categoryId - El ID de la categoría a la que pertenece la imagen actualizada.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Picture.updateById = (pictureId, updatedPicture, result) => {
   sql.query(
@@ -104,8 +105,7 @@ Picture.updateById = (pictureId, updatedPicture, result) => {
 /**
  * Elimina una imagen de la base de datos por su ID.
  * @param {number} pictureId - El ID de la imagen.
- * @param {function} result - El callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Picture.deleteById = (pictureId, result) => {
   sql.query(
@@ -129,8 +129,7 @@ Picture.deleteById = (pictureId, result) => {
 /**
  * Elimina todas las imágenes de una categoría.
  * @param {number} categoryId - El ID de la categoría.
- * @param {function} result - El callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Picture.deleteAllByCategory = (categoryId, result) => {
   sql.query(
@@ -149,8 +148,7 @@ Picture.deleteAllByCategory = (categoryId, result) => {
 
 /**
  * Elimina todas las imágenes de la base de datos.
- * @param {function} result - El callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Picture.deleteAll = (result) => {
   sql.query("DELETE FROM Pictures", (err, res) => {

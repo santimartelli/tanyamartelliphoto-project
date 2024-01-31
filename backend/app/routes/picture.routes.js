@@ -1,6 +1,7 @@
 /**
- * @description: Rutas para gestionar las imágenes.
+ * @fileoverview Este archivo contiene las rutas para gestionar las imágenes.
  */
+
 module.exports = (app) => {
   const pictures = require("../controllers/picture.controller.js");
   var router = require("express").Router();

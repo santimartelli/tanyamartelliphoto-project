@@ -1,5 +1,5 @@
 /**
- * @description Rutas para los mensajes.
+ * @fileoverview Este archivo contiene las rutas para la gestión de los mensajes.
  */
 
 module.exports = (app) => {

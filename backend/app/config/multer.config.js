@@ -1,6 +1,5 @@
 /**
- * Este archivo contiene la configuración de multer para el manejo de archivos subidos.
- * @module multerConfig
+ * @fileoverview Este archivo contiene la configuración de multer para el manejo de archivos subidos.
  */
 
 const multer = require('multer');
@@ -11,7 +10,7 @@ const path = require('path');
  * @param {Object} req - El objeto request.
  * @param {Object} file - El objeto subido.
  * @param {Function} cb - La función callback.
- * @returns {void}
+ * @returns {Function} - Devuelve la función callback.
  */
 const imageFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image")) {

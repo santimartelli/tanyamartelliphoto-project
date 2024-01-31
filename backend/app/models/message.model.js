@@ -1,7 +1,12 @@
+/**
+ * @fileoverview Modelo de la tabla Messages. Se definen los atributos de la tabla y
+ * el nombre de la tabla a la que hace referencia.
+ */
+
 const sql = require("./db.js");
 
 /**
- * Representa el modelo de un mensaje.
+ * Representación del modelo mensaje.
  * @constructor
  * @param {object} message - El objeto mensaje.
  * @param {string} message.messageName - The name of the message.
@@ -18,7 +23,6 @@ const Message = function (message) {
  * Crea un nuevo mensaje, lo guarda en la base de datos y devuelve el resultado.
  * @param {object} newMessage - El nuevo objeto mensaje.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 
 Message.create = (newMessage, result) => {
@@ -37,7 +41,6 @@ Message.create = (newMessage, result) => {
 /**
  * Obtiene todos los mensajes de la base de datos y devuelve el resultado.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 
 Message.getAll = (result) => {
@@ -55,7 +58,6 @@ Message.getAll = (result) => {
  * Busca un mensaje por su ID y Devuelve el resultado.
  * @param {number} messageId - El ID del mensaje a buscar.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Message.findById = (messageId, result) => {
   sql.query(
@@ -82,7 +84,6 @@ Message.findById = (messageId, result) => {
  * @param {number} messageId - El ID del mensaje a actualizar.
  * @param {object} message - El objeto mensaje actualizado.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Message.updateById = (messageId, message, result) => {
   sql.query(
@@ -108,7 +109,6 @@ Message.updateById = (messageId, message, result) => {
  * Elimina un mensaje de la base de datos por su ID y devuelve el resultado.
  * @param {number} messageId - El ID del mensaje a eliminar.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Message.removeOne = (messageId, result) => {
   sql.query("DELETE FROM messages WHERE messageId = ?", messageId, (err, res) => {
@@ -130,7 +130,6 @@ Message.removeOne = (messageId, result) => {
 /**
  * Elimina todos los mensajes de la base de datos y devuelve el resultado.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Message.removeAll = (result) => {
   sql.query("DELETE FROM messages", (err, res) => {

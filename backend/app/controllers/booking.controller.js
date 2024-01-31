@@ -1,13 +1,14 @@
 /**
- * @fileoverview Archivo que contiene el controlador de las reservas.
- * @module bookingController
+ * @fileoverview Archivo que contiene el controlador de las solicitudes de reservas que se envían desde el
+ * formulario de la página de reservas.
  */
 
 const BookingModel = require("../models/booking.model.js");
 const emailService = require("../services/emailService.js");
 
 /**
- * Crea una nueva reserva.
+ * Crea una nueva solicitud de reserva, la guarda en la base de datos, envía un email de confirmación al usuario y
+ * un email de notificación al administrador.
  * @param {Object} req - El objeto de solicitud HTTP.
  * @param {Object} res - El objeto de respuesta HTTP.
  */
@@ -55,7 +56,7 @@ exports.create = (req, res) => {
 };
 
 /**
- * Obtiene todas las reservas.
+ * Obtiene todas las reservas almacenadas en la base de datos.
  * @param {Object} req - El objeto de solicitud HTTP.
  * @param {Object} res - El objeto de respuesta HTTP.
  */
@@ -98,7 +99,7 @@ exports.findOne = (req, res) => {
 };
 
 /**
- * Actualiza una reserva existente.
+ * Actualiza una reserva existente con los datos enviados en el cuerpo de la solicitud.
  * @param {Object} req - El objeto de solicitud HTTP.
  * @param {Object} res - El objeto de respuesta HTTP.
  */

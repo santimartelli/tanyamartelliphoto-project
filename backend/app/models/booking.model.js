@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Modelo de la tabla Bookings. Se definen los atributos de la tabla y
+ * el nombre de la tabla a la que hace referencia.
+ */
+
 const sql = require("./db.js");
 
 /**
@@ -35,8 +40,7 @@ const Booking = function (booking) {
  * @param {string} newBooking.selectedDate - La fecha seleccionada de la reserva.
  * @param {string} newBooking.selectedTime - El horario seleccionado de la reserva.
  * @param {string} newBooking.message - El mensaje de la reserva.
- * @param {function} result - El callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Booking.create = (newBooking, result) => {
   sql.query("INSERT INTO bookings SET ?", newBooking, (err, res) => {
@@ -52,8 +56,7 @@ Booking.create = (newBooking, result) => {
 
 /**
  * Obtiene todas las reservas de la base de datos y devuelve el resultado.
- * @param {function} result - El callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Booking.getAll = (result) => {
   sql.query("SELECT * FROM bookings", (err, res) => {
@@ -70,7 +73,6 @@ Booking.getAll = (result) => {
  * Obtiene una reserva de la base de datos por su ID y devuelve el resultado.
  * @param {number} bookingId - El ID de la reserva.
  * @param {function} result - El callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
  */
 Booking.findById = (bookingId, result) => {
   sql.query(
@@ -104,8 +106,7 @@ Booking.findById = (bookingId, result) => {
  * @param {string} booking.selectedDate - La fecha seleccionada de la reserva.
  * @param {string} booking.selectedTime - El horario seleccionado de la reserva.
  * @param {string} booking.message - El mensaje de la reserva.
- * @param {function} result - El callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Booking.updateById = (bookingId, booking, result) => {
   sql.query(
@@ -130,8 +131,7 @@ Booking.updateById = (bookingId, booking, result) => {
 /**
  * Elimina una reserva existente de la base de datos por su ID y devuelve el resultado.
  * @param {number} bookingId - El ID de la reserva.
- * @param {function} result - El callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Booking.removeOne = (bookingId, result) => {
   sql.query("DELETE FROM bookings WHERE bookingId = ?", bookingId, (err, res) => {
@@ -152,8 +152,7 @@ Booking.removeOne = (bookingId, result) => {
 
 /**
  * Elimina todas las reservas de la base de datos y devuelve el resultado.
- * @param {function} result - El callback que maneja la respuesta de la base de datos.
- * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Booking.removeAll = (result) => {
   sql.query("DELETE FROM bookings", (err, res) => {

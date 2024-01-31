@@ -1,5 +1,8 @@
-<!--Barra de navegación cuando el usuario está autenticado-->
-<template>
+/**
+ * Este componente muestra la barra de navegación cuando el usuario está autenticado.
+  * @module components/layout/AuthenticatedNav
+  */
+ <template>
   <div class="auth-nav">
     <div class="left">
       <div class="title">

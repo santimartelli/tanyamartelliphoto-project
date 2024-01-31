@@ -1,12 +1,11 @@
 /**
  * @fileoverview Archivo que contiene el controlador de las categorías.
- * @module CategoryController
  */
 
 const CategoryModel = require("../models/category.model.js");
 
 /**
- * Crea una nueva categoría.
+ * Crea una nueva categoría y la guarda en la base de datos.
  * @param {Object} req - El objeto de solicitud HTTP.
  * @param {Object} res - El objeto de respuesta HTTP.
  */
@@ -33,7 +32,7 @@ exports.create = (req, res) => {
 };
 
 /**
- * Obtiene todas las categorías.
+ * Obtiene todas las categorías almacenadas en la base de datos.
  * @param {Object} req - El objeto de solicitud HTTP.
  * @param {Object} res - El objeto de respuesta HTTP.
  */
@@ -50,7 +49,7 @@ exports.findAll = (req, res) => {
 };
 
 /**
- * Obtiene una categoría por ID.
+ * Busca una categoría por su ID.
  * @param {Object} req - El objeto de solicitud HTTP.
  * @param {Object} res - El objeto de respuesta HTTP.
  */

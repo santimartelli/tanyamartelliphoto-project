@@ -1,7 +1,5 @@
-
 /**
- * @fileoverview Este archivo contiene el controlador de los mensajes.
- * @module messageController
+ * @fileoverview Este archivo contiene el controlador de los mensajes que se envían desde el formulario de contacto.
  */
 
 const MessageModel = require("../models/message.model.js");

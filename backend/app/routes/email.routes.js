@@ -1,6 +1,7 @@
 /**
- * @description Rutas para gestionar el envío de emails.
+ * @fileoverview Este archivo contiene las rutas para gestionar el envío de emails.
  */
+
 module.exports = (app) => {
   const emailService = require("../services/emailService.js");
   var router = require("express").Router();
