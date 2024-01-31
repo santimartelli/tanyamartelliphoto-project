@@ -1,10 +1,25 @@
 const sql = require("./db.js");
 
+/**
+ * Representa el modelo de un mensaje.
+ * @constructor
+ * @param {object} message - El objeto mensaje.
+ * @param {string} message.messageName - The name of the message.
+ * @param {string} message.messageEmail - The email of the message.
+ * @param {string} message.messageContent - The content of the message.
+ */
 const Message = function (message) {
   this.messageName = message.messageName;
   this.messageEmail = message.messageEmail;
   this.messageContent = message.messageContent;
 };
+
+/**
+ * Crea un nuevo mensaje, lo guarda en la base de datos y devuelve el resultado.
+ * @param {object} newMessage - El nuevo objeto mensaje.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ */
 
 Message.create = (newMessage, result) => {
   sql.query("INSERT INTO messages SET ?", newMessage, (err, res) => {
@@ -19,6 +34,12 @@ Message.create = (newMessage, result) => {
   });
 };
 
+/**
+ * Obtiene todos los mensajes de la base de datos y devuelve el resultado.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ */
+
 Message.getAll = (result) => {
   sql.query("SELECT * FROM messages", (err, res) => {
     if (err) {
@@ -30,6 +51,12 @@ Message.getAll = (result) => {
   });
 };
 
+/**
+ * Busca un mensaje por su ID y Devuelve el resultado.
+ * @param {number} messageId - El ID del mensaje a buscar.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ */
 Message.findById = (messageId, result) => {
   sql.query(
     "SELECT * FROM messages WHERE messageId = ?",
@@ -40,18 +67,23 @@ Message.findById = (messageId, result) => {
         result(err, null);
         return;
       }
-
       if (res.length) {
         console.log("found message: ", res[0]);
         result(null, res[0]);
         return;
       }
-      // not found Category with the id
       result({ kind: "not_found" }, null);
     }
   );
 };
 
+/**
+ * Actualiza un mensaje existente de la base de datos por su ID y devuelve el resultado.
+ * @param {number} messageId - El ID del mensaje a actualizar.
+ * @param {object} message - El objeto mensaje actualizado.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ */
 Message.updateById = (messageId, message, result) => {
   sql.query(
     "UPDATE messages SET messageName = ?, messageEmail = ?, messageContent = ? WHERE messageId = ?",
@@ -62,19 +94,22 @@ Message.updateById = (messageId, message, result) => {
         result(err, null);
         return;
       }
-
       if (res.affectedRows == 0) {
-        // not found Category with the id
         result({ kind: "not_found" }, null);
         return;
       }
-
       console.log("updated message: ", { id: messageId, ...message });
       result(null, { id: messageId, ...message });
     }
   );
 };
 
+/**
+ * Elimina un mensaje de la base de datos por su ID y devuelve el resultado.
+ * @param {number} messageId - El ID del mensaje a eliminar.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ */
 Message.removeOne = (messageId, result) => {
   sql.query("DELETE FROM messages WHERE messageId = ?", messageId, (err, res) => {
     if (err) {
@@ -83,7 +118,6 @@ Message.removeOne = (messageId, result) => {
       return;
     }
     if (res.affectedRows == 0) {
-      // not found Category with the id
       result({ kind: "not_found" }, null);
       return;
     } else {
@@ -93,6 +127,11 @@ Message.removeOne = (messageId, result) => {
   });
 };
 
+/**
+ * Elimina todos los mensajes de la base de datos y devuelve el resultado.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ * @returns {function} Devuelve el callback que maneja la respuesta de la base de datos.
+ */
 Message.removeAll = (result) => {
   sql.query("DELETE FROM messages", (err, res) => {
     if (err) {

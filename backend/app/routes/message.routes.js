@@ -1,24 +1,39 @@
+/**
+ * @description Rutas para los mensajes.
+ */
+
 module.exports = (app) => {
   const messages = require("../controllers/message.controller.js");
-
   var router = require("express").Router();
 
-  // Crear un nuevo mensaje
+  /**
+   * @description Ruta para crear un nuevo mensaje.
+   */
   router.post("/", messages.create);
 
-  // Obtener todos los mensajes
+  /**
+   * @description Ruta para obtener todos los mensajes.
+   */
   router.get("/", messages.findAll);
 
-  // Obtener un solo mensaje a través del id
+  /**
+   * @description Ruta para obtener un mensaje a través del id.
+   */
   router.get("/:id", messages.findOne);
 
-  // Actualizar un mensaje a través del id
+  /**
+   * @description Ruta para actualizar un mensaje a través del id.
+   */
   router.put("/:id", messages.update);
 
-  // Eliminar un mensaje a través del id
+  /**
+   * @description Ruta para eliminar un mensaje a través del id.
+   */
   router.delete("/:id", messages.deleteOne);
 
-  // Eliminar todos los mensajes
+  /**
+   * @description Ruta para eliminar todos los mensajes.
+   */
   router.delete("/", messages.deleteAll);
 
   app.use("/api/messages", router);

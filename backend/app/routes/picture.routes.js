@@ -1,30 +1,49 @@
+/**
+ * @description: Rutas para gestionar las imágenes.
+ */
 module.exports = (app) => {
   const pictures = require("../controllers/picture.controller.js");
   var router = require("express").Router();
   var upload = require("../config/multer.config.js");
 
-  // Upload a new Picture
+  /**
+   * @description Ruta para subir imagenes.
+   */
   router.post("/", upload.array("images", 10), pictures.uploadPictures);
 
-  // Retrieve all Pictures
+  /**
+   * @description Ruta para obtener todas las imágenes.
+   */
   router.get("/", pictures.findAll);
 
-  // Retrieve Pictures by Category
+  /**
+   * @description Ruta para obtener una imagen por su ID.
+   */
   router.get("/category/:categoryID", pictures.findByCategory);
 
-  // Update a Picture with id
+  /**
+   * @description Ruta para actualizar una imagen por su ID.
+   */
   router.put("/:id", pictures.update);
 
-  // Delete a Picture file
+  /**
+   * @description Ruta para eliminar una archivo de imagen.
+   */
   router.delete("/deleteFile", pictures.deleteFile);
 
-  // Delete a Picture with id
+  /**
+   * @description Ruta para eliminar una imagen por su ID.
+   */
   router.delete("/:id", pictures.delete);
 
-  // Delete all Pictures
+  /**
+   * @description Ruta para eliminar todas las imágenes.
+   */
   router.delete("/", pictures.deleteAll);
 
-  // Delete all Pictures for a specific Category
+  /**
+   * @description Ruta para eliminar todas las imágenes de una categoría.
+   */
   router.delete("/category/:categoryID", pictures.deleteAllByCategory);
 
   app.use("/api/pictures", router);

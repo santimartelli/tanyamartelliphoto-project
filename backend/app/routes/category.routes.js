@@ -1,24 +1,38 @@
+/**
+ * @description Rutas para las gestionar categorías.
+ */
 module.exports = (app) => {
   const categories = require("../controllers/category.controller.js");
-
   var router = require("express").Router();
 
-  // Create a new Category
+  /**
+   * @description Ruta para crear una nueva categoría.
+   */
   router.post("/", categories.create);
 
-  // Retrieve all Categories
+  /**
+   * @description Ruta para obtener todas las categorías.
+   */
   router.get("/", categories.findAll);
 
-  // Retrieve a single Category with id
+  /**
+   * @description Ruta para obtener una categoría por su ID.
+   */
   router.get("/:id", categories.findOne);
 
-  // Update a Category with id
+  /**
+   * @description Ruta para actualizar una categoría por su ID.
+   */
   router.put("/:id", categories.update);
 
-  // Delete a Category with id
+  /**
+   * @description Ruta para eliminar una categoría por su ID.
+   */
   router.delete("/:id", categories.deleteOne);
 
-  // Delete all Categories
+  /**
+   * @description Ruta para eliminar todas las categorías.
+   */
   router.delete("/", categories.deleteAll);
 
   app.use("/api/categories", router);

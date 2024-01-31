@@ -1,7 +1,17 @@
+
+/**
+ * @fileoverview Este archivo contiene el controlador de los mensajes.
+ * @module messageController
+ */
+
 const MessageModel = require("../models/message.model.js");
 const emailService = require("../services/emailService.js");
 
-
+/**
+ * Crea un nuevo mensaje.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.create = (req, res) => {
   console.log(req.body);
   if (
@@ -25,15 +35,20 @@ exports.create = (req, res) => {
           err.message || "Some error occurred while creating the message.",
       });
     } else {
-      // Send email to the client
+      // Enviar email de confirmación al usuario
       emailService.sendMessageConfirmationEmail(req.body.messageEmail, req.body);
-      // Send email to the admin
+      // Enviar email de notificación al administrador
       emailService.sendMessageNotificationEmail(req.body);
       res.send(data);
     }
   });
 };
 
+/**
+ * Obtiene todos los mensajes.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.findAll = (req, res) => {
   MessageModel.getAll((err, data) => {
     if (err) {
@@ -47,6 +62,11 @@ exports.findAll = (req, res) => {
   });
 };
 
+/**
+ * Obtiene un mensaje por su ID.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.findOne = (req, res) => {
   MessageModel.findById(req.params.id, (err, data) => {
     if (err) {
@@ -67,6 +87,11 @@ exports.findOne = (req, res) => {
   });
 };
 
+/**
+ * Actualiza un mensaje existente por su ID.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.update = (req, res) => {
   if (!req.body) {
     res.status(400).send({ message: "Message can not be empty!" });
@@ -96,6 +121,11 @@ exports.update = (req, res) => {
   );
 };
 
+/**
+ * Elimina un mensaje por su ID.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.deleteOne = (req, res) => {
   MessageModel.removeOne(req.params.id, (err, data) => {
     if (err) {
@@ -116,6 +146,11 @@ exports.deleteOne = (req, res) => {
   });
 };
 
+/**
+ * Elimina todos los mensajes.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.deleteAll = (req, res) => {
   MessageModel.removeAll((err, data) => {
     if (err) {

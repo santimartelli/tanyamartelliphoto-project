@@ -1,5 +1,15 @@
+/**
+ * @fileoverview Archivo que contiene el controlador de las categorías.
+ * @module CategoryController
+ */
+
 const CategoryModel = require("../models/category.model.js");
 
+/**
+ * Crea una nueva categoría.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.create = (req, res) => {
   console.log(req.body);
   if (!req.body.categoryName) {
@@ -22,6 +32,11 @@ exports.create = (req, res) => {
   });
 };
 
+/**
+ * Obtiene todas las categorías.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.findAll = (req, res) => {
   CategoryModel.getAll((err, data) => {
     if (err) {
@@ -34,6 +49,11 @@ exports.findAll = (req, res) => {
   });
 };
 
+/**
+ * Obtiene una categoría por ID.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.findOne = (req, res) => {
   CategoryModel.findById(req.params.id, (err, data) => {
     if (err) {
@@ -48,6 +68,11 @@ exports.findOne = (req, res) => {
   });
 };
 
+/**
+ * Actualiza una categoría existente por su ID.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.update = (req, res) => {
   if (!req.body) {
     res.status(400).send({ message: "Content can not be empty!" });
@@ -67,6 +92,11 @@ exports.update = (req, res) => {
   });
 };
 
+/**
+ * Elimina una categoría por su ID.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.deleteOne = (req, res) => {
   CategoryModel.removeOne(req.params.id, (err, data) => {
     if (err) {
@@ -81,6 +111,11 @@ exports.deleteOne = (req, res) => {
   });
 };
 
+/**
+ * Elimina todas las categorías.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.deleteAll = (req, res) => {
   CategoryModel.removeAll((err, data) => {
     if (err) {

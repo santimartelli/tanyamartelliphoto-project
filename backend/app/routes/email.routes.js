@@ -1,9 +1,13 @@
+/**
+ * @description Rutas para gestionar el envío de emails.
+ */
 module.exports = (app) => {
   const emailService = require("../services/emailService.js");
-
   var router = require("express").Router();
 
-  // Reply to a message sending an email
+  /**
+   * @description Ruta para responder un email.
+   */
   router.post("/reply", (req, res) => {
     console.log(req.body);
     if (

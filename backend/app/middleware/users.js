@@ -1,20 +1,30 @@
+/**
+ * @fileoverview Funciones middleware para validar los datos de los usuarios.
+ * @module usersMiddleware
+ */
 const jwt = require("jsonwebtoken");
 
 module.exports = {
+  /**
+   * Valida los datos del formulario de registro.
+   * @param {Object} req - El objeto de solicitud HTTP.
+   * @param {Object} res - El objeto de respuesta HTTP.
+   * @param {Function} next - La siguiente función middleware.
+   */
   validateRegister: (req, res, next) => {
-    // username min length 3
+    // username minimo 3 caracteres
     if (!req.body.username || req.body.username.length < 3) {
       return res.status(400).send({
         msg: 'Please enter a username with min. 3 chars'
       });
     }
-    // password min 6 chars
+    // password minimo 6 caracteres
     if (!req.body.password || req.body.password.length < 6) {
       return res.status(400).send({
         msg: 'Please enter a password with min. 6 chars'
       });
     }
-    // password (repeat) does not match
+    // password (repeat) no coincide
     if (
       !req.body.password_repeat ||
       req.body.password != req.body.password_repeat
@@ -25,6 +35,13 @@ module.exports = {
     }
     next();
   },
+
+  /**
+   * Comprueba si el usuario está logueado verificando el token.
+   * @param {Object} req - El objeto de solicitud HTTP.
+   * @param {Object} res - El objeto de respuesta HTTP.
+   * @param {Function} next - La siguiente función middleware.
+   */
   isLoggedIn: (req, res, next) => {
     console.log(req.userData);
     try {

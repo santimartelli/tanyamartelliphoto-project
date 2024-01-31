@@ -1,7 +1,20 @@
-const PictureModel = require("../models/picture.model.js");
-const fs = require('fs');
-const path = require('path');
+/**
+ * @fileoverview Este archivo contiene el controlador de las imágenes.
+ * @module pictureController
+ */
 
+const PictureModel = require("../models/picture.model.js");
+const fs = require("fs");
+const path = require("path");
+
+/**
+ * Sube una o varias imágenes al servidor y las registra en la base de datos.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} req.files - El objeto de archivos subidos.
+ * @param {Array} req.files - El array de archivos subidos.
+ * @param {string} req.body.categoryId - El ID de la categoría a la que pertenecen las imágenes.
+ * @param {Object} res - La respuesta HTTP.
+ */
 exports.uploadPictures = (req, res) => {
   console.log("req.files", req.files);
   const picturesUploaded = req.files.map((file) => {
@@ -18,7 +31,7 @@ exports.uploadPictures = (req, res) => {
 
   PictureModel.create(values, (err, result) => {
     console.log("values", values);
-    if (err){
+    if (err) {
       console.log("Error while uploading pictures: ", err);
       return res.status(500).json({ error: "Failed to upload pictures" });
     }
@@ -27,6 +40,11 @@ exports.uploadPictures = (req, res) => {
   });
 };
 
+/**
+ * Obtiene todas las imágenes de la base de datos.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.findAll = (req, res) => {
   PictureModel.getAll((err, data) => {
     if (err) {
@@ -40,6 +58,12 @@ exports.findAll = (req, res) => {
   });
 };
 
+/**
+ * Obtiene imagenes según el ID su categoría.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {string} req.params.categoryId - El ID de la categoría.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.findByCategory = (req, res) => {
   PictureModel.getByCategory(req.params.categoryId, (err, data) => {
     if (err) {
@@ -54,6 +78,13 @@ exports.findByCategory = (req, res) => {
   });
 };
 
+/**
+ * Actualiza una imagen existente por su ID.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {string} req.params.id - El ID de la imagen.
+ * @param {Object} req.body - Los datos de la imagen a actualizar.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.update = (req, res) => {
   if (!req.body) {
     res.status(400).send({ message: "Content can not be empty!" });
@@ -70,11 +101,9 @@ exports.update = (req, res) => {
             .status(404)
             .send({ message: `Picture not found with id ${req.params.id}` });
         } else {
-          res
-            .status(500)
-            .send({
-              message: "Error updating picture with id " + req.params.id,
-            });
+          res.status(500).send({
+            message: "Error updating picture with id " + req.params.id,
+          });
         }
       } else {
         res.send(data);
@@ -83,6 +112,12 @@ exports.update = (req, res) => {
   );
 };
 
+/**
+ * Elimina una imagen de la base de datos por su ID.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {string} req.params.id - El ID de la imagen.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.delete = (req, res) => {
   PictureModel.deleteById(req.params.id, (err, data) => {
     if (err) {
@@ -91,11 +126,9 @@ exports.delete = (req, res) => {
           .status(404)
           .send({ message: `Picture not found with id ${req.params.id}` });
       } else {
-        res
-          .status(500)
-          .send({
-            message: "Could not delete picture with id " + req.params.id,
-          });
+        res.status(500).send({
+          message: "Could not delete picture with id " + req.params.id,
+        });
       }
     } else {
       res.send({ message: "Picture deleted successfully!" });
@@ -103,6 +136,11 @@ exports.delete = (req, res) => {
   });
 };
 
+/**
+ * Elimina todas las imágenes de la base de datos.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.deleteAll = (req, res) => {
   PictureModel.deleteAll((err, data) => {
     if (err) {
@@ -116,6 +154,12 @@ exports.deleteAll = (req, res) => {
   });
 };
 
+/**
+ * Elimina todas las imágenes de una categoría de la base de datos.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {string} req.params.categoryId - El ID de la categoría.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.deleteAllByCategory = (req, res) => {
   PictureModel.deleteAllByCategory(req.params.categoryId, (err, data) => {
     if (err) {
@@ -125,11 +169,9 @@ exports.deleteAllByCategory = (req, res) => {
           "Some error occurred while removing all pictures for the category.",
       });
     } else if (!data.affectedRows) {
-      res
-        .status(404)
-        .send({
-          message: `No pictures found for category ${req.params.categoryId}`,
-        });
+      res.status(404).send({
+        message: `No pictures found for category ${req.params.categoryId}`,
+      });
     } else {
       res.send({
         message: `All pictures for category ${req.params.categoryId} deleted successfully!`,
@@ -138,25 +180,12 @@ exports.deleteAllByCategory = (req, res) => {
   });
 };
 
-// exports.deleteFile = (req, res) => {
-//   const filePath = req.query.filepath;
-//   console.log("filePath", filePath);
-//   // Check if the file path is provided
-//   if (!filePath) {
-//     return res.status(400).send({ message: "File path is required" });
-//   }
-//   // Construct the full path (if needed) and delete the file
-//   const fullPath = path.join(__dirname, '../../resources/static/assets/uploads/', filePath);
-
-//   fs.unlink(fullPath, (err) => {
-//     if (err) {
-//       console.error("Error while deleting file:", err);
-//       return res.status(500).send({ message: "Failed to delete file" });
-//     }
-//     res.send({ message: "File deleted successfully" });
-//   });
-// };
-
+/**
+ * Elimina un archivo del servidor.
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {string} req.query.filepath - La ruta del archivo a eliminar.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ */
 exports.deleteFile = (req, res) => {
   const filePath = req.query.filepath;
 
@@ -164,14 +193,18 @@ exports.deleteFile = (req, res) => {
     return res.status(400).send({ message: "File path is required" });
   }
 
-  const fullPath = path.join(__dirname, '../../', filePath);
+  const fullPath = path.join(__dirname, "../../", filePath);
 
-  // Security check: Prevent directory traversal
-  if (!fullPath.startsWith(path.join(__dirname, '../../resources/static/assets/uploads/'))) {
+  // Comprobación de seguridad para evitar que se eliminen archivos fuera de la carpeta de uploads
+  if (
+    !fullPath.startsWith(
+      path.join(__dirname, "../../resources/static/assets/uploads/")
+    )
+  ) {
     return res.status(400).send({ message: "Invalid file path" });
   }
 
-  // Check if file exists
+  // Comprobación de si el archivo existe
   if (!fs.existsSync(fullPath)) {
     return res.status(404).send({ message: "File not found" });
   }

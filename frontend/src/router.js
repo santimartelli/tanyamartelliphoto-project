@@ -12,6 +12,8 @@ import store from './store/index.js';
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    //generate a route for not found pages
+    { path: '/:notFound(.*)', redirect: '/home'},
     { path: '/', redirect: '/home'},
     { path: '/home', name: 'home', component: LandingPage },
     { path: '/prices', name: 'prices', component: ServicesPrices },

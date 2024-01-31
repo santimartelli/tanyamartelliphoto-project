@@ -1,24 +1,38 @@
+/**
+ * @description Rutas para gestionar las solicitudes de reservas.
+ */
 module.exports = (app) => {
   const bookings = require("../controllers/booking.controller.js");
-
   var router = require("express").Router();
 
-  // Crear una nueva reserva
+  /**
+   * @description Ruta para crear una nueva reserva.
+   */
   router.post("/", bookings.create);
 
-  // Retrieve all bookings
+  /**
+   * @description Ruta para obtener todas las reservas.
+   */
   router.get("/", bookings.findAll);
 
-  // Retrieve a single Category with id
+  /**
+   * @description Ruta para obtener una reserva por su ID.
+   */
   router.get("/:id", bookings.findOne);
 
-  // Update a Category with id
+  /**
+   * @description Ruta para actualizar una reserva por su ID.
+   */
   router.put("/:id", bookings.update);
 
-  // Delete a Category with id
+  /**
+   * @description Ruta para eliminar una reserva por su ID.
+   */
   router.delete("/:id", bookings.deleteOne);
 
-  // Delete all bookings
+  /**
+   * @description Ruta para eliminar todas las reservas.
+   */
   router.delete("/", bookings.deleteAll);
 
   app.use("/api/bookings", router);

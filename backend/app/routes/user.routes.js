@@ -113,11 +113,5 @@ module.exports = (app) => {
     );
   });
 
-  // Secret route
-  router.get("/secret-route", userMiddleware.isLoggedIn, (req, res, next) => {
-    console.log(req.userData);
-    res.send("This is the secret content. Only logged in users can see that!");
-  });
-
   app.use("/api/users", router);
 };
