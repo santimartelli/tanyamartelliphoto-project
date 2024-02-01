@@ -6,7 +6,7 @@
     <transition name="dialog">
       <dialog open v-if="show">
         <div class="section">
-          <h3>Enter the new category name</h3>
+          <h3>Nuevo nombre de la categoria</h3>
           <form @submit.prevent="submitForm">
             <slot></slot>
           </form>

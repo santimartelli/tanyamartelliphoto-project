@@ -2,45 +2,53 @@
 
 <template>
   <div>
+    <!-- Dialogo feedback despues de enviar el formulario -->
+
     <ok-dialog :show="!!errorMessage" @close="closeDialog">
       <h2>Error!</h2>
       <p>{{ errorMessage }}</p>
     </ok-dialog>
     <ok-dialog :show="!!okMessage" @close="closeDialog">
-      <h2>Booking request successfully sent!</h2>
+      <h2>Solicitud de reserva enviada correctamente!</h2>
       <p>{{ okMessage }}</p>
     </ok-dialog>
 
+    <!-- Texto 'reserva tu sesión' -->
+
     <div class="container">
-      <h2><span class="highlight">Book Your PhotoShoot!</span></h2>
+      <h2><span class="highlight">Reserva tu sesión!</span></h2>
       <p>
-        Thank you for your interest in booking a photoshoot with me! Please fill
-        out the form below with your details and preferences, and I will get
-        back to you as soon as possible to finalize the details.
+        ¡Gracias por tu interés en reservar una sesión de fotos conmigo! Por
+        favor, rellena el formulario con tus datos y
+        preferencias y me pondré en contacto contigo lo antes posible para
+        profundizar en los detalles.
       </p>
       <p>
-        Feel free to include any additional information or specific requests you
-        may have. I want to ensure that your photosession is tailor-made to your
-        preferences and needs.
+        No dudes en incluir cualquier información adicional o solicitudes
+        específicas que puedas tener. Quiero asegurarme de que tu sesión sea
+        perfecta y se adapte a tus preferencias y necesidades.
       </p>
       <p>
-        Once I receive your booking request, I will review the form and contact
-        you to confirm the availability and discuss further details. I am
-        dedicated to providing you with an exceptional experience and capturing
-        beautiful moments that will be cherished for a lifetime.
+        Una vez que reciba tu solicitud de reserva, revisaré el formulario y te
+        contactaré para confirmar la disponibilidad y discutir más detalles.
+        Estoy totalmente comprometida con proporcionarte una experiencia excepcional
+        para poder crear recuerdos inolvidables.
       </p>
+
+      <!-- Formulario de reserva de sesión -->
+
       <form @submit.prevent="submitForm">
-        <input type="text" id="name" v-model="name" placeholder="Name" />
+        <input type="text" id="name" v-model="name" placeholder="Nombre" />
         <div v-if="!formIsValidName" class="errors">
-          Please enter a valid name.
+          Por favor, introduce un nombre válido.
         </div>
         <input type="email" id="email" v-model="email" placeholder="Email" />
         <div v-if="!formIsValidEmail" class="errors">
-          Please enter a valid email address.
+          Por favor, introduce un email válido.
         </div>
         <select id="session" v-model="categoryId">
           <option v-if="!categoryId" value="" disabled selected>
-            Select the photoshoot type
+            Selecciona el tipo de sesión
           </option>
           <option
             v-for="cat in sortedCategories"
@@ -51,22 +59,22 @@
           </option>
         </select>
         <div v-if="!formIsValidCategory" class="errors">
-          Please select a photoshoot type.
+          Por favor, selecciona un tipo de sesión.
         </div>
         <select id="location" v-model="location">
           <option v-if="!location" value="" disabled selected>
-            Select the preferred location
+            Selecciona una localidad
           </option>
           <option value="Barcelona">Barcelona</option>
           <option value="Girona">Girona</option>
           <option value="Lloret">Lloret de Mar</option>
-          <option value="Other">Other (especify in message)</option>
+          <option value="Other">Otra (especifica en el mensaje)</option>
         </select>
         <div v-if="!formIsValidLocation" class="errors">
-          Please select a location.
+          Por favor, selecciona una localidad.
         </div>
         <div class="envoirment">
-          <p class="title">Choose a place:</p>
+          <p class="title">Eliga la localización:</p>
           <div class="radio-group">
             <label for="studio" class="radio-container">
               <div class="sideRadio">
@@ -74,10 +82,10 @@
                   type="radio"
                   id="studio"
                   v-model="place"
-                  value="Studio"
+                  value="Estudio"
                 />
                 <span class="checkmark"></span>
-                <span class="radio-desc">In Studio</span>
+                <span class="radio-desc">En estudio</span>
               </div>
             </label>
             <label for="outdoors" class="radio-container">
@@ -86,52 +94,52 @@
                   type="radio"
                   id="outdoors"
                   v-model="place"
-                  value="Outdoors"
+                  value="Exteriores"
                 />
                 <span class="checkmark"></span>
-                <span class="radio-desc">Outdoors</span>
+                <span class="radio-desc">En exteriores</span>
               </div>
             </label>
             <label for="other" class="radio-container">
               <div class="sideRadio">
-                <input type="radio" id="other" v-model="place" value="Other" />
+                <input type="radio" id="other" v-model="place" value="Otro" />
                 <span class="checkmark"></span>
-                <span class="radio-desc">Other</span>
+                <span class="radio-desc">Otra</span>
               </div>
             </label>
           </div>
         </div>
         <div v-if="!formIsValidPlace" class="errors">
-          Please select a place.
+          Por favor selecciona una localización.
         </div>
         <select id="date" v-model="selectedDate">
           <option v-if="!selectedDate" value="" disabled selected>
-            Select the Date
+            Selecciona la fecha
           </option>
           <option v-for="date in availableDates" :value="date" :key="date">
             {{ date }}
           </option>
-          <option value="Other">Other (specify in the message)</option>
+          <option value="Other">Otra (Especificala in el mensaje)</option>
         </select>
-        <div v-if="!formIsValidDate" class="errors">Please select a date.</div>
+        <div v-if="!formIsValidDate" class="errors">Por favor selecciona una fecha.</div>
         <select id="time" v-model="selectedTime">
           <option v-if="!selectedTime" value="" disabled selected>
-            Select the Time
+            Selecciona una hora
           </option>
           <option v-for="time in availableTimes" :value="time" :key="time">
             {{ time }}
           </option>
         </select>
         <div v-if="!formIsValidTime" class="errors">
-          Please select the time.
+          Por favor selecciona una hora.
         </div>
-        <label for="message">Message </label>
+        <label for="message">Mensaje </label>
         <textarea id="message" v-model="message" rows="10"></textarea>
         <div v-if="!formIsValidMessage" class="errors">
-          Please enter a message.
+          Por favor introduce el mensaje.
         </div>
         <div class="btn-container">
-          <base-button @click="submitForm">Send</base-button>
+          <base-button @click="submitForm">Enviar</base-button>
         </div>
       </form>
     </div>
@@ -146,10 +154,10 @@ export default {
    * Component properties.
    */
 
-   /**
-    * Componentes que usa el componente.
-    * @component OkDialog - Componente que muestra un dialogo de éxito o error.
-    */
+  /**
+   * Componentes que usa el componente.
+   * @component OkDialog - Componente que muestra un dialogo de éxito o error.
+   */
   components: {
     OkDialog,
   },
@@ -326,13 +334,13 @@ export default {
             message: this.message,
           });
           console.log("Dispatch completed");
-          this.okMessage = "Thank you for your booking request! I will get back to you as soon as possible to finalize the details.";
-          console.log("Form submitted:", this.okMessage);
+          this.okMessage =
+            "Gracias por tu interés en reservar una sesión de fotos conmigo! Me pondré en contacto contigo lo antes posible para profundizar en los detalles. ¡Espero verte pronto!";
+          console.log("Formulario enviado:", this.okMessage);
         } catch (error) {
-          console.error("Error submitting the form:", error);
-          console.log("Before error message");
-          this.errorMessage = "An error occurred while processing your request. Please try again later.";
-          console.log("After error message");
+          console.error("Error enviando el formulario:", error);
+          this.errorMessage =
+            "Ha ocurrido un error al enviar el formulario. Por favor, inténtalo de nuevo más tarde.";
         }
       }
     },
@@ -351,7 +359,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* Estilos para el componente BookingForm.vue */
 
 .container {

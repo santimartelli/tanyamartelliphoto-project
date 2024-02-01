@@ -8,7 +8,7 @@
       <dialog open v-if="show">
         <section class="content">
           <slot></slot>
-          <base-button @click="tryClose">Close</base-button>
+          <base-button @click="tryClose">Cerrar</base-button>
         </section>
       </dialog>
     </transition>
@@ -44,6 +44,7 @@ export default {
    * componente que use este componente pueda reaccionar a este evento.
    */
   emits: ["close"],
+
   methods: {
     /**
      * Cierra el dialogo si no es fijo y emite el evento 'close'.

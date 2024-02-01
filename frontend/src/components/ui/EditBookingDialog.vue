@@ -6,7 +6,7 @@
     <transition name="dialog">
       <dialog open v-if="show">
         <div class="section">
-          <h3>Enter the new booking details</h3>
+          <h3>Nuevos datos de la reserva</h3>
           <form @submit.prevent="editCategory">
             <slot></slot>
           </form>

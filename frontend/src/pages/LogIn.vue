@@ -2,13 +2,15 @@
 
 <template>
   <div>
+    <!-- Dialogo de registro de administrador -->
+
     <registration-admin
       :show="!!openRegistration"
       @close="closeRegistrationDialog"
     >
       <div class="container-registration">
         <div v-if="isLoadingAdmin" class="form">
-          <p class="authenticating">Registering...</p>
+          <p class="authenticating">Registrando...</p>
           <base-spinner />
         </div>
         <div
@@ -18,12 +20,12 @@
           class="form"
         >
           <p style="color: green; padding-bottom: 1.5rem; font-size: 14px">
-            Admin successfully registered!
+            Administrador registrado correctamente!
           </p>
           <base-button
             style="margin-botom=1.5rem;"
             @click="closeRegistrationDialog"
-            >Close</base-button
+            >Cerrar</base-button
           >
         </div>
         <div
@@ -33,16 +35,16 @@
           class="form"
         >
           <p style="color: red; padding-bottom: 1.5rem; font-size: 14px">
-            Registration failed. Please try again!
+            Error en el registro, por favor inténtelo de nuevo.
           </p>
           <base-button
             style="margin-botom=1.5rem;"
             @click="closeRegistrationDialog"
-            >Close</base-button
+            >Cerrar</base-button
           >
         </div>
 
-        <!-- Formulario de registro de un nuevo administrador -->
+        <!-- Formulario  -->
 
         <div
           v-if="
@@ -55,46 +57,50 @@
               type="text"
               v-model="newUsername"
               id="newUsername"
-              placeholder="Username"
+              placeholder="Usuario"
             />
             <div v-if="!formIsValidUsername" class="errors">
-              Please enter a valid username, minimum 3 characters.
+              Por favor introduce un nombre de usuario válido, mínimo 3
+              caracteres.
             </div>
             <input
               type="password"
               v-model="newPassword"
               id="newPassword"
-              placeholder="Password"
+              placeholder="Contraseña"
             />
             <div v-if="!formIsValidPassword" class="errors">
-              Please enter a valid password, minimum 6 characters.
+              Por favor introduce una contraseña válida, mínimo 6 caracteres.
             </div>
             <input
               type="password"
               v-model="newConfirmedPassword"
               id="newConfirmedPassword"
-              placeholder="Confirm password"
+              placeholder="Confirma la contraseña"
             />
             <div v-if="!formIsValidConfirmedPassword" class="errors">
-              Error, the passwords must match.
+              Error, las contraseñas no coinciden.
             </div>
             <input
               type="text"
               v-model="newCodeVerification"
               id="codeVerification"
-              placeholder="Code verification"
+              placeholder="Código de verificación"
             />
             <div v-if="!formIsValidCodeVerification" class="errors">
-              Error, the code verification is not correct.
+              Error, el código de verificación no es correcto.
             </div>
             <div class="buttons-container">
-              <base-button @click="adminRegistration">Register</base-button>
-              <base-button @click="closeRegistrationDialog">Close</base-button>
+              <base-button @click="adminRegistration">Enviar</base-button>
+              <base-button @click="closeRegistrationDialog">Cerrar</base-button>
             </div>
           </div>
         </div>
       </div>
     </registration-admin>
+
+    <!-- Dialogo de error en el inicio de sesión -->
+
     <base-dialog :show="!!error" title="Error!" @close="handleError">
       <p>{{ error }}</p></base-dialog
     >
@@ -104,7 +110,7 @@
         alt="Logo Tanya Martelli Photography"
       />
       <div v-if="isLoading">
-        <p class="authenticating">Authenticating...</p>
+        <p class="authenticating">Autenticando...</p>
         <base-spinner />
       </div>
       <div v-else>
@@ -113,22 +119,22 @@
             type="text"
             v-model="username"
             id="username"
-            placeholder="Username"
+            placeholder="Usuario"
           />
           <input
             type="password"
             v-model="password"
             id="password"
-            placeholder="Password"
+            placeholder="Contraseña"
           />
           <div class="buttons-container">
-            <base-button @click="submitForm">Log In</base-button>
+            <base-button @click="submitForm">Iniciar Sesión</base-button>
           </div>
         </form>
       </div>
       <p class="registration">
-        To register as an admin click
-        <span @click="openRegistrationDialog" class="here">here!</span>
+        Para registrarse como administrador, haga click
+        <span @click="openRegistrationDialog" class="here">aqui!</span>
       </p>
     </div>
   </div>
@@ -182,8 +188,7 @@ export default {
         this.$router.push({ name: "admin" });
       } catch (err) {
         this.error =
-          err.message ||
-          "Failed to log in, check your credentials and try again.";
+          "Credenciales incorrectas, por favor inténtelo de nuevo.";
       }
       this.isLoading = false;
     },
@@ -242,18 +247,18 @@ export default {
       if (this.formIsValid) {
         this.isLoadingAdmin = true;
         try {
-          console.log("Registering the admin...");
+          console.log("Registrando administrador...");
           await this.$store.dispatch("adminRegistration", {
             username: this.newUsername,
             password: this.newPassword,
             password_repeat: this.newConfirmedPassword,
           });
-          console.log("Admin registered successfully!");
+          console.log("Administador registrado correctamente!");
           this.isLoadingAdmin = null;
           this.registrationSuccess = true;
           this.adminRegistrationError = null;
         } catch (error) {
-          console.error("Error registering the admin:", error);
+          console.error("Error en el registro: ", error);
           this.isLoadingAdmin = null;
           this.registrationSucces = null;
           this.adminRegistrationError = true;
@@ -266,7 +271,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* Estilos para el componente LogIn.vue */
 
 .container-login {

@@ -29,10 +29,10 @@ const sendEmail = (mailOptions) => {
   return new Promise((resolve, reject)=> {
     transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.error("Error sending email:", error);
+      console.error("Error enviando email:", error);
       reject(error);
     } else {
-      console.log("Email sent:", info.response);
+      console.log("Email enviado:", info.response);
       resolve(info.response);
     }
   });
@@ -55,8 +55,8 @@ exports.sendMessageConfirmationEmail = (recipentEmail, messageData) => {
       "tanyamartelliphoto@gmail.com",
       recipentEmail,
     ],
-    subject: "We received your message!",
-    text: `Hello ${messageData.messageName},\n\nThank you for reaching out to us. We have received your message and will get back to you soon.\n\nBest regards,\n\nTatiana from Tanya Martelli Photography Team`,
+    subject: "Hemos recibido tu mensaje!",
+    text: `Hola ${messageData.messageName}!\n\nGracias por contactar con nosotros, te contestaremos lo antes posible.\n\nSaludos!\n\nTatiana - Tanya Martelli Photography`,
   };
   sendEmail(mailOptions);
 };
@@ -73,9 +73,9 @@ exports.sendMessageNotificationEmail = (messageData) => {
     },
     to: ["santimartelli@gmail.com", "tanyamartelliphoto@gmail.com"],
     subject:
-      "Tanya Martelli Photography - New message received from " +
+      "Tanya Martelli Photography - Nuevo mensaje de: " +
       messageData.messageName,
-    text: `You have received a new message from ${messageData.messageName} (${messageData.messageEmail}):\n\n${messageData.messageContent}`,
+    text: `Has recibido un nuevo mensaje de ${messageData.messageName} (${messageData.messageEmail}):\n\n${messageData.messageContent}`,
   };
   sendEmail(mailOptions);
 };
@@ -92,8 +92,8 @@ exports.sendBookingRequestConfirmationEmail = (to, bookingData) => {
       address: "santimartelli@gmail.com",
     },
     to: to,
-    subject: "We received your booking request!",
-    text: `Hello ${bookingData.name},\n\nThank you for your booking request. We will get back to you soon to finalize the details.\n\nBest regards!\n\nTatiana, from Tanya Martelli Photography Team`,
+    subject: "Hemos recibido tu solicitud de reserva!",
+    text: `Hola ${bookingData.name}!\n\nGracias por tu solicitud de reserva, nos pondremos en contacto contigo a la brevedad para profundizar en los detalles.\n\nSaludos!\n\nTatiana - Tanya Martelli Photography`,
   };
   sendEmail(mailOptions);
 };
@@ -112,7 +112,7 @@ exports.sendBookingRequestNotificationEmail = (bookingData) => {
     subject:
       "Tanya Martelli Photography - New booking request received from " +
       bookingData.name,
-    text: `You have received a new booking request with the following details:\n\nName: ${bookingData.name}\nEmail: ${bookingData.email}\nCategory: ${bookingData.categoryId}\nLocation: ${bookingData.location}\nPlace: ${bookingData.place}\nDate: ${bookingData.selectedDate}\nTime: ${bookingData.selectedTime}\n\nMessage: ${bookingData.message}`,
+    text: `Has recibido una nueva solicitud de reserva, los detalles son los siguientes:\n\nNombre: ${bookingData.name}\nEmail: ${bookingData.email}\nCategoría: ${bookingData.categoryId}\nLocalidad: ${bookingData.location}\nLocalización: ${bookingData.place}\nFecha: ${bookingData.selectedDate}\nHora: ${bookingData.selectedTime}\n\nMensaje: ${bookingData.message}`,
   };
   sendEmail(mailOptions);
 };
@@ -129,8 +129,8 @@ exports.replyEmail = (to, messageData) => {
       address: "santimartelli@gmail.com",
     },
     to: to,
-    subject: `Hello, ${messageData.name}!`,
-    text: `${messageData.message}\n\nBest regards!\n\nTatiana, from Tanya Martelli Photography Team\n\n\n***This is an answer to the message below***\n\n${messageData.name}\n${messageData.email}\n${messageData.messageContent}`,
+    subject: `Hola, ${messageData.name}!`,
+    text: `${messageData.message}\n\nSaludos!\n\nTatiana - Tanya Martelli Photography\n\n\n***Esta es una respuesta al mensaje de abajo***\n\n${messageData.name}\n${messageData.email}\n${messageData.messageContent}`,
   };
   sendEmail(mailOptions);
 };

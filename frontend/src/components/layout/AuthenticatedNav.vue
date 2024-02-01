@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="welcome">
-    <p>ADMIN PANEL DE {{ username }}</p>
+    <p>PANEL DE ADMINISTRACIÓN DE {{ username }}</p>
   </div>
 </template>
 

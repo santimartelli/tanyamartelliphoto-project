@@ -3,7 +3,7 @@
 <template>
   <div>
     <ok-dialog :show="!!okMessage" @close="closeDialog">
-      <h2>Message successfully sent!</h2>
+      <h2>Mensaje enviado correctamente!</h2>
       <p>{{ okMessage }}</p>
     </ok-dialog>
     <ok-dialog :show="!!errorMessage" @close="closeDialog">
@@ -11,14 +11,14 @@
       <p>{{ errorMessage }}</p>
     </ok-dialog>
     <div class="container">
-      <h2>I would love to hear from you!</h2>
+      <h2>Me encantaría saber de tí!</h2>
       <p>
-        I truly appreciate your interest and consideration in my photography
-        services! If you have any questions, want more information, or would
-        like to get in touch with me, please don't hesitate to reach out using
-        the contact form below. I'll respond to your message as soon as
-        possible.
+        ¡Valor mucho tu interés y consideración hacia mis servicios de
+        fotografía! Si tienes preguntas, necesitas más información o simplemente
+        quieres charlar conmigo, no dudes en usar el formulario de contacto de
+        aquí abajo. Te responderé tu mensaje a la mayor brevedad posible.
       </p>
+
       <div>
         <form @submit.prevent="addNewMessage">
           <input
@@ -26,10 +26,10 @@
             v-model.trim="newMessageName"
             name="messageName"
             id="messageName"
-            placeholder="Name"
+            placeholder="Nombre"
           />
           <div v-if="!formIsValidName" class="errors">
-            Please enter a valid name
+            Por favor introduce un nombre válido.
           </div>
 
           <input
@@ -39,10 +39,10 @@
             placeholder="Email"
           />
           <div v-if="!formIsValidEmail" class="errors">
-            Please enter a valid email address
+            Por favor introduce un email válido.
           </div>
 
-          <label for="messageContent">Message</label>
+          <label for="messageContent">Mensaje</label>
           <textarea
             id="messageContent"
             rows="10"
@@ -50,7 +50,7 @@
             v-model.trim="newMessageContent"
           ></textarea>
           <div v-if="!formIsValidContent" class="errors">
-            Please enter a message
+            Por favor introduce un mensaje válido.
           </div>
           <div class="btn-container">
             <base-button @click="addNewMessage" value="Enviar"
@@ -111,10 +111,12 @@ export default {
             messageEmail: this.newMessageEmail,
             messageContent: this.newMessageContent,
           });
-          this.okMessage = "Thank you for contacting me! I will get back to you as soon as possible!";
+          this.okMessage =
+            "Gracias por tu mensaje! Te responderé a la mayor brevedad posible!";
         } catch (error) {
-          console.error("Error sending the message:", error);
-          this.errorMessage = "An error occurred while sending the message. Please try again later.";
+          console.error("Error enviando mensaje: ", error);
+          this.errorMessage =
+            "Ocurrió un error enviando tu mensaje. Por favor inténtalo de nuevo más tarde.";
         }
       }
     },
@@ -155,7 +157,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* Estilos para el componente ContactForm.vue */
 
 .container {

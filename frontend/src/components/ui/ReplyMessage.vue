@@ -2,7 +2,7 @@
 
 <template>
   <teleport to="body">
-  <div v-if="show" @click="close" class="backdrop5"></div>
+  <div v-if="show" @click="close" class="backdrop"></div>
     <transition name="dialog">
       <dialog open v-if="show">
         <div class="section">
@@ -55,13 +55,12 @@ h3 {
   padding: 1rem;
 }
 
-.backdrop3 {
+.backdrop {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.75);
   z-index: 100;
 }
 

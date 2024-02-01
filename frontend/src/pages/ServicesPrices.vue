@@ -34,45 +34,39 @@ export default {
       services: [
         {
           image: require('../assets/images/pregnancy/preg1.jpg'),
-          title: 'Pregnancy Photoshoot',
+          title: 'Sesión de Embarazo',
           price: '250€',
-          includes: ['2 hours', '50 pictures', '10 edited pictures']
+          includes: ['2 horas', '50 fotos', '10 fotos editadas']
         },
         {
           image: require('../assets/images/family/fam1.png'),
-          title: 'Family Photoshoot',
+          title: 'Sesión Familiar',
           price: '250€',
-          includes: ['2 hours', '50 pictures', '10 edited pictures', 'Extra edited picture 5€', 'Price of studio not included']
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
         },
         {
           image: require('../assets/images/fashion/fash1.jpg'),
-          title: 'Individual Photoshoot',
+          title: 'Retrato Individual',
           price: '250€',
-          includes: ['2 hours', '50 pictures', '10 edited pictures', 'Extra edited picture 5€', 'Price of studio not included']
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
         },
         {
           image: require('../assets/images/newborn/newborn3.jpg'),
-          title: 'Newborn Photoshoot',
+          title: 'Recien Nacido',
           price: '250€',
-          includes: ['2 hours', '50 pictures', '10 edited pictures', 'Extra edited picture 5€', 'Price of studio not included']
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
         },
         {
           image: require('../assets/images/nordic-garden.webp'),
-          title: 'Event Photoshoot',
+          title: 'Reportaje Eventos',
           price: '250€',
-          includes: ['2 hours', '50 pictures', '10 edited pictures', 'Extra edited picture 5€', 'Price of studio not included']
-        },
-        {
-          image: require('../assets/images/product/prod1.jpg'),
-          title: 'Product Photoshoot',
-          price: '250€',
-          includes: ['2 hours', '50 pictures', '10 edited pictures', 'Extra edited picture 5€', 'Price of studio not included']
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€']
         },
         {
           image: require('../assets/images/nordic-garden.webp'),
-          title: 'Architecture / Real Estate',
+          title: 'Arquitectura e Interiores',
           price: '250€',
-          includes: ['2 hours', '50 pictures', '10 edited pictures', 'Extra edited picture 5€', 'Price of studio not included']
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€']
         },
       ]
     }

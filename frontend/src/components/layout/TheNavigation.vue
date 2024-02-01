@@ -24,7 +24,7 @@
             <a
               class="link sparkle u-hover--sparkle porfolio-arrow-container"
               @click.prevent
-              >PORTFOLIO
+              >PORTAFOLIO
               <img
                 v-if="!showDropdown"
                 src="../../assets/Icons/flecha-abajo.png" />
@@ -46,7 +46,7 @@
             <router-link
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'prices' }"
-              >PRICES</router-link
+              >PRECIOS</router-link
             >
           </li>
         </div>
@@ -61,7 +61,7 @@
             <router-link
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'booking' }"
-              >BOOKINGS</router-link
+              >RESERVAS</router-link
             >
           </li>
           <li>
@@ -69,7 +69,7 @@
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'contact' }"
               @click="toggleMobileNav"
-              >CONTACT</router-link
+              >CONTACTO</router-link
             >
           </li>
           <li>
@@ -116,7 +116,7 @@
             <a
               class="link sparkle u-hover--sparkle porfolio-arrow-container"
               @click.prevent
-              >PORTFOLIO
+              >PORTAFOLIO
               <img
                 v-if="!showDropdown"
                 src="../../assets/Icons/flecha-abajo.png" />
@@ -138,14 +138,14 @@
             <router-link
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'prices' }"
-              >PRICES</router-link
+              >PRECIOS</router-link
             >
           </li>
           <li>
             <router-link
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'booking' }"
-              >BOOKINGS</router-link
+              >RESERVAS</router-link
             >
           </li>
           <li>
@@ -153,7 +153,7 @@
               class="link sparkle u-hover--sparkle"
               :to="{ name: 'contact' }"
               @click="toggleMobileNav"
-              >CONTACT</router-link
+              >CONTACTO</router-link
             >
           </li>
           <li>
@@ -212,7 +212,7 @@
               <a
                 class="link sparkle u-hover--sparkle porfolio-arrow-container"
                 @click.prevent
-                >PORTFOLIO
+                >PORTAFOLIO
                 <img
                   v-if="!showDropdown"
                   src="../../assets/Icons/flecha-abajo.png" />
@@ -239,7 +239,7 @@
                 class="link sparkle u-hover--sparkle"
                 :to="{ name: 'prices' }"
                 @click="toggleMobileNav"
-                >PRICES</router-link
+                >PRECIOS</router-link
               >
             </li>
             <li>
@@ -247,7 +247,7 @@
                 class="link sparkle u-hover--sparkle"
                 :to="{ name: 'booking' }"
                 @click="toggleMobileNav"
-                >BOOKINGS</router-link
+                >RESERVAS</router-link
               >
             </li>
             <li>
@@ -255,7 +255,7 @@
                 class="link sparkle u-hover--sparkle"
                 :to="{ name: 'contact' }"
                 @click="toggleMobileNav"
-                >CONTACT</router-link
+                >CONTACTO</router-link
               >
             </li>
             <li>

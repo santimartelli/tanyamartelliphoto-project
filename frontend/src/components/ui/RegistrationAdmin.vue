@@ -6,7 +6,7 @@
     <transition name="dialog">
       <dialog open v-if="show">
         <div class="section">
-          <h3>Admin registration</h3>
+          <h3>Registro de administrador</h3>
           <form @submit.prevent="submitForm">
             <slot></slot>
           </form>

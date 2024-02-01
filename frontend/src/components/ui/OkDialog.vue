@@ -7,7 +7,7 @@
       <dialog open v-if="show">
         <section class="content">
           <slot></slot>
-            <base-button @click="closeSuccessMessage">Close</base-button>
+            <base-button @click="closeSuccessMessage">Cerrar</base-button>
         </section>
       </dialog>
     </transition>
@@ -26,6 +26,7 @@ export default {
       required: true,
     },
   },
+
   /**
    * Datos del componente.
    * @data {boolean} alertOk - Indica si el mensaje de éxito se muestra o no.
@@ -35,11 +36,13 @@ export default {
       alertOk: false,
     };
   },
+
   /**
    * Emite el evento 'close' cuando se cierra el dialogo. Lo que permite que el
    * componente que use este componente pueda reaccionar a este evento.
    */
   emits: ["close"],
+
   methods: {
     /**
      * Intenta cerrar el dialogo y emite el evento 'close'.
@@ -52,6 +55,7 @@ export default {
         this.$emit("close");
       }
     },
+
     /**
      * Cierre el dialogo y emite el evento 'close'.
      */

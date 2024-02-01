@@ -22,14 +22,15 @@
 
     <section v-if="mobile" class="welcome-message">
       <div class="text-container">
-        <h2><span class="highlight">Welcome!</span></h2>
+        <h2><span class="highlight">Hola!</span></h2>
         <p>
-          I am Tatiana, a passionate photographer based in Costa Brava, Spain. I specialize
-          in capturing life's most precious moments, from female and family
-          portraits to fashion and events shots. Take a look at my portfolio and
-          let's create beautiful memories together! Book a session or reach out
-          for more information.
-        </p>
+            Soy Tatiana, fotografa apasionada que se especializa en capturar los
+            momentos más preciados de la vida, desde retratos femeninos y
+            familiares hasta fotografías de moda y eventos sociales. Echa un
+            vistazo a mi portafolio y creemos juntos hermosos recuerdos! Reserva
+            una sesión o contacta conmigo para más información.
+          </p>
+
         <div class="desc-image">
           <img
             src="../assets/images/tanyadesc.jpg"
@@ -41,13 +42,13 @@
     <section v-else class="welcome-message">
       <div class="text-image-container">
         <div class="text-container">
-          <h2><span class="highlight">Welcome!</span></h2>
+          <h2><span class="highlight">Hola!</span></h2>
           <p>
-            I am Tatiana, a passionate photographer based in Costa Brava, Spain. I specialize
-            in capturing life's most precious moments, from female and family
-            portraits to fashion and events shots. Take a look at my portfolio
-            and let's create beautiful memories together! Book a session or
-            reach out for more information.
+            Soy Tatiana, fotografa apasionada que se especializa en capturar los
+            momentos más preciados de la vida, desde retratos femeninos y
+            familiares hasta fotografías de moda y eventos sociales. Echa un
+            vistazo a mi portafolio y creemos juntos hermosos recuerdos! Reserva
+            una sesión o contacta conmigo para más información.
           </p>
         </div>
         <div class="desc-image">
@@ -68,7 +69,6 @@
       <p>"Loving photography since 1986"</p>
     </section>
     <section class="categories">
-
       <!--Versión escritorio-->
 
       <swiper
@@ -105,7 +105,7 @@
               <router-link
                 :to="'/portfolio/' + picture.categoryId"
                 class="btn-link"
-                >View portfolio</router-link
+                >Ver Portafolio</router-link
               >
             </div>
           </div>
@@ -192,7 +192,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* Estilos para el componente LandingPage.vue */
 
 h2 {
