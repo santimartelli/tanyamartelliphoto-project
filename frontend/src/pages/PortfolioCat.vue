@@ -1,3 +1,5 @@
+<!-- Componente que muestra las fotografías segun su categoría -->
+
 <template>
   <div class="container">
     <h2 v-if="picturesForCategory.length > 0">{{ picturesForCategory[0].categoryName }}</h2>
@@ -17,7 +19,15 @@
 import { mapGetters } from "vuex";
 export default {
   computed: {
+    /**
+     * Usa mapGetters para obtener las imágenes desde el store.
+     */
     ...mapGetters("pictures", ["pictures"]),
+
+    /**
+     * Devuelve las imágenes que pertenecen a la categoría indicada en la ruta.
+     * @returns {Array} Imágenes que pertenecen a la categoría indicada en la ruta.
+     */
     picturesForCategory() {
       return this.pictures.filter(
         (picture) => picture.categoryId == this.$route.params.id
@@ -28,6 +38,9 @@ export default {
 </script>
 
 <style scoped>
+
+/* Estilos para el componente PortfolioCat.vue */
+
 .container {
   width: 95%;
   margin: 0 auto; /* Center the container */
@@ -52,11 +65,13 @@ img {
   padding: 10px;
 }
 
-/* media queries */
+/* MEDIA QUERIES */
+
 @media (max-width: 855px) {
   .container{
     width: 98%;
   }
+  
   img{
     width: 100%;
     height: auto;

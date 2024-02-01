@@ -1,3 +1,5 @@
+<!-- Componente que muestra un dialogo sin formulario -->
+
 <template>
   <teleport to="body">
     <div v-if="show" @click="tryClose" class="backdrop1"></div>
@@ -14,30 +16,46 @@
 
 <script>
 export default {
+  /**
+   * Propiedades que recibe el componente.
+   * @prop {boolean} show - Indica si el dialogo se muestra o no.
+   */
   props: {
     show: {
       type: Boolean,
       required: true,
     },
   },
+  /**
+   * Datos del componente.
+   * @data {boolean} alertOk - Indica si el mensaje de éxito se muestra o no.
+   */
   data() {
     return {
       alertOk: false,
     };
   },
+  /**
+   * Emite el evento 'close' cuando se cierra el dialogo. Lo que permite que el
+   * componente que use este componente pueda reaccionar a este evento.
+   */
   emits: ["close"],
   methods: {
+    /**
+     * Intenta cerrar el dialogo y emite el evento 'close'.
+     */
     tryClose() {
       if (this.alertOk) {
-        // Reset the success state and close the dialog
+        // Resetea el estado de la alerta
         this.alertOk = 0;
       } else {
-        // Close the dialog
         this.$emit("close");
       }
     },
+    /**
+     * Cierre el dialogo y emite el evento 'close'.
+     */
     closeSuccessMessage() {
-      // Reset the success state and close the dialog
       this.alertOk = 0;
       this.$emit("close");
     },
@@ -46,6 +64,8 @@ export default {
 </script>
 
 <style scoped>
+
+/* Estilos para el componente OkDialog.vue */
 .backdrop1 {
   position: fixed;
   top: 0;

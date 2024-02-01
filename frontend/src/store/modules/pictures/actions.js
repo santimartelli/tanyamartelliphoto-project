@@ -1,6 +1,11 @@
 import axios from "axios";
 
 export default {
+  /**
+   * Devuelve las imágenes de la API y las guarda en el estado.
+   * @param {Object} state - El estado de Vuex del módulo de imágenes.
+   * @returns {Object[]} - Las imágenes del estado.
+   */
   getPictures({ commit }) {
     axios
       .get("http://localhost:3000/api/pictures")
@@ -11,6 +16,16 @@ export default {
         console.log(error);
       });
   },
+
+  /**
+   * Elimina una imagen en la API y en el estado.
+   * @param {Object} context - El contexto de Vuex.
+   * @param {Object} context.commit - La función de Vuex para realizar una mutación.
+   * @param {Object} context.dispatch - La función de Vuex para despachar una acción.
+   * @param {string} pictureId - El ID de la imagen que se eliminará.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   deletePicture({ commit, dispatch }, pictureId) {
     return axios
       .delete(`http://localhost:3000/api/pictures/${pictureId}`)

@@ -1,8 +1,10 @@
+<!-- Componente que muestra los servicios y los precios -->
+
 <template>
   <div class="services-prices">
     <div
       class="service-card"
-      v-for="(service, index) in services" 
+      v-for="(service, index) in services"
       :key="index"
     >
       <img :src="service.image" alt="Service Image">
@@ -26,6 +28,9 @@
 export default {
   data() {
     return {
+      /**
+       * Datos de los servicios y precios que se muestran en la página.
+       */
       services: [
         {
           image: require('../assets/images/pregnancy/preg1.jpg'),
@@ -76,6 +81,9 @@ export default {
 </script>
 
 <style scoped>
+
+/* Estilos para el componente ServicesPrices.vue */
+
 .services-prices {
   font-family: typewriter-light;
   display: flex;
@@ -90,9 +98,8 @@ export default {
   margin: 1.5rem;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
-  /* flex-grow: 1; */
 }
+
 .service-card img {
   display: flex;
   width: 350px;
@@ -103,11 +110,13 @@ export default {
 .service-card ul{
   padding-bottom: 1rem;
 }
+
 .title {
   text-align: left;
   font-size: 14px;
   margin-top: 1rem;
 }
+
 .price {
   letter-spacing: .08rem;
   font-size: 14px;
@@ -126,5 +135,4 @@ export default {
   align-self: center;
   margin-top: auto;
 }
-
 </style>

@@ -1,15 +1,11 @@
+<!-- Componente que es la base de los dialogos del sitio -->
+
 <template>
+  <!-- La etiqueta 'teleport' permite que el contenido de este componente se renderice en el elemento que se le indique en el atributo 'to' -->
   <teleport to="body">
     <div v-if="show" @click="tryClose" class="backdrop"></div>
     <transition name="dialog">
       <dialog open v-if="show">
-        <!-- <header>
-          <slot name="header">
-            <h2>{{ title }}</h2>
-            <slot name="actions">
-            </slot>
-          </slot>
-        </header> -->
         <section class="content">
           <slot></slot>
           <base-button @click="tryClose">Close</base-button>
@@ -21,6 +17,12 @@
 
 <script>
 export default {
+  /**
+   * Propiedades que recibe el componente.
+   * @prop {boolean} show - Indica si el dialogo se muestra o no.
+   * @prop {string} title - Título del dialogo.
+   * @prop {boolean} fixed - Indica si el dialogo es fijo o no.
+   */
   props: {
     show: {
       type: Boolean,
@@ -36,8 +38,16 @@ export default {
       default: false,
     },
   },
+
+  /**
+   * Emite el evento 'close' cuando se cierra el dialogo. Lo que permite que el
+   * componente que use este componente pueda reaccionar a este evento.
+   */
   emits: ["close"],
   methods: {
+    /**
+     * Cierra el dialogo si no es fijo y emite el evento 'close'.
+     */
     tryClose() {
       if (this.fixed) {
         return;
@@ -49,6 +59,9 @@ export default {
 </script>
 
 <style scoped>
+
+/* Estilos para el componente BaseDialog.vue */
+
 .backdrop {
   position: fixed;
   top: 0;
@@ -91,7 +104,6 @@ section {
 .dialog-enter-from,
 .dialog-leave-to {
   opacity: 0;
-  /* transform: scale(0); */
 }
 
 .dialog-enter-active {
@@ -105,7 +117,6 @@ section {
 .dialog-enter-to,
 .dialog-leave-from {
   opacity: 1;
-  /* transform: scale(1); */
 }
 
 @media (min-width: 768px) {

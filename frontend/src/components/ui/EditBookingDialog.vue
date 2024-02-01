@@ -1,3 +1,5 @@
+<!-- Componente que muestra el dialogo con el formulario para editar una reserva -->
+
 <template>
   <teleport to="body">
   <div v-if="show" @click="close" class="backdrop4"></div>
@@ -16,14 +18,27 @@
 
 <script>
 export default {
+  /**
+   * Propiedades que recibe el componente.
+   * @prop {boolean} show - Indica si el dialogo se muestra o no.
+   */
   props: {
     show: {
       type: Boolean,
       required: true,
     },
   },
+
+  /**
+   * Emite el evento 'close' cuando se cierra el dialogo. Lo que permite que el
+   * componente que use este componente pueda reaccionar a este evento.
+   */
   emits: ["close"],
+
   methods: {
+    /**
+   * Cierra el dialogo y emite el evento 'close'.
+   */
     close() {
       this.$emit("close");
     },
@@ -32,6 +47,9 @@ export default {
 </script>
 
 <style scoped>
+
+/* Estilos para el componente EditBookingDialog.vue */
+
 h3 {
   text-align: center;
   padding: 1rem;
@@ -80,7 +98,6 @@ dialog {
 .dialog-enter-from,
 .dialog-leave-to {
   opacity: 0;
-  /* transform: scale(0); */
 }
 
 .dialog-enter-active {
@@ -94,7 +111,6 @@ dialog {
 .dialog-enter-to,
 .dialog-leave-from {
   opacity: 1;
-  /* transform: scale(1); */
 }
 
 @media (min-width: 768px) {

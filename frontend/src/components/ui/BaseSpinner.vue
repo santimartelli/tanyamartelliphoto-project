@@ -1,3 +1,5 @@
+<!-- Componente que muestra un spinner de carga -->
+
 <template>
   <div class="spinner">
     <div class="lds-roller">
@@ -12,6 +14,9 @@
 </template>
 
 <style scoped>
+
+/* Estilos para el componente BaseSpinner.vue */
+
 .spinner {
   display: flex;
   justify-content: center;

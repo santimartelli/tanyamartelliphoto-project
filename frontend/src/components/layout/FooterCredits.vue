@@ -1,3 +1,5 @@
+<!-- Componente que muestra los créditos del sitio -->
+
 <template>
   <div class="footer">
     <p>
@@ -7,11 +9,12 @@
 </template>
 
 <script>
-  export default {
-  }
+export default {};
 </script>
 
 <style scoped>
+
+/* Estilos para el componente FooterCredits.vue */
 
 *{
   margin: 0;

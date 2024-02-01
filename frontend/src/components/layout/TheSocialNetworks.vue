@@ -1,3 +1,5 @@
+<!-- Componente que contiene los iconos de las redes sociales y los datos de contacto -->
+
 <template>
   <section class="redes-sociales">
     <ul>
@@ -46,6 +48,8 @@ export default {};
 </script>
 
 <style scoped>
+
+/* Estilos para el componente TheSocialNetworks.vue */
 .redes-sociales {
   height: 85px;
   display: flex;

@@ -1,3 +1,5 @@
+<!-- Componente que contiene el formulario de solicitud de reserva de sesiones -->
+
 <template>
   <div>
     <ok-dialog :show="!!errorMessage" @close="closeDialog">
@@ -137,10 +139,17 @@
 </template>
 
 <script>
-8;
 import OkDialog from "../components/ui/OkDialog.vue";
 
 export default {
+  /**
+   * Component properties.
+   */
+
+   /**
+    * Componentes que usa el componente.
+    * @component OkDialog - Componente que muestra un dialogo de éxito o error.
+    */
   components: {
     OkDialog,
   },
@@ -170,7 +179,6 @@ export default {
         "20:00",
         "21:00",
         "Other (especify in message)",
-        // Add more available times here
       ],
       availableDates: [],
       formIsValidName: true,
@@ -186,18 +194,27 @@ export default {
       errorMessage: null,
     };
   },
+
   computed: {
+    /**
+     * Devuelve las categorías ordenadas alfabéticamente por nombre.
+     * @returns {Array} Categorías ordenadas alfabéticamente por nombre.
+     */
     sortedCategories() {
-      // Get the categories from the store
+      // Obtiene las categorías del store
       const categories = this.$store.getters["categories/categories"];
 
-      // Sort the categories alphabetically by categoryName
+      // Ordena las categorías alfabetícamente por nombre
       return categories.slice().sort((a, b) => {
         return a.categoryName.localeCompare(b.categoryName);
       });
     },
   },
+
   methods: {
+    /**
+     * Calcula las fechas disponibles para reservar una sesión, jueves y domingos durante los proximos 90 días.
+     */
     calculateAvailableDates() {
       this.availableDates = [];
       const today = new Date();
@@ -213,13 +230,22 @@ export default {
         }
       }
     },
+
+    /**
+     * Comprueba si el email es válido con una expresión regular.
+     * @param {string} email - Email a comprobar.
+     * @returns {boolean} True si el email es válido, false en caso contrario.
+     */
     isValidEmail(email) {
       // Use a more comprehensive email validation regex
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
     },
+
+    /**
+     * Cierra el dialogo y resetea el formulario.
+     */
     closeDialog() {
-      // Reset the form and hide the success message
       this.name = "";
       this.email = "";
       this.categoryId = "";
@@ -244,7 +270,6 @@ export default {
         "20:00",
         "21:00",
         "Other (especify in message)",
-        // Add more available times here
       ];
       this.availableDates = [];
       this.formIsValidName = true;
@@ -259,6 +284,13 @@ export default {
       this.okMessage = null;
       this.errorMessage = null;
     },
+
+    /**
+     * Intenta enviar el formulario de solicitud de reserva de sesión y muestra
+     * un mensaje de error o de éxito en función del resultado.
+     * Si el formulario se envía correctamente, se añade la nueva reserva al
+     * store y a la base de datos.
+     */
     async submitForm() {
       this.formIsValid = true;
       // Validaciones
@@ -279,7 +311,6 @@ export default {
         this.formIsValidDate &&
         this.formIsValidTime &&
         this.formIsValidMessage;
-
       // Si el formulario es valido, se envia
       if (this.formIsValid) {
         try {
@@ -306,6 +337,11 @@ export default {
       }
     },
   },
+
+  /**
+   * Calcula las fechas disponibles para reservar una sesión cuando se crea el
+   * componente.
+   */
   created() {
     this.$nextTick(() => {
       this.calculateAvailableDates();
@@ -315,10 +351,13 @@ export default {
 </script>
 
 <style scoped>
+
+/* Estilos para el componente BookingForm.vue */
+
 .container {
   width: 60%;
-  margin: 0 auto; /* Center the container */
-  padding: 20px; /* Add some padding for spacing */
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .container > h2 {
@@ -380,6 +419,7 @@ input[type="email"] {
 }
 
 /* Radio buttons */
+
 .radio-group {
   margin-top: 1rem;
   display: flex;
@@ -393,13 +433,14 @@ input[type="email"] {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center; /* Center the text within the container */
+  text-align: center;
 }
 
 .radio-container input[type="radio"] {
   position: absolute;
   opacity: 0;
 }
+
 .radio-desc {
   font-family: Typewriter-light, Helvetica, Arial, sans-serif;
   font-size: 14px;
@@ -482,13 +523,14 @@ input:focus,
   margin-bottom: 1rem;
 }
 
-/* Media queries */
+/* MEDIA QUERIES */
+
 @media (max-width: 855px) {
   .container {
     width: 98%;
   }
   .radio-group {
-    flex-direction: column; /* Stack radio buttons vertically on smaller screens */
+    flex-direction: column;
   }
 
   .radio-container {

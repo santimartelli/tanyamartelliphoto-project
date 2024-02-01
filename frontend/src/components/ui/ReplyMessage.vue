@@ -1,3 +1,5 @@
+<!-- Componente que muestra el dialogo para contestar un mensaje -->
+
 <template>
   <teleport to="body">
   <div v-if="show" @click="close" class="backdrop5"></div>
@@ -16,14 +18,27 @@
 
 <script>
 export default {
+  /**
+   * Propiedades que recibe el componente.
+   * @prop {boolean} show - Indica si el dialogo se muestra o no.
+   */
   props: {
     show: {
       type: Boolean,
       required: true,
     },
   },
+
+  /**
+   * Emite el evento 'close' cuando se cierra el dialogo. Lo que permite que el
+   * componente que use este componente pueda reaccionar a este evento.
+   */
   emits: ["close"],
+
   methods: {
+    /**
+     * Cierra el dialogo y emite el evento 'close'.
+     */
     close() {
       this.$emit("close");
     },
@@ -32,6 +47,9 @@ export default {
 </script>
 
 <style scoped>
+
+/* Estilos para el componente ReplyMessage.vue */
+
 h3 {
   text-align: center;
   padding: 1rem;

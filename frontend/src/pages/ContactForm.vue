@@ -1,6 +1,7 @@
+<!-- Componente que contiene el formulario de contacto general -->
+
 <template>
   <div>
-    <!--Generate one ok-dialog and depends if okMessage is true or errorMessage is true show one message or another-->
     <ok-dialog :show="!!okMessage" @close="closeDialog">
       <h2>Message successfully sent!</h2>
       <p>{{ okMessage }}</p>
@@ -18,7 +19,6 @@
         the contact form below. I'll respond to your message as soon as
         possible.
       </p>
-
       <div>
         <form @submit.prevent="addNewMessage">
           <input
@@ -67,9 +67,14 @@
 import OkDialog from "../components/ui/OkDialog.vue";
 
 export default {
+  /**
+   * Componentes que usa el componente
+   * @component OkDialog - Componente que muestra un dialogo con un mensaje de éxito o error.
+   */
   components: {
     OkDialog,
   },
+
   data() {
     return {
       newMessageName: "",
@@ -83,18 +88,17 @@ export default {
       errorMessage: null,
     };
   },
+
   methods: {
+    /**
+     * Añade un nuevo mensaje a la base de datos y almacena el resultado en el estado de la aplicación.
+     */
     async addNewMessage() {
       this.formIsValid = true;
-
-      // Validate Name
+      // Validaciones
       this.formIsValidName = !!this.newMessageName.trim();
-      // Validate Email
       this.formIsValidEmail = this.isValidEmail(this.newMessageEmail.trim());
-      // Validate Message Content
       this.formIsValidContent = !!this.newMessageContent.trim();
-
-      // Check overall form validity
       this.formIsValid =
         this.formIsValidName &&
         this.formIsValidEmail &&
@@ -114,12 +118,21 @@ export default {
         }
       }
     },
+
+    /**
+     * Comprueba si el email es válido con una expresión regular.
+     * @param {string} email - Email a comprobar.
+     * @returns {boolean} - Devuelve true si el email es válido y false si no lo es.
+     */
     isValidEmail(email) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
     },
+
+    /**
+     * Cierra el dialogo y resetea el formulario.
+     */
     closeDialog() {
-      // Reset the form and hide the success message
       this.newMessageName = "";
       this.newMessageEmail = "";
       this.newMessageContent = "";
@@ -131,6 +144,10 @@ export default {
       this.errorMessage = null;
     },
   },
+
+  /**
+   * Resetea okMessage cuando se crea el componente para que no se muestre el dialogo.
+   */
   created() {
     this.okMessage = null;
   },
@@ -138,10 +155,13 @@ export default {
 </script>
 
 <style scoped>
+
+/* Estilos para el componente ContactForm.vue */
+
 .container {
   width: 60%;
-  margin: 0 auto; /* Center the container */
-  padding: 20px; /* Add some padding for spacing */
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .container > h2 {
@@ -188,6 +208,7 @@ textarea:focus {
   outline: none;
   border: 1px solid #f79f9f;
 }
+
 .btn-container {
   display: flex;
   justify-content: center;
@@ -200,7 +221,8 @@ textarea:focus {
   margin-bottom: 1rem;
 }
 
-/* media queries */
+/* MEDIA QUERIES */
+
 @media (max-width: 855px) {
   .container {
     width: 98%;

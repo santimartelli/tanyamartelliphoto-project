@@ -1,3 +1,5 @@
+<!-- Componente de la página de inicio -->
+
 <template>
   <div class="container-landing-page">
     <section class="hero">
@@ -15,7 +17,9 @@
         </div>
       </transition-group>
     </section>
+
     <!-- Versión móvil-->
+
     <section v-if="mobile" class="welcome-message">
       <div class="text-container">
         <h2><span class="highlight">Welcome!</span></h2>
@@ -64,7 +68,9 @@
       <p>"Loving photography since 1986"</p>
     </section>
     <section class="categories">
-      <!--Desktop Version-->
+
+      <!--Versión escritorio-->
+
       <swiper
         :navigation="true"
         :keyboard="{
@@ -112,36 +118,61 @@
 <script>
 import { mapGetters } from "vuex";
 import { Swiper, SwiperSlide } from "swiper/vue";
-// Import Swiper styles
+
+// Importacion de estilos de Swiper
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-
-// import required modules
+// Importacion de componentes de Swiper
 import { Keyboard, Pagination, Navigation } from "swiper/modules";
 
 export default {
+  /**
+   * Componentes que usa el componente
+   * @component Swiper - Componente que muestra un slider de imágenes.
+   * @component SwiperSlide - Componente que muestra una imagen en el slider.
+   */
   components: {
     Swiper,
     SwiperSlide,
   },
+
   data() {
     return {
       modules: [Keyboard, Pagination, Navigation],
       currentImageIndex: 0,
     };
   },
+
   methods: {
+    /**
+     * Cambia la imagen principal que que se muestra.
+     */
     changeImage() {
       this.currentImageIndex =
         (this.currentImageIndex + 1) % this.pictures.length;
     },
   },
+
   computed: {
+    /**
+     * Usa la función mapGetters de Vuex para obtener el ancho de la pantalla y si es móvil o no.
+     * @returns {number} Ancho de la pantalla.
+     * @returns {boolean} Indica si la pantalla es móvil o no.
+     */
     ...mapGetters(["screenWidth", "mobile"]),
+
+    /**
+     * Obtiene las imagenes desde el estado de la aplicación.
+     * @returns {Array} Array de objetos con las imágenes.
+     */
     pictures() {
       return this.$store.getters["pictures/pictures"];
     },
+
+    /**
+     * Hace que no se repitan las categorías de las imágenes.
+     */
     uniquePictures() {
       return this.pictures.filter(
         (picture, index, self) =>
@@ -150,20 +181,26 @@ export default {
       );
     },
   },
+
+  /**
+   * Llama ala función changeImage para cambiar la imagen principal cada 9 segundos.
+   */
   created() {
-    setInterval(this.changeImage, 9000); // Change image every 3 seconds
+    setInterval(this.changeImage, 9000);
   },
 };
 </script>
 
 <style scoped>
-/* General (apply to more than one section) */
+
+/* Estilos para el componente LandingPage.vue */
 
 h2 {
   font-family: Thesignature;
   font-size: 3rem;
   font-weight: 400;
 }
+
 .highlight {
   background: linear-gradient(90deg, #ffff 0%, #fae8e8 50%, #ffff 100%);
   background-repeat: no-repeat;
@@ -171,14 +208,16 @@ h2 {
   background-position: 0 85%;
 }
 
-/* Hero section */
+/* Sección de la imagen principal */
+
 .container-landing-page {
   width: 100%;
 }
+
 .hero {
   position: relative;
   height: 750px;
-  overflow: hidden; /* Adjust this value to fit your images */
+  overflow: hidden;
 }
 
 .image-container {
@@ -193,12 +232,14 @@ h2 {
   object-fit: cover;
 }
 
-/* Welcome message section */
+/* Sección mensaje de bienvenida */
+
 .welcome-message {
   width: 80%;
   padding: 8rem 0;
   margin: 0 auto;
 }
+
 .text-image-container {
   width: 100%;
   display: flex;
@@ -206,13 +247,15 @@ h2 {
   justify-content: center;
 }
 
-/* Text */
+/* Texto */
+
 .text-image-container h2 {
   text-align: left;
   margin-bottom: 1rem;
   letter-spacing: 0.2rem;
   font-size: 3rem;
 }
+
 .text-image-container p {
   text-align: left;
   line-height: 2.5rem;
@@ -220,7 +263,8 @@ h2 {
   font-weight: 400;
 }
 
-/* Image */
+/* Imágen */
+
 .desc-image {
   width: 100%;
   display: flex;
@@ -235,7 +279,8 @@ h2 {
   transition: all 0.2s ease-in-out;
 }
 
-/* Lema section */
+/* Sección lema */
+
 .lema {
   width: 100%;
   background-color: #f7f7f7;
@@ -265,7 +310,8 @@ h2 {
   transition: all 0.2s ease-in-out;
 }
 
-/* Categories section */
+/* Sección categorías */
+
 .categories {
   width: 100%;
   padding: 0;
@@ -276,6 +322,7 @@ h2 {
 .swiper {
   height: 400px;
 }
+
 .swiper-mobile {
   width: 100%;
   max-height: auto;
@@ -303,6 +350,7 @@ h2 {
   flex-direction: column;
   align-items: center;
 }
+
 .centered {
   font-family: thesignature;
   width: 100%;
@@ -315,6 +363,7 @@ h2 {
 .space {
   height: 2rem;
 }
+
 .btn-link {
   font-family: Typewriter-light;
   font-weight: 500;
@@ -329,55 +378,14 @@ h2 {
   opacity: 0.9;
   transition: all 0.2s ease-in-out;
 }
+
 .btn-link:hover {
   color: #fff;
   background-color: transparent;
   border: 1px solid #fff;
 }
 
-/* Featured images section*/
-/* .featured-images {
-  width: 100%;
-  padding: 8rem 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-}
-
-.title-wrapper {
-  width: 80%;
-  display: flex;
-  align-items: center;
-}
-.featured-images h2 {
-  text-align: left;
-  margin-bottom: 2rem;
-  letter-spacing: 0.2rem;
-  font-weight: 400;
-}
-
-.featured-images h2 {
-  margin-bottom: 2rem;
-}
-
-.images {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-
-.image {
-  width: 300px;
-  height: 300px;
-}
-
-.image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-} */
+/* Animaciones */
 
 .fade-enter-from {
   opacity: 0;
@@ -398,6 +406,8 @@ h2 {
 .fade-leave-to {
   opacity: 0;
 }
+
+/* MEDIA QUERIES */
 
 @media (max-width: 1235px) {
   .welcome-message {
@@ -450,6 +460,7 @@ h2 {
     padding-bottom: 1rem;
     font-size: 6rem;
   }
+
   .welcome-message p {
     width: 90%;
     font-size: 0.8rem;
@@ -459,6 +470,7 @@ h2 {
   .desc-image {
     margin: 0;
   }
+
   .title-wrapper {
     width: 100%;
     display: flex;
@@ -466,6 +478,7 @@ h2 {
     align-items: center;
     justify-content: center;
   }
+
   .featured-images h2 {
     font-size: 6rem;
   }
@@ -478,6 +491,7 @@ h2 {
       justify-content: center;
       align-items: center;
     }
+
     .featured-images {
       padding: 2rem 0;
     }
@@ -495,9 +509,11 @@ h2 {
       width: 100%;
       margin: 0;
     }
+
     .desc-image img {
       width: 70%;
     }
+
     .welcome-message p {
       font-size: 0.8rem;
     }

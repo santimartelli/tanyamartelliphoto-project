@@ -1,6 +1,13 @@
 import axios from "axios";
 
 export default {
+  /**
+   * Obtiene las categorías de la API y las almacena en el estado.
+   * @param {Object} context - El contexto de Vuex.
+   * @param {Object} context.commit - La función de Vuex para realizar una mutación.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   getCategories({ commit }) {
     axios
       .get("http://localhost:3000/api/categories")
@@ -11,6 +18,17 @@ export default {
         console.log(err);
       });
   },
+
+  /**
+   * Actualiza una categoría en la API y en el estado.
+   * @param {Object} context - El contexto de Vuex.
+   * @param {Object} context.commit - La función de Vuex para realizar una mutación.
+   * @param {Object} context.dispatch - La función de Vuex para despachar una acción.
+   * @param {string} categoryId - El ID de la categoría que se actualizará.
+   * @param {string} categoryName - El nombre de la categoría que se actualizará.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   updateCategory({ commit, dispatch }, { categoryId, categoryName }) {
     return axios
       .put(`http://localhost:3000/api/categories/${categoryId}`, {
@@ -26,11 +44,19 @@ export default {
         return response;
       })
       .catch((error) => {
-        // Handle network errors or other exceptions
         console.error("Edit request failed with error:", error);
       });
   },
 
+  /**
+   * Agrega una nueva categoría a la API y al estado.
+   * @param {Object} context - El contexto de Vuex.
+   * @param {Object} context.commit - La función de Vuex para realizar una mutación.
+   * @param {Object} context.dispatch - La función de Vuex para despachar una acción.
+   * @param {string} newCategoryName - El nombre de la nueva categoría.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   addNewCategory({ commit, dispatch }, newCategoryName) {
     return axios
       .post(`http://localhost:3000/api/categories`, {
@@ -52,17 +78,25 @@ export default {
         throw error;
       });
   },
+
+  /**
+   * Elimina una categoría de la API y del estado.
+   * @param {Object} context - El contexto de Vuex.
+   * @param {Object} context.commit - La función de Vuex para realizar una mutación.
+   * @param {Object} context.dispatch - La función de Vuex para despachar una acción.
+   * @param {string} categoryId - El ID de la categoría que se eliminará.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   deleteCategory({ commit, dispatch }, categoryId) {
     return axios
       .delete(`http://localhost:3000/api/categories/${categoryId}`)
       .then((response) => {
         if (response.status >= 200 && response.status < 300) {
-          // Successfully deleted, commit the mutation and dispatch any necessary actions
           console.log("Successfully deleted category with ID:", categoryId);
           commit("deleteCategory", categoryId);
           dispatch("getCategories");
         } else {
-          // Handle unexpected status codes (e.g., 404, 500, etc.)
           console.error(
             `Delete request failed with status: ${response.status}`
           );
@@ -70,7 +104,6 @@ export default {
         return response;
       })
       .catch((error) => {
-        // Handle network errors or other exceptions
         console.error("Delete request failed with error:", error);
       });
   },

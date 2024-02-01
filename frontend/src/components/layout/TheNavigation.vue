@@ -1,7 +1,11 @@
+<!-- Componente que muestra la barra de navegación para los visitantes o para el administrador si está
+  fuera del panel de administración -->
+
 <template>
   <header :class="{ 'scrolled-nav': scrolledNav }">
     <nav>
-      <!-- Versión de escritorio 1-->
+
+      <!-- Versión 1, de escritorio -->
 
       <ul v-if="!mobile && !segundoNav">
         <div class="nav-items">
@@ -87,7 +91,7 @@
         </div>
       </ul>
 
-      <!-- Versión de escritorio 2-->
+      <!-- Versión 2, para tablets -->
 
       <ul v-if="segundoNav">
         <li class="logo">
@@ -171,7 +175,7 @@
         </div>
       </ul>
 
-      <!-- Versión móvil -->
+      <!-- Versión 3, para móvil -->
 
       <div>
         <router-link v-if="mobile" class="link" :to="{ name: 'home' }"
@@ -278,9 +282,17 @@
 </template>
 
 <script>
+
 import { mapGetters } from "vuex";
 
 export default {
+  /**
+   * Propiedades de datos que se utilizan en el componente:
+   * - scrolledNav: Indica si la barra de navegación está desplazada.
+   * - mobileNav: Indica si la navegación móvil está activada.
+   * - scrollPosition: La posición actual del desplazamiento.
+   * - showDropdown: Indica si se muestra el menú desplegable.
+   */
   data() {
     return {
       scrolledNav: null,
@@ -290,21 +302,50 @@ export default {
     };
   },
   computed: {
+    /**
+     * A través de la función mapGetters del paquete vuex, se obtienen los datos del store.
+     * @returns {number} El ancho de la pantalla en píxeles.
+     * @returns {boolean} Indica si la pantalla es móvil.
+     * @returns {boolean} Indica si se muestra la segunda barra de navegación 2 (para tablets).
+     * @returns {boolean} Indica si se muestra la primera barra de navegación 1 (para escritorio).
+     */
     ...mapGetters(["screenWidth", "mobile", "segundoNav", "primerNav"]),
+
+    /**
+     * Obtiene las categorías del store.
+     * @returns {Array} Las categorías de la tienda.
+     */
     categories() {
       return this.$store.getters["categories/categories"];
     },
+
+    /**
+     * Obtiene el estado de autenticación del store.
+     * @returns {boolean} Indica si el usuario está autenticado.
+     */
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
     },
   },
+
   methods: {
+    /**
+     * Alterna la navegación móvil.
+     */
     toggleMobileNav() {
       this.mobileNav = !this.mobileNav;
     },
+
+    /**
+     * Alterna la visualización del menú desplegable.
+     */
     toggleShowDropdown() {
       this.showDropdown = !this.showDropdown;
     },
+
+    /**
+     * Actualiza la posición del desplazamiento.
+     */
     updateScroll() {
       const scrollPosition = window.scrollY;
       if (scrollPosition >= this.scrollPosition && this.scrollPosition > 120) {
@@ -314,11 +355,20 @@ export default {
       }
       this.scrollPosition = scrollPosition;
     },
+
+    /**
+     * Cierra sesión de usuario y redirige a la página de inicio.
+     */
     logout() {
       this.$store.dispatch("logout");
       this.$router.replace({ name: "home" });
     },
   },
+
+  /**
+   * Se ejecuta cuando el componente se ha montado en el DOM, añadiendo un
+   * eventListener para actualizar la posición del desplazamiento.
+   */
   mounted() {
     window.addEventListener("scroll", this.updateScroll);
   },
@@ -326,6 +376,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+/* Estilos para el componente TheNavigation.vue */
+
 header {
   display: flex;
   flex-direction: column;
@@ -339,7 +392,6 @@ header {
   transition: 0.5s ease all;
 
   nav {
-    // position: relative;
     display: flex;
     justify-content: center;
     width: 100%;
@@ -486,6 +538,7 @@ header {
       text-align: left;
       font-size: 0.8rem;
     }
+
     .dropdown li:hover {
       background-color: #fae8e8;
     }

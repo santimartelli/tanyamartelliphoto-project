@@ -1,3 +1,5 @@
+<!-- Componente para hacer el inicio de sesión de un usuario -->
+
 <template>
   <div>
     <registration-admin
@@ -15,7 +17,7 @@
           "
           class="form"
         >
-          <p style="color: green; padding-bottom: 1.5rem; font-size: 14px;">
+          <p style="color: green; padding-bottom: 1.5rem; font-size: 14px">
             Admin successfully registered!
           </p>
           <base-button
@@ -30,7 +32,7 @@
           "
           class="form"
         >
-          <p style="color: red; padding-bottom: 1.5rem; font-size: 14px;">
+          <p style="color: red; padding-bottom: 1.5rem; font-size: 14px">
             Registration failed. Please try again!
           </p>
           <base-button
@@ -39,7 +41,9 @@
             >Close</base-button
           >
         </div>
-        <!-- Form registration -->
+
+        <!-- Formulario de registro de un nuevo administrador -->
+
         <div
           v-if="
             !isLoadingAdmin && !registrationSuccess && !adminRegistrationError
@@ -134,9 +138,14 @@
 import RegistrationAdmin from "../components/ui/RegistrationAdmin.vue";
 
 export default {
+  /**
+   * Componentes que usa el componente
+   * @component RegistrationAdmin - Componente que muestra un dialogo para registrar un nuevo administrador.
+   */
   components: {
     RegistrationAdmin,
   },
+
   data() {
     return {
       username: "",
@@ -149,16 +158,20 @@ export default {
       newConfirmedPassword: "",
       newCodeVerification: "",
       codeVerification: "uZ*S3AV6^EaAe6$JjvwwrpWP@F@7Q",
-      formIsValidUsername: true, //minumum 3 characters
-      formIsValidPassword: true, // minimum 6 characters
-      formIsValidConfirmedPassword: true, // minimum 6 characters
-      formIsValidCodeVerification: true, // provided from another admin
+      formIsValidUsername: true, //minimo 3 caracteres
+      formIsValidPassword: true, // minimo 6 caracteres
+      formIsValidConfirmedPassword: true, // minimo 6 caracteres
+      formIsValidCodeVerification: true, // proporcionado por otro admin
       formIsValid: true,
       registrationSuccess: null,
       adminRegistrationError: null,
     };
   },
+
   methods: {
+    /**
+     * Intenta hacer el inicio de sesión de un usuario.
+     */
     async submitForm() {
       this.isLoading = true;
       try {
@@ -174,14 +187,25 @@ export default {
       }
       this.isLoading = false;
     },
+
+    /**
+     * Cierra el dialogo de error.
+     */
     handleError() {
       this.error = null;
     },
+
+    /**
+     * Abre el dialogo para registrar un nuevo administrador.
+     */
     openRegistrationDialog() {
       this.openRegistration = true;
     },
+
+    /**
+     * Cierra el dialogo para registrar un nuevo administrador y resetea el formulario.
+     */
     closeRegistrationDialog() {
-      // Reset the form and hide the success message
       this.openRegistration = false;
       this.newUsername = "";
       this.newPassword = "";
@@ -196,16 +220,19 @@ export default {
       this.registrationSuccess = null;
       this.adminRegistrationError = null;
     },
+
+    /**
+     * Intenta registrar un nuevo administrador.
+     */
     async adminRegistration() {
       this.formIsValid = true;
-      // Validations
+      // Validaciones
       this.formIsValidUsername = this.newUsername.trim().length >= 3;
       this.formIsValidPassword = this.newPassword.trim().length >= 6;
       this.formIsValidConfirmedPassword =
         this.newPassword.trim() === this.newConfirmedPassword.trim();
       this.formIsValidCodeVerification =
         this.newCodeVerification.trim() === this.codeVerification;
-      // Check overall form validity
       this.formIsValid =
         this.formIsValidUsername &&
         this.formIsValidPassword &&
@@ -239,6 +266,9 @@ export default {
 </script>
 
 <style scoped>
+
+/* Estilos para el componente LogIn.vue */
+
 .container-login {
   display: flex;
   flex-direction: column;
@@ -260,6 +290,7 @@ form {
   width: 300px;
   margin: 0 auto;
 }
+
 input {
   font-family: Typewriter-light, Helvetica, Arial, sans-serif;
   margin-bottom: 1.5rem;

@@ -1,6 +1,11 @@
 import axios from "axios";
 
 export default {
+  /**
+   * Devuelve los mensajes de la API y los establece en el estado.
+   * @param {Object} state - El estado de Vuex del módulo de mensajes.
+   * @returns {Object[]} - Los mensajes del estado.
+   */
   getMessages({ commit }) {
     axios
       .get("http://localhost:3000/api/messages")
@@ -11,6 +16,19 @@ export default {
         console.log(err);
       });
   },
+
+  /**
+   * Actualiza un mensaje en la API y en el estado.
+   * @param {Object} context - El contexto de Vuex.
+   * @param {Object} context.commit - La función de Vuex para realizar una mutación.
+   * @param {Object} context.dispatch - La función de Vuex para despachar una acción.
+   * @param {string} messageId - El ID del mensaje que se actualizará.
+   * @param {string} messageName - El nombre del mensaje que se actualizará.
+   * @param {string} messageEmail - El email del mensaje que se actualizará.
+   * @param {string} messageContent - El contenido del mensaje que se actualizará.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   updateMessage({ commit, dispatch }, { messageId, messageName, messageEmail, messageContent }) {
     return axios
       .put(`http://localhost:3000/api/messages/${messageId}`, {
@@ -33,6 +51,17 @@ export default {
       });
   },
 
+  /**
+   * Agrega un nuevo mensaje a la API y al estado.
+   * @param {Object} context - El contexto de Vuex.
+   * @param {Object} context.commit - La función de Vuex para realizar una mutación.
+   * @param {Object} context.dispatch - La función de Vuex para despachar una acción.
+   * @param {string} messageName - El nombre del nuevo mensaje.
+   * @param {string} messageEmail - El email del nuevo mensaje.
+   * @param {string} messageContent - El contenido del nuevo mensaje.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   addNewMessage({ commit, dispatch }, { messageName, messageEmail, messageContent }) {
     return axios
       .post(`http://localhost:3000/api/messages`, {
@@ -56,6 +85,18 @@ export default {
         throw error;
       });
   },
+
+  /**
+   * Envía un correo electrónico de respuesta a un mensaje.
+   * @param {Object} context - El contexto de Vuex.
+   * @param {Object} context.commit - La función de Vuex para realizar una mutación.
+   * @param {string} name - El nombre del remitente del mensaje.
+   * @param {string} email - El email del remitente del mensaje.
+   * @param {string} message - El mensaje del remitente del mensaje.
+   * @param {string} messageContent - El contenido del mensaje de respuesta.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   replyMessage(context, { name, email, message, messageContent }) {
     return axios
       .post(`http://localhost:3000/api/email/reply`, {
@@ -76,6 +117,16 @@ export default {
         console.error("Reply request failed with error:", error);
       });
   },
+
+  /**
+   * Elimina un mensaje de la API y del estado.
+   * @param {Object} context - El contexto de Vuex.
+   * @param {Object} context.commit - La función de Vuex para realizar una mutación.
+   * @param {Object} context.dispatch - La función de Vuex para despachar una acción.
+   * @param {string} messageId - El ID del mensaje que se eliminará.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   deleteMessage({ commit, dispatch }, messageId) {
     return axios
       .delete(`http://localhost:3000/api/messages/${messageId}`)

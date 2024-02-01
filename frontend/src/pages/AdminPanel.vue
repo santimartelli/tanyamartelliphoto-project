@@ -1,6 +1,10 @@
+<!-- Componente para la página panel de administración -->
+
 <template>
   <div>
-    <!-- Dialog view messages and view booking details-->
+
+    <!-- Dialogo que muestra un mensaje o una reserva -->
+
     <ok-dialog :show="!!okMessage" @close="closeDialog" class="nameEmail">
       <div class="dataContainer">
         <!-- Data message -->
@@ -46,7 +50,9 @@
         <p v-if="dialogBooking" class="message">{{ okMessage }}</p>
       </div>
     </ok-dialog>
-    <!-- Edit category dialog-->
+
+    <!-- Dialogo para editar una categoria -->
+
     <edit-category-dialog
       :show="!!openEditCategoryDialog"
       :category="selectedCategory"
@@ -63,7 +69,9 @@
         </div>
       </div>
     </edit-category-dialog>
-    <!-- Reply message dialog-->
+
+    <!-- Dialogo para responder un mensaje -->
+
     <reply-message :show="!!replyMessageEmail" @close="closeReplyMessage">
       <p><strong>From:</strong> {{ selectedMessage.messageName }}</p>
       <p><strong>Email:</strong> {{ selectedMessage.messageEmail }}</p>
@@ -80,7 +88,9 @@
         </div>
       </div>
     </reply-message>
-    <!-- Update booking dialog-->
+
+    <!-- Dialogo para actualizar una solicitud de reserva -->
+
     <edit-booking-dialog
       :show="!!openUpdateDialog"
       :booking="selectedBooking"
@@ -203,7 +213,9 @@
         </div>
       </div>
     </edit-booking-dialog>
-    <!--Feedback message dialog-->
+
+    <!--Dialogo que se muestra para dar un feedback al usuario cuando realiza una acción -->
+
     <transition name="feedback" appear>
       <div class="feedbackOk" v-if="feedbackOk === 1">
         <img src="../assets/Icons/ok.png" alt="ok" />
@@ -220,8 +232,13 @@
         </p>
       </div>
     </transition>
+
+    <!-- Menú de pestañas -->
+
     <div class="tabs">
-      <!-- Tab 1 -->
+
+      <!-- Pestaña 1 Imagenes -->
+
       <input
         type="radio"
         name="tabs"
@@ -235,8 +252,10 @@
         >Pictures</label
       >
       <div class="tab" v-show="currentTab === 'tabone'">
-        <!-- Inside the tab -->
+
+        <!-- Dentro de la pestaña -->
         <!-- Botón para añadir imagenes -->
+
         <base-button class="buttonAdd" @click="addImages = !addImages"
           >Add Images</base-button
         >
@@ -289,7 +308,9 @@
             </form>
           </div>
         </div>
-        <!-- Table with pictures -->
+
+        <!-- Tabla con los datos de las imagenes -->
+
         <div>
           <table>
             <thead>
@@ -351,7 +372,9 @@
             </tbody>
           </table>
         </div>
-        <!-- Modal -->
+
+        <!-- Modal para mostrar la imagen en grande -->
+
         <div v-if="showImageModal">
           <div class="backdrop" @click="closeModal"></div>
           <div class="modal">
@@ -371,7 +394,9 @@
           </div>
         </div>
       </div>
-      <!-- Tab 2 Categories -->
+
+      <!-- Pestaña 2 Categorias -->
+
       <input
         type="radio"
         name="tabs"
@@ -385,8 +410,10 @@
         >Categories</label
       >
       <div class="tab" v-show="currentTab === 'tabtwo'">
-        <!-- Inside the tab -->
+
+        <!-- Dentro de la pestaña -->
         <!-- Botón para añadir categorias -->
+
         <base-button class="buttonAdd" @click="addCategory = !addCategory"
           >Add Category</base-button
         >
@@ -415,7 +442,9 @@
             </form>
           </div>
         </div>
-        <!-- Table with categories -->
+
+        <!-- Tabla con los datos de las categorias -->
+
         <div>
           <table class="categories">
             <thead>
@@ -473,7 +502,9 @@
           </table>
         </div>
       </div>
-      <!-- Tab 3 Messages -->
+
+      <!-- Pestaña 3 Mensajes -->
+
       <input
         type="radio"
         name="tabs"
@@ -487,6 +518,10 @@
         >Messages</label
       >
       <div class="tab" v-show="currentTab === 'tabthree'">
+
+        <!-- Dentro de la pestaña -->
+        <!-- Tabla con los datos de los mensajes -->
+
         <div>
           <table class="messages">
             <thead>
@@ -566,7 +601,9 @@
           </table>
         </div>
       </div>
-      <!-- Tab 4 Booking Requests -->
+
+      <!-- Pestaña 4 Solicitudes de Reservas -->
+
       <input
         type="radio"
         name="tabs"
@@ -580,6 +617,10 @@
         >Booking Requests</label
       >
       <div class="tab" v-show="currentTab === 'tabfour'">
+
+        <!-- Dentro de la pestaña -->
+        <!-- Tabla con los datos de las solicitudes de reserva -->
+
         <div>
           <table class="bookings">
             <thead>
@@ -672,12 +713,23 @@ import EditCategoryDialog from "../components/ui/EditCategoryDialog.vue";
 import ReplyMessage from "../components/ui/ReplyMessage.vue";
 
 export default {
+  /**
+   * Componentes que usa el componente.
+   * @component OkDialog - Componente para mostrar un mensaje o una reserva.
+   * @component EditBookingDialog - Componente de dialogo para editar una reserva.
+   * @component EditCategoryDialog - Componente de dialogo para editar una categoria.
+   * @component ReplyMessage - Componente de dialogo para responder un mensaje.
+   */
   components: {
     OkDialog,
     EditBookingDialog,
     EditCategoryDialog,
     ReplyMessage,
   },
+
+  /**
+   * Propiedades de datos del componente.
+   */
   data() {
     return {
       currentTab: "",
@@ -745,7 +797,16 @@ export default {
       formIsValidReplyMessage: true,
     };
   },
-  computed: {
+
+  /**
+   * Propiedades calculadas del componente.
+   * @computed categories - Devuelve las categorias del store.
+   * @computed pictures - Devuelve las imagenes del store.
+   * @computed messages - Devuelve los mensajes del store.
+   * @computed bookings - Devuelve las solicitudes de reserva del store.
+   * @computed sortedCategories - Devuelve las categorias ordenadas alfabeticamente.
+   */
+   computed: {
     categories() {
       return this.$store.getters["categories/categories"];
     },
@@ -768,18 +829,26 @@ export default {
       });
     },
   },
+
   methods: {
     //GENERAL METHODS
+
+    /**
+     * Alterna la pestaña
+     * @param {*} tab  - Pestana que alternará
+     */
     toggleTab(tab) {
       console.log("Clicked tab:", tab);
       this.showIconsActions();
       // Toggle the value of currentTab
       this.currentTab = this.currentTab === tab ? "" : tab;
     },
+
+    /**
+     * Dependiendo del ancho de la pantalla, muestra o no los iconos de las acciones o no.
+     */
     showIconsActions() {
-      // Get the window width
       const windowWidth = window.innerWidth;
-      // If width is less than or equal to 821px, set iconsActions to true
       if (windowWidth <= 1080) {
         this.iconsActions = true;
       } else {
@@ -788,6 +857,12 @@ export default {
     },
 
     //PICTURES METHODS
+
+    /**
+     * Funcion que procesa cada imagen seleccionada y le añade una vista previa a cada una
+     * y las almacena en el array files.
+     * @param {*} event - Evento de subir imagenes
+     */
     handleFileUpload(event) {
       this.files = Array.from(event.target.files).map((file) => {
         const reader = new FileReader();
@@ -798,6 +873,10 @@ export default {
         return file;
       });
     },
+
+    /**
+     * Funcion asincrona que envia las imagenes al servidor para que las almacene en la base de datos y en el servidor.
+     */
     async submitForm() {
       this.isLoading = true;
       const formData = new FormData();
@@ -815,10 +894,10 @@ export default {
         if (response.status >= 200 && response.status < 300) {
           this.feedbackMessage = "Pictures uploaded successfully";
           this.feedbackOk = 1;
-          // Clear the file input and reset categoryId after successful upload
+          // reinicia el formulario una vez se han subido las imagenes exitosamente
           this.files = [];
           this.categoryId = "";
-          // Dispatch an action to get the pictures again
+          // Despacha la accion para actualizar las imagenes en el store
           this.$store.dispatch("pictures/getPictures");
         } else {
           this.feedbackOk = 2;
@@ -837,6 +916,10 @@ export default {
         }, 3000);
       }
     },
+
+    /**
+     * Funcion que gestiona el evento de error.
+     */
     handleError() {
       this.error = null;
       this.$refs.fileInput.value = "";
@@ -844,6 +927,10 @@ export default {
       this.files = [];
       this.categoryId = "";
     },
+
+    /**
+     * Funcion que reinicia el formulario de subir imagenes.
+     */
     resetUpload() {
       this.feedbackMessage = "";
       this.feedbackOk = 3;
@@ -852,45 +939,11 @@ export default {
       this.files = [];
       this.categoryId = "";
     },
-    // async deletePicture(pictureId) {
-    //   try {
-    //     const picture = this.pictures.find((p) => p.pictureId === pictureId);
-    //     const picturePath = picture.picturePath;
 
-    //     const response = await this.$store.dispatch(
-    //       "pictures/deletePicture",
-    //       pictureId
-    //     );
-    //     if (response && response.status >= 200 && response.status < 300) {
-    //       const fileResponse = await fetch(
-    //         `http://localhost:3000/api/pictures/deleteFile?filepath=${picturePath}`,
-    //         {
-    //           method: "DELETE",
-    //         }
-    //       );
-
-    //       if (fileResponse.status === 200) {
-    //         this.$store.commit("pictures/deletePicture", pictureId);
-    //         this.feedbackMessage = "Picture deleted successfully";
-    //         this.feedbackOk = 1;
-    //       } else {
-    //         this.feedbackOk = 2;
-    //         this.feedbackMessage = "Failed to delete picture, please try again";
-    //       }
-    //     } else {
-    //       this.feedbackOk = 2;
-    //       this.feedbackMessage = "Failed to delete picture, please try again";
-    //     }
-    //   } catch (error) {
-    //     this.feedbackOk = 2;
-    //     this.feedbackMessage = "Failed to delete picture, please try again";
-    //     console.log(error);
-    //   }
-    //   setTimeout(() => {
-    //     this.feedbackMessage = "";
-    //     this.feedbackOk = 3;
-    //   }, 3000);
-    // },
+    /**
+     * Funcion asincrona que elimina una imagen de la base de datos y del servidor.
+     * @param {*} pictureId - Id de la imagen a eliminar
+     */
     async deletePicture(pictureId) {
       try {
         const picture = this.pictures.find((p) => p.pictureId === pictureId);
@@ -929,17 +982,30 @@ export default {
       }, 3000);
     },
 
+    /**
+     * Funcion que muestra una ventana modal con la imagen en grande.
+     * @param {*} picture - Imagen a mostrar
+     */
     showModal(picture) {
       this.selectedImage = picture;
       this.showImageModal = true;
       document.body.style.overflow = "hidden";
     },
+
+    /**
+     * Funcion que cierra la ventana modal.
+     */
     closeModal() {
       this.showImageModal = false;
       document.body.style.overflow = "auto";
     },
 
     //CATEGORIES METHODS
+
+    /**
+     * Funcion que sirve para abrir el dialogo para editar una categoria.
+     * @param {*} category - objeto categoria con todos sus datos
+     */
     openUpdateCategoryDialog(category) {
       this.openEditCategoryDialog = true;
       this.selectedCategory = category;
@@ -951,6 +1017,9 @@ export default {
       this.openUpdateDialog = false;
     },
 
+    /**
+     * Funcion sirve para cerrar el dialogo para editar una categoria.
+     */
     closeEditCategoryDialog() {
       this.openEditCategoryDialog = false;
       this.selectedCategory = null;
@@ -960,9 +1029,14 @@ export default {
       this.okMessage = null;
       this.errorMessage = null;
     },
+
+    /**
+     * Edita la categoria correspondiente en la base de datos
+     * y en el store con los nuevos datos.
+     */
     async editCategory() {
       this.formIsValid = true;
-      // Validations
+      // Validaciones
       this.formIsValidCategoryName = !!this.updatedCategoryName.trim();
       this.formIsValid = this.formIsValidCategoryName;
       if (this.formIsValid) {
@@ -985,6 +1059,10 @@ export default {
         }, 3000);
       }
     },
+
+    /**
+     * Agrega una nueva categoria a la base de datos y al store con los nuevos datos.
+     */
     addNewCategory() {
       this.isLoading = true;
       const newCategoryName = this.newCategoryName;
@@ -1013,12 +1091,20 @@ export default {
       }
       this.isLoading = false;
     },
+
+    /**
+     * Funcion que reinicia el formulario de añadir una categoria.
+     */
     resetCategoryForm() {
       this.newCategoryName = "";
       this.addCategory = false;
     },
+
+    /**
+     * Funcion que elimina una categoria de la base de datos y del store.
+     * @param {*} categoryId - Id de la categoria a eliminar
+     */
     deleteCategory(categoryId) {
-      // Check if there are pictures with this category
       const picturesWithCategory = this.pictures.filter(
         (picture) => picture.categoryId == categoryId
       );
@@ -1047,11 +1133,20 @@ export default {
     },
 
     //MESSAGES METHODS
+
+    /**
+     * Funcion para mostrar el mensaje seleccionado en un dialogo.
+     * @param {*} message - Mensaje a mostrar
+     */
     viewMessage(message) {
       this.dialogMessage = true;
       this.selectedMessage = message;
       this.okMessage = message.messageContent;
     },
+
+    /**
+     * Funcion para cerrar el dialogo del mensaje.
+     */
     closeDialog() {
       this.okMessage = null;
       this.selectedMessage = null;
@@ -1059,11 +1154,21 @@ export default {
       this.dialogMessage = null;
       this.dialogBooking = null;
     },
+
+    /**
+     * Abre el dialogo para responder un mensaje.
+     * @param {*} message - Mensaje a responder
+     */
     replyMessageDialog(message) {
       this.replyMessageEmail = true;
       this.selectedMessage = message;
       this.okMessage = this.selectedMessage.messageContent;
     },
+
+    /**
+     * Funcion asincrona que envia el mensaje de respuesta al servidor
+     * para que lo envie al email del usuario.
+     */
     async replyMessage() {
       this.formIsValid = true;
       // Validations
@@ -1095,6 +1200,10 @@ export default {
         }, 3000);
       }
     },
+
+    /**
+     * Funcion que cierra el dialogo de responder un mensaje.
+     */
     closeReplyMessage() {
       this.replyMessageEmail = null;
       this.okMessage = null;
@@ -1103,6 +1212,11 @@ export default {
       this.formIsValidReplyMessage = true;
       this.formIsValid = true;
     },
+
+    /**
+     * Funcion que elimina un mensaje de la base de datos y del store.
+     * @param {*} messageId - Id del mensaje a eliminar
+     */
     deleteMessage(messageId) {
       try {
         this.$store.dispatch("messages/deleteMessage", messageId);
@@ -1119,12 +1233,23 @@ export default {
     },
 
     //BOOKINGS METHODS
+
+    /**
+     * Funcion que devuelve el nombre de la categoria a la que pertenece la reserva.
+     * @param {*} categoryId - Id de la categoria
+     * @returns Nombre de la categoria
+     */
     getCategoryName(categoryId) {
       const category = this.categories.find(
         (category) => category.categoryId === categoryId
       );
       return category.categoryName;
     },
+
+    /**
+     * Funcion que formatea la fecha y la hora de la reserva.
+     * @param {*} dateStr - Fecha y hora de la reserva
+     */
     formatDate(dateStr) {
       const date = new Date(dateStr);
       const day = date.getDate().toString().padStart(2, "0");
@@ -1135,16 +1260,30 @@ export default {
       const seconds = date.getSeconds().toString().padStart(2, "0");
       return `${day}/${month}/${year} at ${hours}:${minutes}:${seconds}h.`;
     },
+
+    /**
+     * Funcion que muestra los detalles de la reserva en un dialogo.
+     * @param {*} booking - Reserva a mostrar
+     */
     viewDetails(booking) {
       this.dialogBooking = true;
       this.selectedBooking = booking;
       this.okMessage = booking.message;
     },
+
+    /**
+     * Funcion que valida el email.
+     */
     isValidEmail(email) {
       // Use a more comprehensive email validation regex
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
     },
+
+    /**
+     * Funcion que abre el dialogo para editar una reserva.
+     * @param {*} booking - Reserva a editar
+     */
     openEditBookingDialog(booking) {
       this.openUpdateDialog = true;
       this.calculateAvailableDates();
@@ -1153,6 +1292,10 @@ export default {
       this.dialogBooking = false;
       this.dialogMessage = false;
     },
+
+    /**
+     * Funcion que cierra el dialogo para editar una reserva.
+     */
     closeBookingUpdateDialog() {
       this.openUpdateDialog = false;
       this.updatedName = "";
@@ -1176,6 +1319,11 @@ export default {
       this.okMessage = null;
       this.errorMessage = null;
     },
+
+    /**
+     * Edita la reserva correspondiente en la base de datos
+     * y en el store con los nuevos datos.
+     */
     async editBooking() {
       this.formIsValid = true;
       // Validations
@@ -1225,6 +1373,11 @@ export default {
         }, 3000);
       }
     },
+
+    /**
+     * Funcion que elimina una reserva de la base de datos y del store.
+     * @param {*} bookingId - Id de la reserva a eliminar
+     */
     deleteBooking(bookingId) {
       try {
         this.$store.dispatch("bookings/deleteBooking", bookingId);
@@ -1240,6 +1393,10 @@ export default {
         this.feedbackOk = 3;
       }, 3000);
     },
+
+    /**
+     * Funcion que calcula las fechas disponibles para reservar.
+     */
     calculateAvailableDates() {
       this.availableDates = [];
       const today = new Date();
@@ -1255,6 +1412,13 @@ export default {
         }
       }
     },
+
+    /**
+     * Cuando se crea el componente, se ejecuta esta funcion.
+     * Muetsra los iconos de las acciones o no dependiendo del ancho de la pantalla.
+     * Pone la variable okMessage en null, para que no se muestre ningun mensaje.
+     * y calcula las fechas disponibles para reservar.
+     */
     created() {
       this.showIconsActions();
       this.okMessage = null;
@@ -1263,6 +1427,10 @@ export default {
       });
     },
   },
+
+  /**
+   * Vigila el ancho de la pantalla para mostrar o no los iconos de las acciones.
+   */
   watch: {
     "$store.getters.screenWidth"() {
       this.showIconsActions();
@@ -1272,7 +1440,11 @@ export default {
 </script>
 
 <style scoped>
-/* GENERAL STYLES*/
+
+/* Estilos para la pagina de administracion */
+
+/* ESTILOS GENERALES */
+
 body {
   background: #eee;
   min-height: 100vh;
@@ -1287,13 +1459,14 @@ body {
   font-size: 112%;
 }
 
-/* Tabs */
+/* Pestañas */
+
 .tabs {
   display: flex;
-  flex-wrap: wrap; /* make sure it wraps */
+  flex-wrap: wrap;
 }
 .tabs label {
-  order: 1; /* Put the labels first */
+  order: 1;
   letter-spacing: 0.02rem;
   font-size: 0.8rem;
   flex-grow: 1;
@@ -1305,7 +1478,7 @@ body {
   transition: background ease 0.5s;
 }
 .tabs .tab {
-  order: 99; /* Put the tabs last */
+  order: 99;
   flex-grow: 1;
   width: 100%;
   padding: 1rem;
@@ -1318,13 +1491,14 @@ body {
   display: block;
 }
 
-/* Feedback dialog */
+/* Dialogo Feedback */
+
 .feedbackOk,
 .feedbackError {
   position: fixed;
   display: flex;
-  align-items: center; /* Center vertically */
-  justify-content: center; /* Center horizontally */
+  align-items: center;
+  justify-content: center;
   top: 1rem;
   right: 1rem;
   border-radius: 4px;
@@ -1354,9 +1528,9 @@ body {
 
 .feedbackOk p,
 .feedbackError p {
-  margin: 0; /* Remove default margin */
+  margin: 0;
   display: flex;
-  align-items: center; /* Center horizontally */
+  align-items: center;
 }
 
 .feedback-enter-active,
@@ -1370,12 +1544,12 @@ body {
 }
 
 /* ok dialog */
+
 .dataContainer {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: left;
-  /* margin-bottom: 1rem; */
 }
 
 .message {
@@ -1385,7 +1559,8 @@ body {
   overflow-y: scroll;
 }
 
-/* Pictures */
+/* Imagenes */
+
 .buttonAdd {
   margin-bottom: 1rem;
 }
@@ -1400,7 +1575,8 @@ body {
   max-width: 100%;
 }
 
-/* Form add images */
+/* Formulario para añadir imagenes */
+
 .addItem form {
   display: flex;
   width: 100%;
@@ -1459,6 +1635,7 @@ body {
   margin-bottom: 0;
   padding: .7rem;
 }
+
 .file-select::file-selector-button {
   border: 1px solid #000;
   border-radius: 4px;
@@ -1481,7 +1658,6 @@ body {
   -webkit-appearance: none;
   -moz-appearance: none;
   padding: 8px;
-  /* other styles for aesthetics */
   width: 100%;
   font-family: Typewriter-extralight;
   font-size: 0.7rem;
@@ -1536,6 +1712,7 @@ select option {
 }
 
 /*space between buttons*/
+
 .buttons-container div {
   margin: 0.5rem;
 }
@@ -1570,7 +1747,8 @@ select option {
   max-width: 75px;
 }
 
-/* Table pictures*/
+/* Tabla imagenes*/
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -1712,13 +1890,13 @@ tr:nth-child(even) {
 }
 
 .modal-content img.close {
-  position: absolute; /* Position the close image absolutely */
-  top: 15px; /* Adjust the top position as needed */
-  right: 15px; /* Adjust the right position as needed */
+  position: absolute;
+  top: 15px;
+  right: 15px;
   width: 20px;
   height: 20px;
   opacity: 0.7;
-  z-index: 100; /* Ensure the close image is on top */
+  z-index: 100;
 }
 
 .modal-content .close:hover,
@@ -1727,8 +1905,10 @@ tr:nth-child(even) {
   cursor: pointer;
 }
 
-/* CATEGORIES STYLES */
-/*Table categories*/
+/* ESTILOS DE LAS SECCIÓN CATEGORIAS */
+
+/*Tabla de categories*/
+
 .categories .th-1,
 .categories .th-2 {
   width: 25%;
@@ -1739,8 +1919,10 @@ tr:nth-child(even) {
   background-color: #fdf6df;
 }
 
-/* MESSAGES STYLES */
-/*Table messages*/
+/* ESTILOS DE LA SECCIÓN MENSAJES */
+
+/*Tabla de mensajes*/
+
 .messages .th-1 {
   width: 10%;
 }
@@ -1750,7 +1932,8 @@ tr:nth-child(even) {
   width: 20%;
 }
 
-/* BOOKINGS STYLES */
+/* ESTILOS DE LA SECCIÓN RESERVAS */
+
 .bookings .th-1 {
   width: 5%;
 }
@@ -1798,12 +1981,12 @@ tr:nth-child(even) {
 
   .modal-content {
     position: relative;
-    max-height: 100vh; /* Set the maximum height to 80% of the viewport height */
+    max-height: 100vh;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 0; /* Remove padding to avoid extra space */
-    overflow: auto; /* Enable scroll if needed */
+    padding: 0;
+    overflow: auto;
   }
 
   .modal-content img {
@@ -1832,7 +2015,8 @@ tr:nth-child(even) {
   }
 }
 
-/* Dialog edit booking */
+/* Dialogo para editar reserva */
+
 .form {
   width: 100%;
   display: flex;
@@ -1886,6 +2070,7 @@ input[type="email"] {
 }
 
 /* Radio buttons */
+
 .radio-group {
   margin-top: 1rem;
   display: flex;
@@ -2000,7 +2185,6 @@ input:focus,
   margin-bottom: 1rem;
 }
 
-/* set the class errors that comes after a textarea to have marign-top 1rem */
 textarea + .errors {
   margin-top: 1rem;
 }

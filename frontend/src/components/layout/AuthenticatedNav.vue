@@ -1,7 +1,5 @@
-/**
- * Este componente muestra la barra de navegación cuando el usuario está autenticado.
-  * @module components/layout/AuthenticatedNav
-  */
+<!--Componente que muestra la barra de navegación cuando el usuario está autenticado.-->
+
  <template>
   <div class="auth-nav">
     <div class="left">
@@ -10,14 +8,9 @@
       </div>
     </div>
     <div class="right">
-      <li v-if="isAdminPanel">
+      <li>
         <router-link :to="{ name: 'home' }" class="router-link btn-link"
           >Home</router-link
-        >
-      </li>
-      <li v-else>
-        <router-link :to="{ name: 'admin' }" class="router-link btn-link"
-          >Admin Panel</router-link
         >
       </li>
       <li>
@@ -26,37 +19,24 @@
     </div>
   </div>
   <div class="welcome">
-    <h1>ADMIN PANEL</h1>
+    <p>ADMIN PANEL DE {{ username }}</p>
   </div>
 </template>
 
 <script>
+
 export default {
-  /**
-   * Data properties para el componente AuthenticatedNav.
-   * @returns {Object} Objeto "data" que contiene la propiedad adminPanelLink.
-   */
-  data() {
-    return {
-      adminPanelLink: false,
-    };
-  },
   computed: {
     /**
-     * Obtiene el nombre de usuario del usuario autenticado.
-     * @returns {string} Nombre de usuario del usuario autenticado.
+     * Devuelve el nombre de usuario en mayúsculas.
+     * @returns {string} Nombre de usuario en mayúsculas.
      */
     username() {
-      return this.$store.state.auth.user.username;
-    },
-    /**
-     * Comprueba si la ruta actual es la del panel de administración.
-     * @returns {boolean} Verdadero si la ruta actual es la del panel de administración, falso de lo contrario.
-     */
-    isAdminPanel() {
-      return this.$route.name === "admin";
+      const username = this.$store.state.auth.user.username;
+      return username.toUpperCase();
     },
   },
+
   methods: {
     /**
      * Cierra sesión de usuario y redirige a la página de inicio.
@@ -70,6 +50,9 @@ export default {
 </script>
 
 <style scoped>
+
+/* Estilos para el componente AuthenticatedNav.vue */
+
 * {
   margin: 0;
   padding: 0;
@@ -107,11 +90,15 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  font-family: Typewriter-extralight;
-  font-size: 0.6rem;
+  font-family: Typewriter-light;
   letter-spacing: 0.2rem;
   background-color: #fff;
   border-bottom: 1px solid #ccc;
+}
+
+.welcome p {
+  color: rgb(22, 103, 11);
+  font-size: 1rem;
 }
 
 .right {
@@ -153,9 +140,8 @@ li {
   margin-bottom: 0;
 }
 
-/** 
-/* Responsive
-*/
+/* Media queries para pantallas de hasta 450px de ancho.*/
+
 @media (max-width: 450px) {
   .auth-nav {
     flex-direction: column;
@@ -180,11 +166,6 @@ li {
   }
   .name-title {
     font-size: 1.5rem;
-  }
-  .welcome {
-    font-size: 0.5rem;
-    justify-content: center;
-    text-align: center;
   }
 }
 </style>

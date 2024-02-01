@@ -1,6 +1,12 @@
 import axios from "axios";
 
 export default {
+  /**
+   * Obtiene las reservas de la API y las almacena en el estado.
+   * @param {Object} context - El objeto context de Vuex.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   getBookings({ commit }) {
     axios
       .get("http://localhost:3000/api/bookings")
@@ -11,6 +17,14 @@ export default {
         console.log(err);
       });
   },
+
+  /**
+   * Actualiza una reserva en la API y en el estado.
+   * @param {Object} context - El objeto context de Vuex.
+   * @param {Object} payload - El payload de la reserva que contiene el ID de la reserva y los datos de la reserva.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   updateBooking({ commit, dispatch }, { bookingId, name, email, categoryId, location, place, selectedDate, selectedTime, message }) {
     return axios
       .put(`http://localhost:3000/api/bookings/${bookingId}`, {
@@ -33,11 +47,17 @@ export default {
         return response;
       })
       .catch((error) => {
-        // Handle network errors or other exceptions
         console.error("Edit request failed with error:", error);
       });
   },
 
+  /**
+   * Agrega una nueva reserva a la API y al estado.
+   * @param {Object} context - El objeto context de Vuex.
+   * @param {Object} payload - El payload de la reserva que contiene todos los datos de la reserva.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   addNewBooking({ commit, dispatch }, { name, email, categoryId, location, place, selectedDate, selectedTime, message }) {
     return axios
       .post(`http://localhost:3000/api/bookings`, {
@@ -66,17 +86,23 @@ export default {
         throw error;
       });
   },
+
+  /**
+   * Elimina una reserva de la API y del estado.
+   * @param {Object} context - El objeto context de Vuex.
+   * @param {string} bookingId - El ID de la reserva que se va a eliminar.
+   * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
+   * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
+   */
   deleteBooking({ commit, dispatch }, bookingId) {
     return axios
       .delete(`http://localhost:3000/api/bookings/${bookingId}`)
       .then((response) => {
         if (response.status >= 200 && response.status < 300) {
-          // Successfully deleted, commit the mutation and dispatch any necessary actions
           console.log("Successfully deleted booking with ID:", bookingId);
           commit("deleteBooking", bookingId);
           dispatch("getBookings");
         } else {
-          // Handle unexpected status codes (e.g., 404, 500, etc.)
           console.error(
             `Delete request failed with status: ${response.status}`
           );
@@ -84,7 +110,6 @@ export default {
         return response;
       })
       .catch((error) => {
-        // Handle network errors or other exceptions
         console.error("Delete request failed with error:", error);
       });
   },

@@ -1,6 +1,7 @@
 /**
  * @fileoverview Este archivo contiene las rutas para gestionar las solicitudes de reserva.
  */
+
 module.exports = (app) => {
   const bookings = require("../controllers/booking.controller.js");
   var router = require("express").Router();

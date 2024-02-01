@@ -1,3 +1,5 @@
+<!-- Componente principal que contiene todos los componentes del sitio -->
+
 <template>
   <div id="app">
     <authenticated-nav v-if="isLoggedIn && isAdminPanel"></authenticated-nav>
@@ -5,6 +7,7 @@
     <main id="page-wrap">
       <router-view v-slot="slotProps">
         <transition name="route" mode="out-in">
+           <!-- Aquí se renderiza el componente que corresponde a la ruta actual -->
           <component :is="slotProps.Component"></component>
         </transition>
       </router-view>
@@ -24,56 +27,141 @@ import { mapActions } from "vuex";
 import AuthenticatedNav from "./components/layout/AuthenticatedNav.vue";
 
 export default {
+  /**
+   * Componentes que usa el componente
+   * @component TheNavigation - Componente que muestra la navegación del sitio.
+   * @component TheSocialNetworks - Componente que muestra los enlaces a las redes sociales.
+   * @component FooterCredits - Componente que muestra los créditos del sitio.
+   * @component AuthenticatedNav - Componente que muestra la navegación del sitio para usuarios autenticados.
+   */
   components: {
     TheNavigation,
     TheSocialNetworks,
     FooterCredits,
     AuthenticatedNav,
   },
+
+  /**
+   * Propiedades calculadas del componente.
+   */
   computed: {
+    /**
+     * Obtiene del store si el usuario está autenticado.
+     * @returns {boolean} True si el usuario está autenticado.
+     */
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
     },
+
+    /**
+     * Determina si se muestra la navegación para usuarios autenticados.
+     */
     isAdminPanel() {
       return this.$route.name === "admin";
     },
+
+    /**
+     * Obtiene del store si el usuario se deslogueó automáticamente.
+     */
     didAutoLogout() {
       return this.$store.getters.didAutoLogout;
     },
   },
+
+  /**
+   * Realiza una serie de acciones cuando se crea el componente.
+   */
   created() {
+    /**
+     * Llama al método getCategories de este componente.
+     */
     this.getCategories();
+
+    /**
+     * Llama al método getPictures de este componente.
+     */
     this.getPictures();
+
+    /**
+     * Llama al método getMessages de este componente.
+     */
     this.getMessages();
+
+    /**
+     * Llama al método getBookings de este componente.
+     */
     this.getBookings();
+
+    /**
+     * Despacha la acción tryLogin del store.
+     */
     this.$store.dispatch("tryLogin");
   },
+
   watch: {
+    /**
+   * Observa la propiedad didAutoLogout y redirige a la página de login si es verdadera.
+   */
     didAutoLogout(curValue, oldValue) {
       if (curValue && curValue !== oldValue) {
         this.$router.replace({ name: "login" });
       }
     },
   },
+
   mounted() {
+    /**
+     * Cuando se monta el componente se añade un listener al evento resize de la ventana
+     * para actualizar el ancho de la pantalla en el store.
+     */
     window.addEventListener("resize", this.updateScreenWidth);
   },
+
   beforeUnmount() {
+    /**
+     * Cuando se desmonta el componente se elimina el listener del evento resize de la ventana.
+     */
     window.removeEventListener("resize", this.updateScreenWidth);
   },
   methods: {
+    /**
+     * Actualiza el ancho de la pantalla en el store.
+     */
     updateScreenWidth() {
       this.$store.dispatch("onResize");
     },
+
+    /**
+     * Llama a la acción getCategories del módulo categories, que devuelve las
+     * categorías de la base de datos y las almacena en el estado de la aplicación.
+     */
     ...mapActions("categories", ["getCategories"]),
+
+    /**
+     * Llama a la acción getPictures del módulo pictures, que devuelve las
+     * imágenes de la base de datos y las almacena en el estado de la aplicación.
+     */
     ...mapActions("pictures", ["getPictures"]),
+
+    /**
+     * Llama a la acción getMessages del módulo messages, que devuelve los
+     * mensajes de la base de datos y los almacena en el estado de la aplicación.
+     */
     ...mapActions("messages", ["getMessages"]),
+
+    /**
+     * Llama a la acción getBookings del módulo bookings, que devuelve las
+     * reservas de la base de datos y las almacena en el estado de la aplicación.
+     */
     ...mapActions("bookings", ["getBookings"]),
   },
 };
 </script>
 
 <style>
+
+/* Estilos para el componente App.vue que serían estilos generales */
+
 @font-face {
   font-family: "Typewriter-light";
   src: local("Typewriter-light"),
@@ -185,7 +273,8 @@ a {
   transform: translateY(0);
 }
 
-/*generate the media queries for the cpntainer to occupy 100% width*/
+/* MEDIA QUERIES */
+
 @media (max-width: 1024px) {
   .container {
     width: 80%;
