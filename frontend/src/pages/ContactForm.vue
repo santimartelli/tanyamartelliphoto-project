@@ -2,6 +2,9 @@
 
 <template>
   <div>
+
+    <!-- Dialogo con mensaje feedback cuando se envía formulario -->
+
     <ok-dialog :show="!!okMessage" @close="closeDialog">
       <h2>Mensaje enviado correctamente!</h2>
       <p>{{ okMessage }}</p>
@@ -11,13 +14,18 @@
       <p>{{ errorMessage }}</p>
     </ok-dialog>
     <div class="container">
+
+      <!-- Texto -->
+
       <h2>Me encantaría saber de tí!</h2>
       <p>
-        ¡Valor mucho tu interés y consideración hacia mis servicios de
+        Aprecio mucho tu interés y consideración hacia mis servicios de
         fotografía! Si tienes preguntas, necesitas más información o simplemente
         quieres charlar conmigo, no dudes en usar el formulario de contacto de
-        aquí abajo. Te responderé tu mensaje a la mayor brevedad posible.
+        aquí abajo. Te responderé a la mayor brevedad posible.
       </p>
+
+      <!-- Formulario -->
 
       <div>
         <form @submit.prevent="addNewMessage">

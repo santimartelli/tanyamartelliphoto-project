@@ -4,7 +4,7 @@
   <div class="container">
     <h2 v-if="picturesForCategory.length > 0">{{ picturesForCategory[0].categoryName }}</h2>
     <div class="container2">
-    <h3 v-if="picturesForCategory.length === 0">There are no pictures of this category</h3>
+    <h3 v-if="picturesForCategory.length === 0">No hay imagenes de esta categoría</h3>
     <div v-for="picture in picturesForCategory" :key="picture.pictureId">
       <img
         :src="picture.picturePath"
@@ -71,7 +71,7 @@ img {
   .container{
     width: 98%;
   }
-  
+
   img{
     width: 100%;
     height: auto;

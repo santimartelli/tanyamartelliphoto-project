@@ -68,6 +68,7 @@ export default {
   font-size: 0.7rem;
   color: #fff;
   padding: 0.5rem;
+  z-index: 1;
 }
 
 .left,
