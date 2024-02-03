@@ -9,6 +9,9 @@
 </template>
 
 <script>
+/**
+ * Componente que muestra los créditos del sitio.
+ */
 export default {};
 </script>
 

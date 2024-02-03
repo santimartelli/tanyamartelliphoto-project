@@ -2,7 +2,10 @@ import mutations from "./mutations.js";
 import actions from "./actions.js";
 import getters from "./getters.js";
 
-
+/**
+ * Este módulo contiene el estado, las mutaciones, las acciones y los getters
+ * del módulo de autenticación.
+ */
 export default {
 /**
  * Inicializa el estado del módulo de autenticación.
@@ -18,10 +21,6 @@ state() {
     didAutoLogout: false,
   };
 },
-
-/**
- * Mutaciones, acciones y getters del módulo de autenticación.
- */
 mutations,
 actions,
 getters

@@ -1,7 +1,6 @@
 /**
  * Getters generales
  */
-
 export default {
   /**
    * Getter que devuelve el ancho de la pantalla.

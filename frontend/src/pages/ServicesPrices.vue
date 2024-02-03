@@ -17,7 +17,7 @@
       </ul>
       <div class="button-container">
       <router-link to="/booking">
-        <base-button>Book Now !</base-button>
+        <base-button>Reserva ya!</base-button>
       </router-link>
     </div>
     </div>

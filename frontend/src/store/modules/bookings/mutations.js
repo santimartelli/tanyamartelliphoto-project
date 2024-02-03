@@ -1,3 +1,6 @@
+/**
+ * Las mutaciones de Vuex para el módulo de reservas.
+ */
 export default {
   /**
    * Establece las reservas del estado.

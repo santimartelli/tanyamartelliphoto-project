@@ -17,6 +17,10 @@
 
 <script>
 import { mapGetters } from "vuex";
+/**
+ * Componente que muestra las fotografías segun su categoría.
+ * @vue-computed picturesForCategory - Devuelve las imágenes que pertenecen a la categoría indicada en la ruta.
+ */
 export default {
   computed: {
     /**
@@ -26,7 +30,6 @@ export default {
 
     /**
      * Devuelve las imágenes que pertenecen a la categoría indicada en la ruta.
-     * @returns {Array} Imágenes que pertenecen a la categoría indicada en la ruta.
      */
     picturesForCategory() {
       return this.pictures.filter(

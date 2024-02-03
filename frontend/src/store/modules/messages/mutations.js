@@ -1,3 +1,6 @@
+/**
+ * Las mutaciones de Vuex para el módulo de mensajes.
+ */
 export default {
   /**
    * Establece los mensajes del estado.

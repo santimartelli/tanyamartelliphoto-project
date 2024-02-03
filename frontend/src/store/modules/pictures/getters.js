@@ -1,3 +1,6 @@
+/**
+ * Define los getters del módulo de imágenes.
+ */
 export default {
   /**
    * Devuelve las imágenes del estado.

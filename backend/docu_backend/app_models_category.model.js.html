@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app/models/category.model.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app/models/category.model.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview Modelo de la tabla Categories. Se definen los atributos de la tabla y
+ * el nombre de la tabla a la que hace referencia.
+ */
+
+const sql = require("./db.js");
+
+/**
+ * Representación del modelo categoría.
+ * @constructor
+ * @param {object} category - El objeto de la categoría.
+ * @param {string} category.categoryName - El nombre de la categoría.
+ */
+const Category = function (category) {
+  this.categoryName = category.categoryName;
+};
+
+/**
+ * Crea una nueva categoría, la guarda en la base de datos y devuelve el resultado.
+ * @param {object} newCategory - El objeto de la nueva categoría.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ */
+Category.create = (newCategory, result) => {
+  sql.query("INSERT INTO Categories SET ?", newCategory, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("created category: ", { id: res.insertId, ...newCategory });
+    result(null, { id: res.insertId, ...newCategory });
+  });
+};
+
+/**
+ * Obtiene todas las categorías de la base de datos y devuelve el resultado.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ */
+Category.getAll = (result) => {
+  sql.query("SELECT * FROM Categories", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    result(null, res);
+  });
+};
+
+/**
+ * Busca una categoría por su ID y Devuelve el resultado.
+ * @param {number} categoryId - El ID de la categoría a buscar.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ */
+Category.findById = (categoryId, result) => {
+  sql.query(
+    "SELECT * FROM Categories WHERE categoryId = ?",
+    categoryId,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+
+      if (res.length) {
+        console.log("found category: ", res[0]);
+        result(null, res[0]);
+        return;
+      }
+      result({ kind: "not_found" }, null);
+    }
+  );
+};
+
+/**
+ * Actualiza en la base de datos una categoría existente por su ID y devuelve el resultado.
+ * @param {number} categoryId - El ID de la categoría a actualizar.
+ * @param {object} category - El objeto de la categoria actualizado.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ */
+Category.updateById = (categoryId, category, result) => {
+  sql.query(
+    "UPDATE Categories SET categoryName = ? WHERE categoryId = ?",
+    [category.categoryName, categoryId],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      console.log("updated category: ", { id: categoryId, ...category });
+      result(null, { id: categoryId, ...category });
+    }
+  );
+};
+
+/**
+ * Elimina una categoría de la base de datos por su ID y devuelve el resultado.
+ * @param {number} categoryId - El ID de la categoría a eliminar.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ */
+Category.removeOne = (categoryId, result) => {
+  sql.query("DELETE FROM Categories WHERE categoryId = ?", categoryId, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    if (res.affectedRows == 0) {
+      result({ kind: "not_found" }, null);
+      return;
+    } else {
+      console.log("deleted category with id:", categoryId);
+      result(null, res);
+    }
+  });
+};
+
+/**
+ * Elimina todas las categorías de la base de datos y devuelve el resultado.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ */
+Category.removeAll = (result) => {
+  sql.query("DELETE FROM Categories", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    } else {
+      console.log(`deleted ${res.affectedRows} categories`);
+      result(null, res);
+    }
+  });
+};
+
+module.exports = Category;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Booking.html">Booking</a></li><li><a href="Category.html">Category</a></li><li><a href="Message.html">Message</a></li><li><a href="Picture.html">Picture</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connection">connection</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#deleteAll">deleteAll</a></li><li><a href="global.html#deleteAllByCategory">deleteAllByCategory</a></li><li><a href="global.html#deleteFile">deleteFile</a></li><li><a href="global.html#deleteOne">deleteOne</a></li><li><a href="global.html#findAll">findAll</a></li><li><a href="global.html#findByCategory">findByCategory</a></li><li><a href="global.html#findOne">findOne</a></li><li><a href="global.html#imageFilter">imageFilter</a></li><li><a href="global.html#replyEmail">replyEmail</a></li><li><a href="global.html#sendBookingRequestConfirmationEmail">sendBookingRequestConfirmationEmail</a></li><li><a href="global.html#sendBookingRequestNotificationEmail">sendBookingRequestNotificationEmail</a></li><li><a href="global.html#sendEmail">sendEmail</a></li><li><a href="global.html#sendMessageConfirmationEmail">sendMessageConfirmationEmail</a></li><li><a href="global.html#sendMessageNotificationEmail">sendMessageNotificationEmail</a></li><li><a href="global.html#storage">storage</a></li><li><a href="global.html#transporter">transporter</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#upload">upload</a></li><li><a href="global.html#uploadPictures">uploadPictures</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Feb 02 2024 22:40:27 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

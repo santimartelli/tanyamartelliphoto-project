@@ -13,6 +13,13 @@
   </div>
 </template>
 
+<script>
+/**
+ * Componente que muestra un spinner de carga.
+ */
+export default {};
+</script>
+
 <style scoped>
 
 /* Estilos para el componente BaseSpinner.vue */

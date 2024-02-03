@@ -17,28 +17,21 @@
 </template>
 
 <script>
+/**
+ * Componente que muestra el dialogo con el formulario para editar una reserva.
+ * @vue-prop {boolean} show - Indica si el dialogo se muestra o no.
+ * @vue-emits {close} - Emite el evento 'close' cuando se cierra el dialogo.
+ * @vue-methods close - Cierra el dialogo y emite el evento 'close'.
+ */
 export default {
-  /**
-   * Propiedades que recibe el componente.
-   * @prop {boolean} show - Indica si el dialogo se muestra o no.
-   */
   props: {
     show: {
       type: Boolean,
       required: true,
     },
   },
-
-  /**
-   * Emite el evento 'close' cuando se cierra el dialogo. Lo que permite que el
-   * componente que use este componente pueda reaccionar a este evento.
-   */
   emits: ["close"],
-
   methods: {
-    /**
-   * Cierra el dialogo y emite el evento 'close'.
-   */
     close() {
       this.$emit("close");
     },

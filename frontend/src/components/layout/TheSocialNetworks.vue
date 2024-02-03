@@ -44,6 +44,9 @@
 </template>
 
 <script>
+/**
+ * Componente que contiene los iconos de las redes sociales y los datos de contacto.
+ */
 export default {};
 </script>
 

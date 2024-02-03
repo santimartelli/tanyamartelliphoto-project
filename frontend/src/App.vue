@@ -7,7 +7,7 @@
     <main id="page-wrap">
       <router-view v-slot="slotProps">
         <transition name="route" mode="out-in">
-           <!-- Aquí se renderiza el componente que corresponde a la ruta actual -->
+          <!-- Aquí se renderiza el componente que corresponde a la ruta actual -->
           <component :is="slotProps.Component"></component>
         </transition>
       </router-view>
@@ -26,14 +26,17 @@ import FooterCredits from "./components/layout/FooterCredits.vue";
 import { mapActions } from "vuex";
 import AuthenticatedNav from "./components/layout/AuthenticatedNav.vue";
 
+/**
+ * Componente principal que contiene todos los componentes del sitio.
+ * @vue-computed isLoggedIn - Devuelve si el usuario está autenticado.
+ * @vue-computed isAdminPanel - Devuelve si se muestra la navegación para usuarios autenticados.
+ * @vue-computed didAutoLogout - Devuelve si el usuario se deslogueó automáticamente.
+ * @vue-methods getCategories - Llama a la acción getCategories del módulo categories.
+ * @vue-methods getPictures - Llama a la acción getPictures del módulo pictures.
+ * @vue-methods getMessages - Llama a la acción getMessages del módulo messages.
+ * @vue-methods getBookings - Llama a la acción getBookings del módulo bookings.
+ */
 export default {
-  /**
-   * Componentes que usa el componente
-   * @component TheNavigation - Componente que muestra la navegación del sitio.
-   * @component TheSocialNetworks - Componente que muestra los enlaces a las redes sociales.
-   * @component FooterCredits - Componente que muestra los créditos del sitio.
-   * @component AuthenticatedNav - Componente que muestra la navegación del sitio para usuarios autenticados.
-   */
   components: {
     TheNavigation,
     TheSocialNetworks,
@@ -43,33 +46,25 @@ export default {
 
   /**
    * Propiedades calculadas del componente.
+   * Devuelve si el usuario está autenticado.
+   * Devuelve si se muestra la navegación para usuarios autenticados.
+   * Devuelve si el usuario se deslogueó automáticamente.
    */
   computed: {
-    /**
-     * Obtiene del store si el usuario está autenticado.
-     * @returns {boolean} True si el usuario está autenticado.
-     */
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
     },
-
-    /**
-     * Determina si se muestra la navegación para usuarios autenticados.
-     */
     isAdminPanel() {
       return this.$route.name === "admin";
     },
-
-    /**
-     * Obtiene del store si el usuario se deslogueó automáticamente.
-     */
     didAutoLogout() {
       return this.$store.getters.didAutoLogout;
     },
   },
-
   /**
    * Realiza una serie de acciones cuando se crea el componente.
+   * Llama a los métodos getCategories, getPictures, getMessages y getBookings de este componente.
+   * Despacha la acción tryLogin del store.
    */
   created() {
     /**
@@ -97,30 +92,29 @@ export default {
      */
     this.$store.dispatch("tryLogin");
   },
-
-  watch: {
-    /**
-   * Observa la propiedad didAutoLogout y redirige a la página de login si es verdadera.
+  /**
+   * Propiedades observadas del componente.
+   * Si el usuario se desloguea automáticamente, redirige a la página de login.
+   * @vue-watch didAutoLogout - Redirige a la página de login si el usuario se desloguea automáticamente.
    */
+  watch: {
     didAutoLogout(curValue, oldValue) {
       if (curValue && curValue !== oldValue) {
         this.$router.replace({ name: "login" });
       }
     },
   },
-
+  /**
+   * Cuando se monta el componente se añade un listener al evento resize de la ventana
+   * para actualizar el ancho de la pantalla en el store.
+   */
   mounted() {
-    /**
-     * Cuando se monta el componente se añade un listener al evento resize de la ventana
-     * para actualizar el ancho de la pantalla en el store.
-     */
     window.addEventListener("resize", this.updateScreenWidth);
   },
-
+  /**
+   * Cuando se desmonta el componente se elimina el listener del evento resize de la ventana.
+   */
   beforeUnmount() {
-    /**
-     * Cuando se desmonta el componente se elimina el listener del evento resize de la ventana.
-     */
     window.removeEventListener("resize", this.updateScreenWidth);
   },
   methods: {
@@ -159,7 +153,6 @@ export default {
 </script>
 
 <style>
-
 /* Estilos para el componente App.vue que serían estilos generales */
 
 @font-face {

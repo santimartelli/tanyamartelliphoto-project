@@ -1,5 +1,5 @@
 /**
- * @fileoverview Este archivo es el encargado de crear el store de Vuex, el cual es el encargado
+ * Este archivo es el encargado de crear el store de Vuex, el cual es el encargado
  * de almacenar los datos de la aplicación.
  */
 
@@ -15,9 +15,9 @@ import bookingsModule from "./modules/bookings/index.js";
 
 /**
  * Crea el store de Vuex.
- * @returns {Object} - El store de Vuex.
+ * @returns {Object} - El store de Vuex de la aplicación.
  * @property {Object} modules - Los módulos del store, los cuales son: categorías, imágenes, autenticación, mensajes y reservas.
- * @property {Object} state - El estado del store de Vuex.
+ * @property {Object} state - El estado del store de Vuex que contiene el ancho de la pantalla y si es móvil o no.
  * @property {Object} mutations - Las mutaciones del store.
  * @property {Object} actions - Las acciones del store.
  * @property {Object} getters - Los getters del store.

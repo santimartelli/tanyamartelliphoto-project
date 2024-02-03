@@ -1,5 +1,8 @@
 import axios from "axios";
 
+/**
+ * Este archivo contiene las acciones de Vuex para el módulo de reservas.
+ */
 export default {
   /**
    * Obtiene las reservas de la API y las almacena en el estado.

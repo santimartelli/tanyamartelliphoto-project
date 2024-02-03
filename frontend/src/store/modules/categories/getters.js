@@ -1,3 +1,6 @@
+/**
+ * Define los getters del módulo de categorías.
+ */
 export default {
   /**
    * Devuelve las categorías del estado.

@@ -1,3 +1,6 @@
+/**
+ * Getters del módulo de autenticación.
+ */
 export default{
   /**
    * Devuelve el usuario del estado.

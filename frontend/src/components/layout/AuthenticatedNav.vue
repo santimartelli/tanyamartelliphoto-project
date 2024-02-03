@@ -24,12 +24,15 @@
 </template>
 
 <script>
-
+/**
+ * Componente que muestra la barra de navegación cuando el usuario está autenticado.
+ * @vue-computed {string} username - Devuelve el nombre de usuario en mayúsculas.
+ * @vue-methods logout - Cierra sesión de usuario y redirige a la página de inicio.
+ */
 export default {
   computed: {
     /**
      * Devuelve el nombre de usuario en mayúsculas.
-     * @returns {string} Nombre de usuario en mayúsculas.
      */
     username() {
       const username = this.$store.state.auth.user.username;

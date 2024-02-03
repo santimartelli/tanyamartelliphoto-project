@@ -1,7 +1,6 @@
 /**
  * Mutaciones generales
  */
-
 export default {
   /**
    * Comprueba el ancho de la pantalla y actualiza el estado de mobile, primerNav y segundoNav segun corresponda.

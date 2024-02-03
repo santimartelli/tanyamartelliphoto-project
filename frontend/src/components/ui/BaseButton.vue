@@ -8,13 +8,14 @@
 </template>
 
 <script>
+/**
+ * Componente que es la base para los botones del sitio.
+ * @vue-prop {string} mode - Modo del botón.
+ * @vue-prop {boolean} link - Indica si el botón es un enlace.
+ * @vue-prop {string} to - Ruta a la que redirige el botón.
+ * @vue-slot - Contenido del botón.
+ */
 export default {
-  /**
-   * Propiedades que recibe el componente.
-   * @prop {string} mode - Modo del botón.
-   * @prop {boolean} link - Indica si el botón es un enlace.
-   * @prop {string} to - Ruta a la que redirige el botón.
-   */
   props: {
     mode: {
       type: String,

@@ -1,3 +1,6 @@
+/**
+ * Define los getters del módulo de reservas.
+ */
 export default {
   /**
    * Devuelve las reservas del estado.

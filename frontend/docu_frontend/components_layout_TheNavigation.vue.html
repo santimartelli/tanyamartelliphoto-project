@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/layout/TheNavigation.vue</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/layout/TheNavigation.vue</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;!-- Componente que muestra la barra de navegación para los visitantes o para el administrador si está
+  fuera del panel de administración -->
+
+&lt;template>
+  &lt;header :class="{ 'scrolled-nav': scrolledNav }">
+    &lt;nav>
+
+      &lt;!-- Versión 1, de escritorio -->
+
+      &lt;ul v-if="!mobile &amp;&amp; !segundoNav">
+        &lt;div class="nav-items">
+          &lt;li>
+            &lt;router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'home' }"
+              >HOME&lt;/router-link
+            >
+          &lt;/li>
+          &lt;li
+            @mouseover="showDropdown = true"
+            @mouseleave="showDropdown = false"
+            @click="toggleShowDropdown"
+          >
+            &lt;a
+              class="link sparkle u-hover--sparkle porfolio-arrow-container"
+              @click.prevent
+              >PORTAFOLIO
+              &lt;img
+                v-if="!showDropdown"
+                src="../../assets/Icons/flecha-abajo.png" />
+              &lt;img v-else src="../../assets/Icons/flecha-arriba.png"
+            />&lt;/a>
+            &lt;transition name="dropdown">
+              &lt;ul v-if="showDropdown" class="dropdown">
+                &lt;li v-for="cat in categories" :key="cat.categoryId">
+                  &lt;router-link
+                    :to="'/portfolio/' + cat.categoryId"
+                    class="li-a"
+                    >{{ cat.categoryName }}&lt;/router-link
+                  >
+                &lt;/li>
+              &lt;/ul>
+            &lt;/transition>
+          &lt;/li>
+          &lt;li>
+            &lt;router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'prices' }"
+              >PRECIOS&lt;/router-link
+            >
+          &lt;/li>
+        &lt;/div>
+        &lt;li class="logo">
+          &lt;div class="title">
+            &lt;h1 class="name-title">TanyaMartelli&lt;/h1>
+            &lt;h1 class="photography-title">PHOTOGRAPHY&lt;/h1>
+          &lt;/div>
+        &lt;/li>
+        &lt;div class="nav-items">
+          &lt;li>
+            &lt;router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'booking' }"
+              >RESERVAS&lt;/router-link
+            >
+          &lt;/li>
+          &lt;li>
+            &lt;router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'contact' }"
+              @click="toggleMobileNav"
+              >CONTACTO&lt;/router-link
+            >
+          &lt;/li>
+          &lt;li>
+            &lt;router-link
+                v-if="!isLoggedIn"
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'login' }"
+                @click="toggleMobileNav"
+                >LOGIN&lt;/router-link
+              >
+              &lt;router-link
+                v-else
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'admin' }"
+                @click="toggleMobileNav"
+                >ADMIN&lt;/router-link
+              >
+          &lt;/li>
+        &lt;/div>
+      &lt;/ul>
+
+      &lt;!-- Versión 2, para tablets -->
+
+      &lt;ul v-if="segundoNav">
+        &lt;li class="logo">
+          &lt;div class="title">
+            &lt;h1 class="name-title">TanyaMartelli&lt;/h1>
+            &lt;h1 class="photography-title">PHOTOGRAPHY&lt;/h1>
+          &lt;/div>
+        &lt;/li>
+        &lt;div class="nav-items">
+          &lt;li>
+            &lt;router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'home' }"
+              >HOME&lt;/router-link
+            >
+          &lt;/li>
+          &lt;li
+            @mouseover="showDropdown = true"
+            @mouseleave="showDropdown = false"
+            @click="toggleShowDropdown"
+          >
+            &lt;a
+              class="link sparkle u-hover--sparkle porfolio-arrow-container"
+              @click.prevent
+              >PORTAFOLIO
+              &lt;img
+                v-if="!showDropdown"
+                src="../../assets/Icons/flecha-abajo.png" />
+              &lt;img v-else src="../../assets/Icons/flecha-arriba.png"
+            />&lt;/a>
+            &lt;transition name="dropdown">
+              &lt;ul v-if="showDropdown" class="dropdown">
+                &lt;li v-for="cat in categories" :key="cat.categoryId">
+                  &lt;router-link
+                    :to="'/portfolio/' + cat.categoryId"
+                    class="li-a"
+                    >{{ cat.categoryName }}&lt;/router-link
+                  >
+                &lt;/li>
+              &lt;/ul>
+            &lt;/transition>
+          &lt;/li>
+          &lt;li>
+            &lt;router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'prices' }"
+              >PRECIOS&lt;/router-link
+            >
+          &lt;/li>
+          &lt;li>
+            &lt;router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'booking' }"
+              >RESERVAS&lt;/router-link
+            >
+          &lt;/li>
+          &lt;li>
+            &lt;router-link
+              class="link sparkle u-hover--sparkle"
+              :to="{ name: 'contact' }"
+              @click="toggleMobileNav"
+              >CONTACTO&lt;/router-link
+            >
+          &lt;/li>
+          &lt;li>
+            &lt;router-link
+                v-if="!isLoggedIn"
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'login' }"
+                @click="toggleMobileNav"
+                >LOGIN&lt;/router-link
+              >
+              &lt;router-link
+                v-else
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'admin' }"
+                @click="toggleMobileNav"
+                >ADMIN&lt;/router-link
+              >
+          &lt;/li>
+        &lt;/div>
+      &lt;/ul>
+
+      &lt;!-- Versión 3, para móvil -->
+
+      &lt;div>
+        &lt;router-link v-if="mobile" class="link" :to="{ name: 'home' }"
+          >&lt;div class="title">
+            &lt;h1 class="name-title">TanyaMartelli&lt;/h1>
+            &lt;h1 class="photography-title">PHOTOGRAPHY&lt;/h1>
+          &lt;/div>
+        &lt;/router-link>
+        &lt;div class="icon">
+          &lt;i
+            @click="toggleMobileNav"
+            v-show="mobile"
+            :class="{ 'icon-active': mobileNav }"
+            >&lt;img src="../../assets/Icons/menu.png" alt="menu"
+          />&lt;/i>
+        &lt;/div>
+      &lt;/div>
+      &lt;transition name="mobile-nav">
+        &lt;div v-show="mobileNav &amp;&amp; mobile" class="dropdown-nav link">
+          &lt;div class="title">
+            &lt;h1 class="name-title">TanyaMartelli&lt;/h1>
+            &lt;h1 class="photography-title">PHOTOGRAPHY&lt;/h1>
+          &lt;/div>
+          &lt;ul class="dropdown-items">
+            &lt;li>
+              &lt;router-link
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'home' }"
+                @click="toggleMobileNav"
+                >HOME&lt;/router-link
+              >
+            &lt;/li>
+            &lt;li @click="toggleShowDropdown">
+              &lt;a
+                class="link sparkle u-hover--sparkle porfolio-arrow-container"
+                @click.prevent
+                >PORTAFOLIO
+                &lt;img
+                  v-if="!showDropdown"
+                  src="../../assets/Icons/flecha-abajo.png" />
+                &lt;img v-else src="../../assets/Icons/flecha-arriba.png"
+              />&lt;/a>
+              &lt;transition name="dropdown">
+                &lt;ul v-if="showDropdown" class="dropdown">
+                  &lt;li
+                    v-for="cat in categories"
+                    :key="cat.categoryId"
+                    @click="toggleMobileNav"
+                  >
+                    &lt;router-link
+                      :to="'/portfolio/' + cat.categoryId"
+                      class="li-a"
+                      >{{ cat.categoryName }}&lt;/router-link
+                    >
+                  &lt;/li>
+                &lt;/ul>
+              &lt;/transition>
+            &lt;/li>
+            &lt;li>
+              &lt;router-link
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'prices' }"
+                @click="toggleMobileNav"
+                >PRECIOS&lt;/router-link
+              >
+            &lt;/li>
+            &lt;li>
+              &lt;router-link
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'booking' }"
+                @click="toggleMobileNav"
+                >RESERVAS&lt;/router-link
+              >
+            &lt;/li>
+            &lt;li>
+              &lt;router-link
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'contact' }"
+                @click="toggleMobileNav"
+                >CONTACTO&lt;/router-link
+              >
+            &lt;/li>
+            &lt;li>
+              &lt;router-link
+                v-if="!isLoggedIn"
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'login' }"
+                @click="toggleMobileNav"
+                >LOGIN&lt;/router-link
+              >
+              &lt;router-link
+                v-else
+                class="link sparkle u-hover--sparkle"
+                :to="{ name: 'admin' }"
+                @click="toggleMobileNav"
+                >ADMIN&lt;/router-link
+              >
+            &lt;/li>
+          &lt;/ul>
+        &lt;/div>
+      &lt;/transition>
+    &lt;/nav>
+  &lt;/header>
+&lt;/template>
+
+&lt;script>
+
+import { mapGetters } from "vuex";
+
+export default {
+  /**
+   * Propiedades de datos que se utilizan en el componente:
+   * - scrolledNav: Indica si la barra de navegación está desplazada.
+   * - mobileNav: Indica si la navegación móvil está activada.
+   * - scrollPosition: La posición actual del desplazamiento.
+   * - showDropdown: Indica si se muestra el menú desplegable.
+   */
+  data() {
+    return {
+      scrolledNav: null,
+      mobileNav: false,
+      scrollPosition: 0,
+      showDropdown: false,
+    };
+  },
+  computed: {
+    /**
+     * A través de la función mapGetters del paquete vuex, se obtienen los datos del store.
+     * @returns {number} El ancho de la pantalla en píxeles.
+     * @returns {boolean} Indica si la pantalla es móvil.
+     * @returns {boolean} Indica si se muestra la segunda barra de navegación 2 (para tablets).
+     * @returns {boolean} Indica si se muestra la primera barra de navegación 1 (para escritorio).
+     */
+    ...mapGetters(["screenWidth", "mobile", "segundoNav", "primerNav"]),
+
+    /**
+     * Obtiene las categorías del store.
+     * @returns {Array} Las categorías de la tienda.
+     */
+    categories() {
+      return this.$store.getters["categories/categories"];
+    },
+
+    /**
+     * Obtiene el estado de autenticación del store.
+     * @returns {boolean} Indica si el usuario está autenticado.
+     */
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
+    },
+  },
+
+  methods: {
+    /**
+     * Alterna la navegación móvil.
+     */
+    toggleMobileNav() {
+      this.mobileNav = !this.mobileNav;
+    },
+
+    /**
+     * Alterna la visualización del menú desplegable.
+     */
+    toggleShowDropdown() {
+      this.showDropdown = !this.showDropdown;
+    },
+
+    /**
+     * Actualiza la posición del desplazamiento.
+     */
+    updateScroll() {
+      const scrollPosition = window.scrollY;
+      if (scrollPosition >= this.scrollPosition &amp;&amp; this.scrollPosition > 120) {
+        this.scrolledNav = true;
+      } else {
+        this.scrolledNav = false;
+      }
+      this.scrollPosition = scrollPosition;
+    },
+
+    /**
+     * Cierra sesión de usuario y redirige a la página de inicio.
+     */
+    logout() {
+      this.$store.dispatch("logout");
+      this.$router.replace({ name: "home" });
+    },
+  },
+
+  /**
+   * Se ejecuta cuando el componente se ha montado en el DOM, añadiendo un
+   * eventListener para actualizar la posición del desplazamiento.
+   */
+  mounted() {
+    window.addEventListener("scroll", this.updateScroll);
+  },
+};
+&lt;/script>
+
+&lt;style lang="scss" scoped>
+
+/* Estilos para el componente TheNavigation.vue */
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 99;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  transition: 0.5s ease all;
+
+  nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: 0.5s ease all;
+
+    ul,
+    link {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      align-items: center;
+    }
+
+    li {
+      margin: 1rem;
+      letter-spacing: 0.1rem;
+    }
+
+    .nav-items {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .porfolio-arrow-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .porfolio-arrow-container img {
+      width: 15px;
+    }
+
+    .link {
+      transition: 0.5s ease all;
+      text-decoration: none;
+      color: #000;
+      font-size: 0.8rem;
+    }
+
+    .title {
+      font-family: typewriter-extralight;
+      padding: 1rem 3rem;
+    }
+
+    .title h1 {
+      letter-spacing: 0.3rem;
+    }
+    .name-title {
+      font-family: Thesignature;
+      font-weight: 400;
+      font-size: 3rem;
+      margin-bottom: 0;
+    }
+    .photography-title {
+      font-size: 0.6rem;
+    }
+
+    .sparkle {
+      max-width: 10em;
+      margin: auto auto;
+    }
+    .sparkle:hover {
+      cursor: pointer;
+    }
+
+    .u-hover--sparkle {
+      box-sizing: border-box;
+      position: relative;
+      padding: 0.2em 0.8em;
+    }
+
+    .u-hover--sparkle::before,
+    .u-hover--sparkle::after {
+      content: "";
+      box-sizing: border-box;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      transform-origin: center;
+    }
+
+    .u-hover--sparkle::before {
+      border-bottom: 0.8em solid #fae8e8;
+      transform: scale3d(0, 1, 1);
+      z-index: -100;
+    }
+    .u-hover--sparkle::after {
+      transform: scale3d(1, 0, 1);
+    }
+    .u-hover--sparkle:hover::before,
+    .u-hover--sparkle:hover::after {
+      transform: scale3d(1, 1, 1);
+      transition: transform 900ms;
+    }
+
+    .router-link-exact-active::before {
+      border-bottom: 0.8em solid #fae8e8;
+      transform: scale3d(1, 1, 1);
+      z-index: -100;
+    }
+
+    .icon {
+      display: flex;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 99;
+
+      i {
+        cursor: pointer;
+        height: 40px;
+        width: 40px;
+        transition: 0.8s ease all;
+      }
+    }
+
+    .icon-active {
+      transform: rotate(-180deg);
+    }
+
+    .dropdown {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      margin: 0;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      background-color: #fff;
+      transition: 0.5s ease all;
+      z-index: 99;
+    }
+
+    .dropdown ul {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dropdown li {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      text-align: left;
+      font-size: 0.8rem;
+    }
+
+    .dropdown li:hover {
+      background-color: #fae8e8;
+    }
+
+    .li-a {
+      margin: 0;
+      padding: 1rem;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .dropdown-enter-active,
+    .dropdown-leave-active {
+      transition: opacity 0.5s;
+    }
+    .dropdown-enter-from,
+    .dropdown-leave-to {
+      opacity: 0;
+    }
+    .dropdown-enter-to,
+    .dropdown-leave-from {
+      opacity: 1;
+    }
+
+    .dropdown-nav {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      width: 100%;
+      margin: 0;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      background-color: #fff;
+      top: 0;
+      left: 0;
+      transition: 0.5s ease all;
+
+      ul {
+        display: flex;
+        flex-direction: column;
+
+        li {
+          margin-left: 0;
+          .link {
+            color: #000;
+          }
+        }
+      }
+    }
+
+    .mobile-nav-enter-active,
+    .mobile-nav-leave-active {
+      transition: all 1s ease;
+    }
+
+    .mobile-nav-enter-from,
+    .mobile-nav-leave-active {
+      transform: translateY(-100%);
+    }
+
+    .mobile-nav-enter-to,
+    .mobile-nav-leave-from {
+      transform: translateY(0);
+    }
+  }
+  &amp;.scrolled-nav {
+    transform: translateY(-100%);
+    transition: 0.5s ease all;
+
+    &amp;:hover {
+      transform: translateY(0);
+    }
+  }
+}
+
+@media (max-width: 1235px) {
+  nav ul {
+    flex-direction: column;
+  }
+  .nav-items {
+    flex-direction: row;
+  }
+
+  .logo {
+    margin: 0;
+  }
+
+  .nav-items li {
+    margin-top: 0.2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  i img {
+    height: 30px;
+    width: 30px;
+  }
+
+  header nav .name-title {
+    font-size: 2.5rem;
+  }
+
+  header nav .photography-title {
+    font-size: 0.5rem;
+  }
+}
+&lt;/style>
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AuthenticatedNav.html">AuthenticatedNav</a></li></ul><h3>Global</h3><ul><li><a href="global.html#app">app</a></li><li><a href="global.html#history">history</a></li><li><a href="global.html#routes">routes</a></li><li><a href="global.html#scrollBehavior">scrollBehavior</a></li><li><a href="global.html#services">services</a></li><li><a href="global.html#store">store</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Feb 02 2024 23:20:53 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

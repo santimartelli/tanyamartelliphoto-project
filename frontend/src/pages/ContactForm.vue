@@ -73,12 +73,24 @@
 
 <script>
 import OkDialog from "../components/ui/OkDialog.vue";
-
+/**
+ * Componente que contiene el formulario de contacto general.
+ * @vue-data {string} newMessageName - Nombre del remitente del mensaje.
+ * @vue-data {string} newMessageEmail - Email del remitente del mensaje.
+ * @vue-data {string} newMessageContent - Contenido del mensaje.
+ * @vue-data {boolean} formIsValidName - Indica si el nombre es válido.
+ * @vue-data {boolean} formIsValidEmail - Indica si el email es válido.
+ * @vue-data {boolean} formIsValidContent - Indica si el contenido del mensaje es válido.
+ * @vue-data {boolean} formIsValid - Indica si el formulario es válido.
+ * @vue-data {string} okMessage - Mensaje de éxito al enviar el formulario.
+ * @vue-data {string} errorMessage - Mensaje de error al enviar el formulario.
+ * @vue-components {OkDialog} - Componente que muestra un dialogo de feedback.
+ * @vue-methods addNewMessage - Añade un nuevo mensaje a la base de datos y almacena el resultado en el estado de la aplicación.
+ * @vue-methods isValidEmail - Comprueba si el email es válido con una expresión regular.
+ * @vue-methods closeDialog - Cierra el dialogo y resetea el formulario.
+ * @vue-created - Resetea okMessage cuando se crea el componente para que no se muestre el dialogo.
+ */
 export default {
-  /**
-   * Componentes que usa el componente
-   * @component OkDialog - Componente que muestra un dialogo con un mensaje de éxito o error.
-   */
   components: {
     OkDialog,
   },
@@ -131,8 +143,6 @@ export default {
 
     /**
      * Comprueba si el email es válido con una expresión regular.
-     * @param {string} email - Email a comprobar.
-     * @returns {boolean} - Devuelve true si el email es válido y false si no lo es.
      */
     isValidEmail(email) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

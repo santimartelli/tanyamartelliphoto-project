@@ -282,17 +282,24 @@
 </template>
 
 <script>
-
 import { mapGetters } from "vuex";
-
+/**
+ * Componente que muestra la barra de navegación para los visitantes o para el administrador si está
+ * fuera del panel de administración.
+ * @vue-computed {boolean} mobile - Devuelve true si el ancho de la pantalla es menor a 768px.
+ * @vue-computed {boolean} segundoNav - Devuelve true si el ancho de la pantalla es menor a 1235px.
+ * @vue-computed {Array} categories - Devuelve un array con las categorías de las fotografías.
+ * @vue-computed {boolean} isLoggedIn - Devuelve true si el usuario está autenticado.
+ * @vue-data {boolean} scrolledNav - Devuelve true si el usuario ha hecho scroll en la página.
+ * @vue-data {boolean} mobileNav - Devuelve true si el menú de navegación está abierto en dispositivos móviles.
+ * @vue-data {number} scrollPosition - Devuelve la posición del scroll en la página.
+ * @vue-data {boolean} showDropdown - Devuelve true si el usuario hace hover sobre el botón de portafolio.
+ * @vue-methods toggleMobileNav - Muestra u oculta el menú de navegación en dispositivos móviles.
+ * @vue-methods toggleShowDropdown - Muestra u oculta el menú desplegable de portafolio.
+ * @vue-methods updateScroll - Actualiza el estado de la barra de navegación al hacer scroll en la página.
+ * @vue-methods logout - Cierra sesión de usuario y redirige a la página de inicio.
+ */
 export default {
-  /**
-   * Propiedades de datos que se utilizan en el componente:
-   * - scrolledNav: Indica si la barra de navegación está desplazada.
-   * - mobileNav: Indica si la navegación móvil está activada.
-   * - scrollPosition: La posición actual del desplazamiento.
-   * - showDropdown: Indica si se muestra el menú desplegable.
-   */
   data() {
     return {
       scrolledNav: null,
@@ -302,50 +309,22 @@ export default {
     };
   },
   computed: {
-    /**
-     * A través de la función mapGetters del paquete vuex, se obtienen los datos del store.
-     * @returns {number} El ancho de la pantalla en píxeles.
-     * @returns {boolean} Indica si la pantalla es móvil.
-     * @returns {boolean} Indica si se muestra la segunda barra de navegación 2 (para tablets).
-     * @returns {boolean} Indica si se muestra la primera barra de navegación 1 (para escritorio).
-     */
     ...mapGetters(["screenWidth", "mobile", "segundoNav", "primerNav"]),
-
-    /**
-     * Obtiene las categorías del store.
-     * @returns {Array} Las categorías de la tienda.
-     */
     categories() {
       return this.$store.getters["categories/categories"];
     },
-
-    /**
-     * Obtiene el estado de autenticación del store.
-     * @returns {boolean} Indica si el usuario está autenticado.
-     */
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
     },
   },
 
   methods: {
-    /**
-     * Alterna la navegación móvil.
-     */
     toggleMobileNav() {
       this.mobileNav = !this.mobileNav;
     },
-
-    /**
-     * Alterna la visualización del menú desplegable.
-     */
     toggleShowDropdown() {
       this.showDropdown = !this.showDropdown;
     },
-
-    /**
-     * Actualiza la posición del desplazamiento.
-     */
     updateScroll() {
       const scrollPosition = window.scrollY;
       if (scrollPosition >= this.scrollPosition && this.scrollPosition > 120) {
@@ -355,20 +334,11 @@ export default {
       }
       this.scrollPosition = scrollPosition;
     },
-
-    /**
-     * Cierra sesión de usuario y redirige a la página de inicio.
-     */
     logout() {
       this.$store.dispatch("logout");
       this.$router.replace({ name: "home" });
     },
   },
-
-  /**
-   * Se ejecuta cuando el componente se ha montado en el DOM, añadiendo un
-   * eventListener para actualizar la posición del desplazamiento.
-   */
   mounted() {
     window.addEventListener("scroll", this.updateScroll);
   },

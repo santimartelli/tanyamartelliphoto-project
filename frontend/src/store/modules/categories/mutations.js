@@ -1,3 +1,6 @@
+/**
+ * Las mutaciones de Vuex para el módulo de categorías.
+ */
 export default{
   /**
    * Actualiza las categorías del estado.

@@ -1,3 +1,6 @@
+/**
+ * Las mutaciones de Vuex para el módulo de imágenes.
+ */
 export default {
   /**
    * Establece las imágenes del estado.

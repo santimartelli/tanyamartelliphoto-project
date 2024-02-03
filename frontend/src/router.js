@@ -10,10 +10,9 @@ import AdminPanel from './pages/AdminPanel.vue';
 import store from './store/index.js';
 
 /**
- * @fileoverview Este archivo es el encargado de crear el router de Vue,
+ * Este archivo es el encargado de crear el router de Vue,
  * el cual es el encargado de manejar las rutas de la aplicación.
  */
-
 const router = createRouter({
   /**
    * Indica el modo de historia que se usará. En este caso se usará el modo

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Este archivo es el encargado de crear la aplicación de Vue,
+ * Este archivo es el encargado de crear la aplicación de Vue,
  * la cual es el punto de entrada de la aplicación.
  */
 
@@ -15,8 +15,7 @@ import BaseSpinner from './components/ui/BaseSpinner.vue';
 import BaseDialog from './components/ui/BaseDialog.vue';
 
 /**
- * Crea la aplicación de Vue.
- * @returns {Object} - La aplicación de Vue.
+ * Usa createApp para crear la aplicación de Vue.
  */
 const app = createApp(App);
 

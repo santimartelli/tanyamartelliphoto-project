@@ -1,5 +1,8 @@
 import axios from "axios";
 
+/**
+ * Las acciones de Vuex para el módulo de imágenes.
+ */
 export default {
   /**
    * Devuelve las imágenes de la API y las guarda en el estado.

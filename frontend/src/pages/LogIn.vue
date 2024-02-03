@@ -142,12 +142,34 @@
 
 <script>
 import RegistrationAdmin from "../components/ui/RegistrationAdmin.vue";
-
+/**
+ * Componente para hacer el inicio de sesión de un usuario.
+ * @vue-data {string} username - Nombre de usuario.
+ * @vue-data {string} password - Contraseña.
+ * @vue-data {boolean} isLoading - Indica si se está autenticando.
+ * @vue-data {string} error - Mensaje de error.
+ * @vue-data {boolean} openRegistration - Indica si el dialogo de registro de administrador está abierto.
+ * @vue-data {string} newUsername - Nuevo nombre de usuario.
+ * @vue-data {string} newPassword - Nueva contraseña.
+ * @vue-data {string} newConfirmedPassword - Confirmación de la nueva contraseña.
+ * @vue-data {string} newCodeVerification - Código de verificación.
+ * @vue-data {string} codeVerification - Código de verificación.
+ * @vue-data {boolean} formIsValidUsername - Indica si el nombre de usuario es válido.
+ * @vue-data {boolean} formIsValidPassword - Indica si la contraseña es válida.
+ * @vue-data {boolean} formIsValidConfirmedPassword - Indica si la confirmación de la contraseña es válida.
+ * @vue-data {boolean} formIsValidCodeVerification - Indica si el código de verificación es válido.
+ * @vue-data {boolean} formIsValid - Indica si el formulario es válido.
+ * @vue-data {boolean} registrationSuccess - Indica si el registro fue exitoso.
+ * @vue-data {boolean} adminRegistrationError - Indica si hubo un error en el registro.
+ * @vue-components {RegistrationAdmin} - Componente que muestra el dialogo para registrar un nuevo administrador.
+ * @vue-methods submitForm - Intenta hacer el inicio de sesión de un usuario.
+ * @vue-methods handleError - Cierra el dialogo de error.
+ * @vue-methods openRegistrationDialog - Abre el dialogo para registrar un nuevo administrador.
+ * @vue-methods closeRegistrationDialog - Cierra el dialogo para registrar un nuevo administrador y resetea el formulario.
+ * @vue-methods adminRegistration - Intenta registrar un nuevo administrador.
+ * @vue-slot - Contenido del dialogo de registro de administrador.
+ */
 export default {
-  /**
-   * Componentes que usa el componente
-   * @component RegistrationAdmin - Componente que muestra un dialogo para registrar un nuevo administrador.
-   */
   components: {
     RegistrationAdmin,
   },

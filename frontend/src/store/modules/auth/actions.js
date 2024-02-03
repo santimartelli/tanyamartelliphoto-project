@@ -2,6 +2,9 @@ import axios from "axios";
 
 let timer;
 
+/**
+ * Las acciones de Vuex para el módulo de autenticación.
+ */
 export default {
   /**
    * Inicia sesion de usuario despachando la acción "auth" con los datos de inicio de sesión.

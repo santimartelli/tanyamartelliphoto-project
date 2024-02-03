@@ -1,0 +1,14 @@
+{
+  "source": {
+    "include": ["src"],
+    "exclude": ["node_modules"],
+    "includePattern": ".+\\.(js|vue)$"
+  },
+  "plugins": [
+    "node_modules/jsdoc-vuejs"
+  ],
+  "opts": {
+    "recurse": true,
+    "destination": "./docu_frontend"
+  }
+}

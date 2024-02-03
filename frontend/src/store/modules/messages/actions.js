@@ -1,5 +1,8 @@
 import axios from "axios";
 
+/**
+ * Las acciones de Vuex para el módulo de mensajes.
+ */
 export default {
   /**
    * Devuelve los mensajes de la API y los establece en el estado.

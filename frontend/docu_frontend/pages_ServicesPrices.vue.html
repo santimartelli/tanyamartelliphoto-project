@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/ServicesPrices.vue</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/ServicesPrices.vue</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;!-- Componente que muestra los servicios y los precios -->
+
+&lt;template>
+  &lt;div class="services-prices">
+    &lt;div
+      class="service-card"
+      v-for="(service, index) in services"
+      :key="index"
+    >
+      &lt;img :src="service.image" alt="Service Image">
+      &lt;p class="title">{{ service.title }}&lt;/p>
+      &lt;p class="price">{{ service.price }}&lt;/p>
+      &lt;ul>
+        &lt;li v-for="(item, index) in service.includes" :key="index">
+          {{ item }}
+        &lt;/li>
+      &lt;/ul>
+      &lt;div class="button-container">
+      &lt;router-link to="/booking">
+        &lt;base-button>Reserva ya!&lt;/base-button>
+      &lt;/router-link>
+    &lt;/div>
+    &lt;/div>
+  &lt;/div>
+&lt;/template>
+
+&lt;script>
+export default {
+  data() {
+    return {
+      /**
+       * Datos de los servicios y precios que se muestran en la página.
+       */
+      services: [
+        {
+          image: require('../assets/images/pregnancy/preg1.jpg'),
+          title: 'Sesión de Embarazo',
+          price: '250€',
+          includes: ['2 horas', '50 fotos', '10 fotos editadas']
+        },
+        {
+          image: require('../assets/images/family/fam1.png'),
+          title: 'Sesión Familiar',
+          price: '250€',
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
+        },
+        {
+          image: require('../assets/images/fashion/fash1.jpg'),
+          title: 'Retrato Individual',
+          price: '250€',
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
+        },
+        {
+          image: require('../assets/images/newborn/newborn3.jpg'),
+          title: 'Recien Nacido',
+          price: '250€',
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
+        },
+        {
+          image: require('../assets/images/nordic-garden.webp'),
+          title: 'Reportaje Eventos',
+          price: '250€',
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€']
+        },
+        {
+          image: require('../assets/images/nordic-garden.webp'),
+          title: 'Arquitectura e Interiores',
+          price: '250€',
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€']
+        },
+      ]
+    }
+  }
+}
+&lt;/script>
+
+&lt;style scoped>
+
+/* Estilos para el componente ServicesPrices.vue */
+
+.services-prices {
+  font-family: typewriter-light;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 2.5rem auto;
+  width: 90%;
+}
+
+.service-card {
+  width: 350px;
+  margin: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-card img {
+  display: flex;
+  width: 350px;
+  height: 400px;
+  object-fit: cover;
+}
+
+.service-card ul{
+  padding-bottom: 1rem;
+}
+
+.title {
+  text-align: left;
+  font-size: 14px;
+  margin-top: 1rem;
+}
+
+.price {
+  letter-spacing: .08rem;
+  font-size: 14px;
+}
+
+.service-card li {
+  list-style-type: '- ';
+  font-size: 13px;
+  margin: .5rem;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+  align-self: center;
+  margin-top: auto;
+}
+&lt;/style>
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AdminPanel.html">AdminPanel</a></li><li><a href="module-App.html">App</a></li><li><a href="module-AuthenticatedNav.html">AuthenticatedNav</a></li><li><a href="module-BaseButton.html">BaseButton</a></li><li><a href="module-BaseDialog.html">BaseDialog</a></li><li><a href="module-BaseSpinner.html">BaseSpinner</a></li><li><a href="module-BookingForm.html">BookingForm</a></li><li><a href="module-ContactForm.html">ContactForm</a></li><li><a href="module-EditBookingDialog.html">EditBookingDialog</a></li><li><a href="module-EditCategoryDialog.html">EditCategoryDialog</a></li><li><a href="module-FooterCredits.html">FooterCredits</a></li><li><a href="module-LandingPage.html">LandingPage</a></li><li><a href="module-LogIn.html">LogIn</a></li><li><a href="module-OkDialog.html">OkDialog</a></li><li><a href="module-PortfolioCat.html">PortfolioCat</a></li><li><a href="module-RegistrationAdmin.html">RegistrationAdmin</a></li><li><a href="module-ReplyMessage.html">ReplyMessage</a></li><li><a href="module-TheNavigation.html">TheNavigation</a></li><li><a href="module-TheSocialNetworks.html">TheSocialNetworks</a></li></ul><h3>Global</h3><ul><li><a href="global.html#app">app</a></li><li><a href="global.html#history">history</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#routes">routes</a></li><li><a href="global.html#scrollBehavior">scrollBehavior</a></li><li><a href="global.html#services">services</a></li><li><a href="global.html#store">store</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Feb 03 2024 01:02:16 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

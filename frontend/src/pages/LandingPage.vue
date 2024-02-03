@@ -5,14 +5,14 @@
     <section class="hero">
       <transition-group name="fade" tag="div">
         <div
-          v-for="(picture, index) in pictures"
-          :key="picture.picrureId"
+          v-for="(imagen, index) in imagenesPortada"
+          :key="imagen.id"
           class="image-container"
           v-show="index === currentImageIndex"
         >
           <img
-            :src="picture.picturePath"
-            :alt="'Picture category: ' + picture.categoryName"
+            :src="imagen.picturePath"
+            :alt="'Imagen de portada ' + imagen.id"
           />
         </div>
       </transition-group>
@@ -118,7 +118,6 @@
 <script>
 import { mapGetters } from "vuex";
 import { Swiper, SwiperSlide } from "swiper/vue";
-
 // Importacion de estilos de Swiper
 import "swiper/css";
 import "swiper/css/navigation";
@@ -126,12 +125,18 @@ import "swiper/css/pagination";
 // Importacion de componentes de Swiper
 import { Keyboard, Pagination, Navigation } from "swiper/modules";
 
+/**
+ * Componente que muestra la página de inicio.
+ * @vue-computed {number} screenWidth - Devuelve el ancho de la pantalla.
+ * @vue-computed {boolean} mobile - Indica si la pantalla es móvil o no.
+ * @vue-computed {Array} pictures - Devuelve un array con todas las imágenes.
+ * @vue-computed {Array} uniquePictures - Devuelve un array con una imagen de cada categpría.
+ * @vue-data {Array} modules - Array con los módulos de Swiper.
+ * @vue-data {number} currentImageIndex - Índice de la imagen actual.
+ * @vue-data {Array} imagenesPortada - Array con las imágenes de portada.
+ * @vue-methods changeImage - Cambia la imagen principal que se muestra.
+ */
 export default {
-  /**
-   * Componentes que usa el componente
-   * @component Swiper - Componente que muestra un slider de imágenes.
-   * @component SwiperSlide - Componente que muestra una imagen en el slider.
-   */
   components: {
     Swiper,
     SwiperSlide,
@@ -141,6 +146,48 @@ export default {
     return {
       modules: [Keyboard, Pagination, Navigation],
       currentImageIndex: 0,
+      imagenesPortada: [
+        {
+          picturePath: require("../assets/images/landing/landing1.jpg"),
+          id: 1,
+        },
+        {
+          picturePath: require("../assets/images/landing/landing2.jpg"),
+          id: 2,
+        },
+        {
+          picturePath: require("../assets/images/landing/landing3.jpg"),
+          id: 3,
+        },
+        {
+          picturePath: require("../assets/images/landing/landing4.jpg"),
+          id: 4,
+        },
+        {
+          picturePath: require("../assets/images/landing/landing5.jpg"),
+          id: 5,
+        },
+        {
+          picturePath: require("../assets/images/landing/landing6.jpg"),
+          id: 6,
+        },
+        {
+          picturePath: require("../assets/images/landing/landing7.jpg"),
+          id: 7,
+        },
+        {
+          picturePath: require("../assets/images/landing/landing8.jpg"),
+          id: 8,
+        },
+        {
+          picturePath: require("../assets/images/landing/landing9.jpg"),
+          id: 9,
+        },
+        {
+          picturePath: require("../assets/images/landing/landing10.jpg"),
+          id: 10,
+        }
+      ],
     };
   },
 
@@ -150,21 +197,18 @@ export default {
      */
     changeImage() {
       this.currentImageIndex =
-        (this.currentImageIndex + 1) % this.pictures.length;
+        (this.currentImageIndex + 1) % this.imagenesPortada.length;
     },
   },
 
   computed: {
     /**
      * Usa la función mapGetters de Vuex para obtener el ancho de la pantalla y si es móvil o no.
-     * @returns {number} Ancho de la pantalla.
-     * @returns {boolean} Indica si la pantalla es móvil o no.
      */
     ...mapGetters(["screenWidth", "mobile"]),
 
     /**
      * Obtiene las imagenes desde el estado de la aplicación.
-     * @returns {Array} Array de objetos con las imágenes.
      */
     pictures() {
       return this.$store.getters["pictures/pictures"];

@@ -1,7 +1,6 @@
 /**
  * Acciones generales
  */
-
 export default {
   /**
    * Cuando la pantalla cambia de tamaño hace un commit de la mutación updateScreenWidth.

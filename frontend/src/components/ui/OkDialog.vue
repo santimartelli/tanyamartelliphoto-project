@@ -15,38 +15,27 @@
 </template>
 
 <script>
+/**
+ * Componente que muestra un dialogo de feedback.
+ * @vue-prop {boolean} show - Indica si el dialogo se muestra o no.
+ * @vue-emits {close} - Emite el evento 'close' cuando se cierra el dialogo.
+ * @vue-methods tryClose - Cierra el dialogo y emite el evento 'close'.
+ * @vue-methods closeSuccessMessage - Cierra el dialogo y emite el evento 'close'.
+ */
 export default {
-  /**
-   * Propiedades que recibe el componente.
-   * @prop {boolean} show - Indica si el dialogo se muestra o no.
-   */
   props: {
     show: {
       type: Boolean,
       required: true,
     },
   },
-
-  /**
-   * Datos del componente.
-   * @data {boolean} alertOk - Indica si el mensaje de éxito se muestra o no.
-   */
   data() {
     return {
       alertOk: false,
     };
   },
-
-  /**
-   * Emite el evento 'close' cuando se cierra el dialogo. Lo que permite que el
-   * componente que use este componente pueda reaccionar a este evento.
-   */
   emits: ["close"],
-
   methods: {
-    /**
-     * Intenta cerrar el dialogo y emite el evento 'close'.
-     */
     tryClose() {
       if (this.alertOk) {
         // Resetea el estado de la alerta
@@ -55,10 +44,6 @@ export default {
         this.$emit("close");
       }
     },
-
-    /**
-     * Cierre el dialogo y emite el evento 'close'.
-     */
     closeSuccessMessage() {
       this.alertOk = 0;
       this.$emit("close");
@@ -70,6 +55,7 @@ export default {
 <style scoped>
 
 /* Estilos para el componente OkDialog.vue */
+
 .backdrop1 {
   position: fixed;
   top: 0;

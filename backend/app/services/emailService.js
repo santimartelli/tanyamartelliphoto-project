@@ -7,7 +7,7 @@ const nodemailer = require("nodemailer");
 
 /**
  * Crea el transportador de emails con los datos de autenticación.
- * @type {import("nodemailer").Transporter}
+ * @type {object}
  */
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport({
 
 /**
  * Envia un email con los datos especificados.
- * @param {import("nodemailer").SendMailOptions} mailOptions - Las opciones del email.
+ * @param {object} mailOptions - Las opciones del email.
  * @returns {Promise<string>} - Devuelve una promesa con la respuesta del servidor.
  */
 const sendEmail = (mailOptions) => {

@@ -712,24 +712,99 @@ import EditBookingDialog from "../components/ui/EditBookingDialog.vue";
 import EditCategoryDialog from "../components/ui/EditCategoryDialog.vue";
 import ReplyMessage from "../components/ui/ReplyMessage.vue";
 
+/**
+ * Componente para la página panel de administración.
+ * @vue-data {string} currentTab - Pestaña actual.
+ * @vue-data {array} files - Array con las imagenes seleccionadas.
+ * @vue-data {boolean} addImages - Indica si hay que abrir el formulario para añadir imagenes o no.
+ * @vue-data {boolean} addCategory - Indica si hay que abrir el formulario para añadir categorias o no.
+ * @vue-data {string} categoryId - Id de la categoria seleccionada.
+ * @vue-data {string} feedbackMessage - Mensaje de feedback que cambia dependiendo de la acción realizada.
+ * @vue-data {number} feedbackOk - Según el valor, muestra un feedback u otro.
+ * @vue-data {object} error - Error en caso de que haya uno.
+ * @vue-data {boolean} isLoading - Indica si se está cargando o no.
+ * @vue-data {object} selectedImage - Imagen seleccionada.
+ * @vue-data {boolean} showImageModal - Indica si se muestra el modal de la imagen o no.
+ * @vue-data {boolean} iconsActions - Indica si se muestran los iconos de las acciones o no.
+ * @vue-data {string} newCategoryName - Nombre de la nueva categoria.
+ * @vue-data {boolean} openEditCategoryDialog - Indica si se muestra el dialogo de editar categoria o no.
+ * @vue-data {object} selectedCategory - Categoria seleccionada.
+ * @vue-data {string} updatedCategoryName - Nombre de la categoria actualizado.
+ * @vue-data {object} messageEmail - Mensaje del email.
+ * @vue-data {object} selectedMessage - Mensaje seleccionado.
+ * @vue-data {object} okMessage - Mensaje de feedback que cambia dependiendo de la acción realizada.
+ * @vue-data {boolean} dialogMessage - Indica si se muestra el dialogo de mensaje o no.
+ * @vue-data {boolean} dialogBooking - Indica si se muestra el dialogo de reserva o no.
+ * @vue-data {boolean} openUpdateDialog - Indica si se muestra el dialogo de actualizar reserva o no.
+ * @vue-data {object} selectedBooking - Reserva seleccionada.
+ * @vue-data {string} updatedName - Nombre actualizado.
+ * @vue-data {string} updatedEmail - Email actualizado.
+ * @vue-data {string} updatedCategoryId - Id de la categoria actualizado.
+ * @vue-data {string} updatedLocation - Localidad actualizada.
+ * @vue-data {string} updatedPlace - Lugar actualizado.
+ * @vue-data {string} updatedSelectedDate - Fecha actualizada.
+ * @vue-data {string} updatedSelectedTime - Hora actualizada.
+ * @vue-data {string} updatedMessage - Mensaje actualizado.
+ * @vue-data {array} availableTimes - Array con las horas disponibles.
+ * @vue-data {array} availableDates - Array con las fechas disponibles.
+ * @vue-data {boolean} formIsValidCategoryName - Indica si el nombre de la categoria es válido o no.
+ * @vue-data {boolean} formIsValidName - Indica si el nombre es válido o no.
+ * @vue-data {boolean} formIsValidEmail - Indica si el email es válido o no.
+ * @vue-data {boolean} formIsValidCategory - Indica si la categoria es válida o no.
+ * @vue-data {boolean} formIsValidLocation - Indica si la localidad es válida o no.
+ * @vue-data {boolean} formIsValidPlace - Indica si el lugar es válido o no.
+ * @vue-data {boolean} formIsValidDate - Indica si la fecha es válida o no.
+ * @vue-data {boolean} formIsValidTime - Indica si la hora es válida o no.
+ * @vue-data {boolean} formIsValidMessage - Indica si el mensaje es válido o no.
+ * @vue-data {boolean} formIsValid - Indica si el formulario es válido o no.
+ * @vue-data {object} replyMessageEmail - Email del mensaje a responder.
+ * @vue-data {string} messageToReply - Mensaje que se responderá.
+ * @vue-data {boolean} formIsValidReplyMessage - Indica si el mensaje a responder es válido o no.
+ * @vue-computed {array} categories - Devuelve las categorias del store.
+ * @vue-computed {array} pictures - Devuelve las imagenes del store.
+ * @vue-computed {array} messages - Devuelve los mensajes del store.
+ * @vue-computed {array} bookings - Devuelve las solicitudes de reserva del store.
+ * @vue-computed {array} sortedCategories - Devuelve las categorias ordenadas alfabeticamente.
+ * @vue-methods closeDialog - Cierra el dialogo.
+ * @vue-methods closeEditCategoryDialog - Cierra el dialogo de editar categoria.
+ * @vue-methods closeReplyMessage - Cierra el dialogo de responder mensaje.
+ * @vue-methods closeBookingUpdateDialog - Cierra el dialogo de actualizar reserva.
+ * @vue-methods showIconsActions - Dependiendo del ancho de la pantalla, muestra o no los iconos de las acciones o no.
+ * @vue-methods handleFileUpload - Funcion que procesa cada imagen seleccionada y le añade una vista previa a cada una y las almacena en el array files.
+ * @vue-methods submitForm - Funcion asincrona que envia las imagenes al servidor para almacenarlas y registrarlas en la base de datos.
+ * @vue-methods addNewCategory - Añade una nueva categoria.
+ * @vue-methods resetCategoryForm - Resetea el formulario de añadir categoria.
+ * @vue-methods openUpdateCategoryDialog - Abre el dialogo de editar categoria.
+ * @vue-methods editCategory - Edita una categoria.
+ * @vue-methods deleteCategory - Elimina una categoria.
+ * @vue-methods viewMessage - Muestra un mensaje.
+ * @vue-methods replyMessageDialog - Abre el dialogo de responder mensaje.
+ * @vue-methods replyMessage - Responde un mensaje.
+ * @vue-methods deleteMessage - Elimina un mensaje.
+ * @vue-methods viewDetails - Muestra los detalles de una reserva.
+ * @vue-methods openEditBookingDialog - Abre el dialogo de editar reserva.
+ * @vue-methods editBooking - Edita una reserva.
+ * @vue-methods deleteBooking - Elimina una reserva.
+ * @vue-methods closeModal - Cierra el modal de la imagen.
+ * @vue-methods showModal - Muestra el modal de la imagen.
+ * @vue-methods resetUpload - Resetea el formulario de subir imagenes.
+ * @vue-methods getCategoryName - Devuelve el nombre de la categoria.
+ * @vue-methods formatDate - Formatea la fecha.
+ * @vue-methods showIconsActions - Dependiendo del ancho de la pantalla, muestra o no los iconos de las acciones o no.
+ * @vue-methods toggleTab - Alterna la pestaña.
+ * @vue-methods showIconsActions - Dependiendo del ancho de la pantalla, muestra o no los iconos de las acciones o no.
+ * @vue-components OkDialog - Componente para mostrar un mensaje o una reserva.
+ * @vue-components EditBookingDialog - Componente de dialogo para editar una reserva.
+ * @vue-components EditCategoryDialog - Componente de dialogo para editar una categoria.
+ * @vue-components ReplyMessage - Componente de dialogo para responder un mensaje.
+ */
 export default {
-  /**
-   * Componentes que usa el componente.
-   * @component OkDialog - Componente para mostrar un mensaje o una reserva.
-   * @component EditBookingDialog - Componente de dialogo para editar una reserva.
-   * @component EditCategoryDialog - Componente de dialogo para editar una categoria.
-   * @component ReplyMessage - Componente de dialogo para responder un mensaje.
-   */
   components: {
     OkDialog,
     EditBookingDialog,
     EditCategoryDialog,
     ReplyMessage,
   },
-
-  /**
-   * Propiedades de datos del componente.
-   */
   data() {
     return {
       currentTab: "",
@@ -779,7 +854,6 @@ export default {
         "20:00",
         "21:00",
         "Other (especify in message)",
-        // Add more available times here
       ],
       availableDates: [],
       formIsValidCategoryName: true,
@@ -797,15 +871,6 @@ export default {
       formIsValidReplyMessage: true,
     };
   },
-
-  /**
-   * Propiedades calculadas del componente.
-   * @computed categories - Devuelve las categorias del store.
-   * @computed pictures - Devuelve las imagenes del store.
-   * @computed messages - Devuelve los mensajes del store.
-   * @computed bookings - Devuelve las solicitudes de reserva del store.
-   * @computed sortedCategories - Devuelve las categorias ordenadas alfabeticamente.
-   */
    computed: {
     categories() {
       return this.$store.getters["categories/categories"];
@@ -829,13 +894,11 @@ export default {
       });
     },
   },
-
   methods: {
     //METODOS GENERALES
 
     /**
      * Alterna la pestaña
-     * @param {*} tab  - Pestana que alternará
      */
     toggleTab(tab) {
       console.log("Clicked tab:", tab);
@@ -861,7 +924,6 @@ export default {
     /**
      * Funcion que procesa cada imagen seleccionada y le añade una vista previa a cada una
      * y las almacena en el array files.
-     * @param {*} event - Evento de subir imagenes
      */
     handleFileUpload(event) {
       this.files = Array.from(event.target.files).map((file) => {
@@ -875,7 +937,7 @@ export default {
     },
 
     /**
-     * Funcion asincrona que envia las imagenes al servidor para que las almacene en la base de datos y en el servidor.
+     * Funcion asincrona que envia las imagenes al servidor para almacenarlas y registrarlas en la base de datos.
      */
     async submitForm() {
       this.isLoading = true;
@@ -941,8 +1003,7 @@ export default {
     },
 
     /**
-     * Funcion asincrona que elimina una imagen de la base de datos y del servidor.
-     * @param {*} pictureId - Id de la imagen a eliminar
+     * Funcion asincrona que elimina una imagen de la base de datos y el archivo del servidor.
      */
     async deletePicture(pictureId) {
       try {
@@ -984,7 +1045,6 @@ export default {
 
     /**
      * Funcion que muestra una ventana modal con la imagen en grande.
-     * @param {*} picture - Imagen a mostrar
      */
     showModal(picture) {
       this.selectedImage = picture;
@@ -1004,7 +1064,6 @@ export default {
 
     /**
      * Funcion que sirve para abrir el dialogo para editar una categoria.
-     * @param {*} category - objeto categoria con todos sus datos
      */
     openUpdateCategoryDialog(category) {
       this.openEditCategoryDialog = true;
@@ -1104,7 +1163,6 @@ export default {
 
     /**
      * Funcion que elimina una categoria de la base de datos y del store.
-     * @param {*} categoryId - Id de la categoria a eliminar
      */
     deleteCategory(categoryId) {
       const picturesWithCategory = this.pictures.filter(
@@ -1138,7 +1196,6 @@ export default {
 
     /**
      * Funcion para mostrar el mensaje seleccionado en un dialogo.
-     * @param {*} message - Mensaje a mostrar
      */
     viewMessage(message) {
       this.dialogMessage = true;
@@ -1161,7 +1218,6 @@ export default {
 
     /**
      * Abre el dialogo para responder un mensaje.
-     * @param {*} message - Mensaje a responder
      */
     replyMessageDialog(message) {
       this.replyMessageEmail = true;
@@ -1219,7 +1275,6 @@ export default {
 
     /**
      * Funcion que elimina un mensaje de la base de datos y del store.
-     * @param {*} messageId - Id del mensaje a eliminar
      */
     deleteMessage(messageId) {
       try {
@@ -1240,8 +1295,6 @@ export default {
 
     /**
      * Función que devuelve el nombre de la categoria a la que pertenece la reserva.
-     * @param {*} categoryId - Id de la categoria
-     * @returns Nombre de la categoria
      */
     getCategoryName(categoryId) {
       const category = this.categories.find(
@@ -1252,7 +1305,6 @@ export default {
 
     /**
      * Función que formatea la fecha y la hora de la reserva.
-     * @param {*} dateStr - Fecha y hora de la reserva
      */
     formatDate(dateStr) {
       const date = new Date(dateStr);
@@ -1267,7 +1319,6 @@ export default {
 
     /**
      * Función que muestra los detalles de la reserva en un dialogo.
-     * @param {*} booking - Reserva a mostrar
      */
     viewDetails(booking) {
       this.dialogBooking = true;
@@ -1287,7 +1338,6 @@ export default {
 
     /**
      * Función que abre el dialogo para editar una reserva.
-     * @param {*} booking - Reserva a editar
      */
     openEditBookingDialog(booking) {
       this.openUpdateDialog = true;
@@ -1383,7 +1433,6 @@ export default {
 
     /**
      * Funcion que elimina una reserva de la base de datos y del store.
-     * @param {*} bookingId - Id de la reserva a eliminar
      */
     deleteBooking(bookingId) {
       try {
@@ -1410,7 +1459,7 @@ export default {
       for (let i = 0; i < 90; i++) {
         const currentDate = new Date(today);
         currentDate.setDate(today.getDate() + i);
-        // Check if the day is either Sunday (0) or Thursday (4)
+        // comprueba si es domingo (0) o jueves (4)
         if (currentDate.getDay() === 0 || currentDate.getDay() === 4) {
           const year = currentDate.getFullYear();
           let month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
@@ -1422,9 +1471,7 @@ export default {
 
     /**
      * Cuando se crea el componente, se ejecuta esta funcion.
-     * Muetsra los iconos de las acciones o no dependiendo del ancho de la pantalla.
-     * Pone la variable okMessage en null, para que no se muestre ningun mensaje.
-     * y calcula las fechas disponibles para reservar.
+     * Que tiene otras funciones dentro.
      */
     created() {
       this.showIconsActions();

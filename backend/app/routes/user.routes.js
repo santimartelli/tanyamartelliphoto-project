@@ -21,19 +21,20 @@ module.exports = (app) => {
         req.body.username
       )});`,
       (err, result) => {
+        // Compueba si el nombre de usuario ya está en uso
         if (result.length) {
           return res.status(409).send({
             msg: "This username is already in use!",
           });
         } else {
-          // username is available
+          // Se encripta la contraseña
           bcrypt.hash(req.body.password, 10, (err, hash) => {
             if (err) {
               return res.status(500).send({
                 msg: err,
               });
             } else {
-              // has hashed pw => add to database
+              // Cuando la contraseña ha sido encriptada, se almacena en la base de datos
               db.query(
                 `INSERT INTO users (username, password, registered) VALUES (${db.escape(
                   req.body.username
@@ -64,9 +65,8 @@ module.exports = (app) => {
     db.query(
       `SELECT * FROM users WHERE username = ${db.escape(req.body.username)};`,
       (err, result) => {
-        // user does not exist
         if (err) {
-          console.error(err); // Log the database query error
+          console.error(err);
           return res.status(400).send({
             msg: err,
           });
@@ -85,7 +85,7 @@ module.exports = (app) => {
             if (bErr) {
               console.error(bErr); // Log bcrypt error
               return res.status(401).send({
-                msg: "Username or password is incorrect! 2",
+                msg: "Username or password is incorrect!",
               });
             }
             if (bResult) {

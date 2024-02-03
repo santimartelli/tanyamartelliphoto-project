@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/ContactForm.vue</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/ContactForm.vue</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;!-- Componente que contiene el formulario de contacto general -->
+
+&lt;template>
+  &lt;div>
+
+    &lt;!-- Dialogo con mensaje feedback cuando se envía formulario -->
+
+    &lt;ok-dialog :show="!!okMessage" @close="closeDialog">
+      &lt;h2>Mensaje enviado correctamente!&lt;/h2>
+      &lt;p>{{ okMessage }}&lt;/p>
+    &lt;/ok-dialog>
+    &lt;ok-dialog :show="!!errorMessage" @close="closeDialog">
+      &lt;h2>Error!&lt;/h2>
+      &lt;p>{{ errorMessage }}&lt;/p>
+    &lt;/ok-dialog>
+    &lt;div class="container">
+
+      &lt;!-- Texto -->
+
+      &lt;h2>Me encantaría saber de tí!&lt;/h2>
+      &lt;p>
+        Aprecio mucho tu interés y consideración hacia mis servicios de
+        fotografía! Si tienes preguntas, necesitas más información o simplemente
+        quieres charlar conmigo, no dudes en usar el formulario de contacto de
+        aquí abajo. Te responderé a la mayor brevedad posible.
+      &lt;/p>
+
+      &lt;!-- Formulario -->
+
+      &lt;div>
+        &lt;form @submit.prevent="addNewMessage">
+          &lt;input
+            type="text"
+            v-model.trim="newMessageName"
+            name="messageName"
+            id="messageName"
+            placeholder="Nombre"
+          />
+          &lt;div v-if="!formIsValidName" class="errors">
+            Por favor introduce un nombre válido.
+          &lt;/div>
+
+          &lt;input
+            type="text"
+            v-model.trim="newMessageEmail"
+            id="messageEmail"
+            placeholder="Email"
+          />
+          &lt;div v-if="!formIsValidEmail" class="errors">
+            Por favor introduce un email válido.
+          &lt;/div>
+
+          &lt;label for="messageContent">Mensaje&lt;/label>
+          &lt;textarea
+            id="messageContent"
+            rows="10"
+            name="messageContent"
+            v-model.trim="newMessageContent"
+          >&lt;/textarea>
+          &lt;div v-if="!formIsValidContent" class="errors">
+            Por favor introduce un mensaje válido.
+          &lt;/div>
+          &lt;div class="btn-container">
+            &lt;base-button @click="addNewMessage" value="Enviar"
+              >Enviar&lt;/base-button
+            >
+          &lt;/div>
+        &lt;/form>
+      &lt;/div>
+    &lt;/div>
+  &lt;/div>
+&lt;/template>
+
+&lt;script>
+import OkDialog from "../components/ui/OkDialog.vue";
+/**
+ * Componente que contiene el formulario de contacto general.
+ * @vue-data {string} newMessageName - Nombre del remitente del mensaje.
+ * @vue-data {string} newMessageEmail - Email del remitente del mensaje.
+ * @vue-data {string} newMessageContent - Contenido del mensaje.
+ * @vue-data {boolean} formIsValidName - Indica si el nombre es válido.
+ * @vue-data {boolean} formIsValidEmail - Indica si el email es válido.
+ * @vue-data {boolean} formIsValidContent - Indica si el contenido del mensaje es válido.
+ * @vue-data {boolean} formIsValid - Indica si el formulario es válido.
+ * @vue-data {string} okMessage - Mensaje de éxito al enviar el formulario.
+ * @vue-data {string} errorMessage - Mensaje de error al enviar el formulario.
+ * @vue-components {OkDialog} - Componente que muestra un dialogo de feedback.
+ * @vue-methods addNewMessage - Añade un nuevo mensaje a la base de datos y almacena el resultado en el estado de la aplicación.
+ * @vue-methods isValidEmail - Comprueba si el email es válido con una expresión regular.
+ * @vue-methods closeDialog - Cierra el dialogo y resetea el formulario.
+ * @vue-created - Resetea okMessage cuando se crea el componente para que no se muestre el dialogo.
+ */
+export default {
+  components: {
+    OkDialog,
+  },
+
+  data() {
+    return {
+      newMessageName: "",
+      newMessageEmail: "",
+      newMessageContent: "",
+      formIsValidName: true,
+      formIsValidEmail: true,
+      formIsValidContent: true,
+      formIsValid: true,
+      okMessage: null,
+      errorMessage: null,
+    };
+  },
+
+  methods: {
+    /**
+     * Añade un nuevo mensaje a la base de datos y almacena el resultado en el estado de la aplicación.
+     */
+    async addNewMessage() {
+      this.formIsValid = true;
+      // Validaciones
+      this.formIsValidName = !!this.newMessageName.trim();
+      this.formIsValidEmail = this.isValidEmail(this.newMessageEmail.trim());
+      this.formIsValidContent = !!this.newMessageContent.trim();
+      this.formIsValid =
+        this.formIsValidName &amp;&amp;
+        this.formIsValidEmail &amp;&amp;
+        this.formIsValidContent;
+
+      if (this.formIsValid) {
+        try {
+          await this.$store.dispatch("messages/addNewMessage", {
+            messageName: this.newMessageName,
+            messageEmail: this.newMessageEmail,
+            messageContent: this.newMessageContent,
+          });
+          this.okMessage =
+            "Gracias por tu mensaje! Te responderé a la mayor brevedad posible!";
+        } catch (error) {
+          console.error("Error enviando mensaje: ", error);
+          this.errorMessage =
+            "Ocurrió un error enviando tu mensaje. Por favor inténtalo de nuevo más tarde.";
+        }
+      }
+    },
+
+    /**
+     * Comprueba si el email es válido con una expresión regular.
+     */
+    isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
+
+    /**
+     * Cierra el dialogo y resetea el formulario.
+     */
+    closeDialog() {
+      this.newMessageName = "";
+      this.newMessageEmail = "";
+      this.newMessageContent = "";
+      this.formIsValidName = true;
+      this.formIsValidEmail = true;
+      this.formIsValidContent = true;
+      this.formIsValid = true;
+      this.okMessage = null;
+      this.errorMessage = null;
+    },
+  },
+
+  /**
+   * Resetea okMessage cuando se crea el componente para que no se muestre el dialogo.
+   */
+  created() {
+    this.okMessage = null;
+  },
+};
+&lt;/script>
+
+&lt;style scoped>
+/* Estilos para el componente ContactForm.vue */
+
+.container {
+  width: 60%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.container > h2 {
+  text-align: center;
+  padding-bottom: 1rem;
+}
+
+form {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  margin: 0px auto;
+  padding-top: 3rem;
+}
+
+input {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  margin-bottom: 1.5rem;
+  padding: 5px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+
+textarea {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  margin-bottom: 1.5rem;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+label {
+  font-family: Typewriter-light, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.65;
+  padding: 0 5px 5px 5px;
+}
+
+input:focus {
+  outline: none;
+  border-bottom: 1px solid #f79f9f;
+}
+
+textarea:focus {
+  outline: none;
+  border: 1px solid #f79f9f;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+.errors {
+  color: red;
+  font-size: 14px;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* MEDIA QUERIES */
+
+@media (max-width: 855px) {
+  .container {
+    width: 98%;
+  }
+}
+
+@media (max-width: 1235px) {
+  form {
+    width: 100%;
+  }
+}
+&lt;/style>
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AdminPanel.html">AdminPanel</a></li><li><a href="module-App.html">App</a></li><li><a href="module-AuthenticatedNav.html">AuthenticatedNav</a></li><li><a href="module-BaseButton.html">BaseButton</a></li><li><a href="module-BaseDialog.html">BaseDialog</a></li><li><a href="module-BaseSpinner.html">BaseSpinner</a></li><li><a href="module-BookingForm.html">BookingForm</a></li><li><a href="module-ContactForm.html">ContactForm</a></li><li><a href="module-EditBookingDialog.html">EditBookingDialog</a></li><li><a href="module-EditCategoryDialog.html">EditCategoryDialog</a></li><li><a href="module-FooterCredits.html">FooterCredits</a></li><li><a href="module-LandingPage.html">LandingPage</a></li><li><a href="module-LogIn.html">LogIn</a></li><li><a href="module-OkDialog.html">OkDialog</a></li><li><a href="module-PortfolioCat.html">PortfolioCat</a></li><li><a href="module-RegistrationAdmin.html">RegistrationAdmin</a></li><li><a href="module-ReplyMessage.html">ReplyMessage</a></li><li><a href="module-TheNavigation.html">TheNavigation</a></li><li><a href="module-TheSocialNetworks.html">TheSocialNetworks</a></li></ul><h3>Global</h3><ul><li><a href="global.html#app">app</a></li><li><a href="global.html#history">history</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#routes">routes</a></li><li><a href="global.html#scrollBehavior">scrollBehavior</a></li><li><a href="global.html#services">services</a></li><li><a href="global.html#store">store</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Feb 03 2024 01:02:16 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

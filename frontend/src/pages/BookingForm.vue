@@ -149,15 +149,37 @@
 <script>
 import OkDialog from "../components/ui/OkDialog.vue";
 
+/**
+ * Componente que contiene el formulario de solicitud de reserva de sesiones.
+ * @vue-data {string} name - Nombre del cliente.
+ * @vue-data {string} email - Email del cliente.
+ * @vue-data {string} categoryId - Id de la categoría de la sesión.
+ * @vue-data {string} location - Localidad de la sesión.
+ * @vue-data {string} place - Lugar de la sesión.
+ * @vue-data {string} selectedDate - Fecha de la sesión.
+ * @vue-data {string} selectedTime - Hora de la sesión.
+ * @vue-data {string} message - Mensaje del cliente.
+ * @vue-data {string[]} availableTimes - Horas disponibles para la sesión.
+ * @vue-data {string[]} availableDates - Fechas disponibles para la sesión.
+ * @vue-data {boolean} formIsValidName - Indica si el nombre es válido.
+ * @vue-data {boolean} formIsValidEmail - Indica si el email es válido.
+ * @vue-data {boolean} formIsValidCategory - Indica si la categoría es válida.
+ * @vue-data {boolean} formIsValidLocation - Indica si la localidad es válida.
+ * @vue-data {boolean} formIsValidPlace - Indica si el lugar es válido.
+ * @vue-data {boolean} formIsValidDate - Indica si la fecha es válida.
+ * @vue-data {boolean} formIsValidTime - Indica si la hora es válida.
+ * @vue-data {boolean} formIsValidMessage - Indica si el mensaje es válido.
+ * @vue-data {boolean} formIsValid - Indica si el formulario es válido.
+ * @vue-data {string} okMessage - Mensaje de éxito.
+ * @vue-data {string} errorMessage - Mensaje de error.
+ * @vue-computed {object[]} sortedCategories - Categorías ordenadas alfabéticamente.
+ * @vue-methods calculateAvailableDates - Calcula las fechas disponibles para reservar una sesión.
+ * @vue-methods isValidEmail - Comprueba si el email es válido.
+ * @vue-methods closeDialog - Cierra el dialogo y resetea el formulario.
+ * @vue-methods submitForm - Intenta enviar el formulario de solicitud de reserva de sesión.
+ * @vue-created calculateAvailableDates - Calcula las fechas disponibles para reservar una sesión cuando se crea el componente.
+ */
 export default {
-  /**
-   * Component properties.
-   */
-
-  /**
-   * Componentes que usa el componente.
-   * @component OkDialog - Componente que muestra un dialogo de éxito o error.
-   */
   components: {
     OkDialog,
   },
@@ -206,7 +228,6 @@ export default {
   computed: {
     /**
      * Devuelve las categorías ordenadas alfabéticamente por nombre.
-     * @returns {Array} Categorías ordenadas alfabéticamente por nombre.
      */
     sortedCategories() {
       // Obtiene las categorías del store
@@ -241,8 +262,6 @@ export default {
 
     /**
      * Comprueba si el email es válido con una expresión regular.
-     * @param {string} email - Email a comprobar.
-     * @returns {boolean} True si el email es válido, false en caso contrario.
      */
     isValidEmail(email) {
       // Use a more comprehensive email validation regex

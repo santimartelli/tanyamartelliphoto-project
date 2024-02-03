@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app/models/booking.model.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app/models/booking.model.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview Modelo de la tabla Bookings. Se definen los atributos de la tabla y
+ * el nombre de la tabla a la que hace referencia.
+ */
+
+const sql = require("./db.js");
+
+/**
+ * Represenenta el modelo reserva.
+ * @constructor
+ * @param {object} booking - El objeto reserva.
+ * @param {string} booking.name - El nombre de la persona que reserva.
+ * @param {string} booking.email - El email de la persona que reserva.
+ * @param {number} booking.categoryId - La categoría de la foto sesión de la reserva.
+ * @param {string} booking.location - La localidad de la reserva.
+ * @param {string} booking.place - El lugar de la reserva.
+ * @param {string} booking.selectedDate - La fecha seleccionada de la reserva.
+ * @param {string} booking.selectedTime - El horario seleccionado de la reserva.
+ * @param {string} booking.message - El mensaje de la reserva.
+ */
+const Booking = function (booking) {
+  this.name = booking.name;
+  this.email = booking.email;
+  this.categoryId = booking.categoryId;
+  this.location = booking.location;
+  this.place = booking.place;
+  this.selectedDate = booking.selectedDate;
+  this.selectedTime = booking.selectedTime;
+  this.message = booking.message;
+};
+
+/**
+ * Crea una nueva reserva, la guarda en la base de datos y devuelve el resultado.
+ * @param {Object} newBooking - El objeto nueva reserva.
+ * @param {string} newBooking.name - El nombre de la persona que reserva.
+ * @param {string} newBooking.email - El email de la persona que reserva.
+ * @param {number} newBooking.categoryId - La categoría de la foto sesión de la reserva.
+ * @param {string} newBooking.location - La localidad de la reserva.
+ * @param {string} newBooking.place - El lugar de la reserva.
+ * @param {string} newBooking.selectedDate - La fecha seleccionada de la reserva.
+ * @param {string} newBooking.selectedTime - El horario seleccionado de la reserva.
+ * @param {string} newBooking.message - El mensaje de la reserva.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ */
+Booking.create = (newBooking, result) => {
+  sql.query("INSERT INTO bookings SET ?", newBooking, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("booking created: ", { id: res.insertId, ...newBooking });
+    result(null, { id: res.insertId, ...newBooking });
+  });
+};
+
+/**
+ * Obtiene todas las reservas de la base de datos y devuelve el resultado.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ */
+Booking.getAll = (result) => {
+  sql.query("SELECT * FROM bookings", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    result(null, res);
+  });
+};
+
+/**
+ * Obtiene una reserva de la base de datos por su ID y devuelve el resultado.
+ * @param {number} bookingId - El ID de la reserva.
+ * @param {function} result - El callback que maneja la respuesta de la base de datos.
+ */
+Booking.findById = (bookingId, result) => {
+  sql.query(
+    "SELECT * FROM bookings WHERE bookingId = ?",
+    bookingId,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+      if (res.length) {
+        console.log("Booking found: ", res[0]);
+        result(null, res[0]);
+        return;
+      }
+      result({ kind: "not_found" }, null);
+    }
+  );
+};
+
+/**
+ * Actualiza una reserva existente de la base de datos por su ID y devuelve el resultado.
+ * @param {number} bookingId - El ID de la reserva.
+ * @param {Object} booking - El objeto de la reserva.
+ * @param {string} booking.name - El nombre de la persona que reserva.
+ * @param {string} booking.email - El email de la persona que reserva.
+ * @param {number} booking.categoryId - La categoría de la foto sesión de la reserva.
+ * @param {string} booking.location - La localidad de la reserva.
+ * @param {string} booking.place - El lugar de la reserva.
+ * @param {string} booking.selectedDate - La fecha seleccionada de la reserva.
+ * @param {string} booking.selectedTime - El horario seleccionado de la reserva.
+ * @param {string} booking.message - El mensaje de la reserva.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ */
+Booking.updateById = (bookingId, booking, result) => {
+  sql.query(
+    "UPDATE bookings SET name = ?, email = ?, categoryId = ?, location = ?, place = ?, selectedDate = ?, selectedTime = ?, message = ? WHERE bookingId = ?",
+    [booking.name, booking.email, booking.categoryId, booking.location, booking.place, booking.selectedDate, booking.selectedTime, booking.message, bookingId],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      console.log("updated category: ", { id: bookingId, ...booking });
+      result(null, { id: bookingId, ...booking });
+    }
+  );
+};
+
+/**
+ * Elimina una reserva existente de la base de datos por su ID y devuelve el resultado.
+ * @param {number} bookingId - El ID de la reserva.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ */
+Booking.removeOne = (bookingId, result) => {
+  sql.query("DELETE FROM bookings WHERE bookingId = ?", bookingId, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    if (res.affectedRows == 0) {
+      result({ kind: "not_found" }, null);
+      return;
+    } else {
+      console.log("deleted booking with id:", bookingId);
+      result(null, res);
+    }
+  });
+};
+
+/**
+ * Elimina todas las reservas de la base de datos y devuelve el resultado.
+ * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
+ */
+Booking.removeAll = (result) => {
+  sql.query("DELETE FROM bookings", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    } else {
+      console.log(`deleted ${res.affectedRows} bookings`);
+      result(null, res);
+    }
+  });
+};
+
+module.exports = Booking;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Booking.html">Booking</a></li><li><a href="Category.html">Category</a></li><li><a href="Message.html">Message</a></li><li><a href="Picture.html">Picture</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connection">connection</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#deleteAll">deleteAll</a></li><li><a href="global.html#deleteAllByCategory">deleteAllByCategory</a></li><li><a href="global.html#deleteFile">deleteFile</a></li><li><a href="global.html#deleteOne">deleteOne</a></li><li><a href="global.html#findAll">findAll</a></li><li><a href="global.html#findByCategory">findByCategory</a></li><li><a href="global.html#findOne">findOne</a></li><li><a href="global.html#imageFilter">imageFilter</a></li><li><a href="global.html#replyEmail">replyEmail</a></li><li><a href="global.html#sendBookingRequestConfirmationEmail">sendBookingRequestConfirmationEmail</a></li><li><a href="global.html#sendBookingRequestNotificationEmail">sendBookingRequestNotificationEmail</a></li><li><a href="global.html#sendEmail">sendEmail</a></li><li><a href="global.html#sendMessageConfirmationEmail">sendMessageConfirmationEmail</a></li><li><a href="global.html#sendMessageNotificationEmail">sendMessageNotificationEmail</a></li><li><a href="global.html#storage">storage</a></li><li><a href="global.html#transporter">transporter</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#upload">upload</a></li><li><a href="global.html#uploadPictures">uploadPictures</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Feb 02 2024 22:40:27 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -16,13 +16,15 @@
 </template>
 
 <script>
+/**
+ * Componente que es la base de los dialogos del sitio.
+ * @vue-prop {boolean} show - Indica si el dialogo se muestra o no.
+ * @vue-prop {string} title - Título del dialogo.
+ * @vue-prop {boolean} fixed - Indica si el dialogo es fijo o no.
+ * @vue-emits {close} - Emite el evento 'close' cuando se cierra el dialogo.
+ * @vue-methods tryClose - Cierra el dialogo si no es fijo y emite el evento 'close'.
+ */
 export default {
-  /**
-   * Propiedades que recibe el componente.
-   * @prop {boolean} show - Indica si el dialogo se muestra o no.
-   * @prop {string} title - Título del dialogo.
-   * @prop {boolean} fixed - Indica si el dialogo es fijo o no.
-   */
   props: {
     show: {
       type: Boolean,
@@ -38,17 +40,8 @@ export default {
       default: false,
     },
   },
-
-  /**
-   * Emite el evento 'close' cuando se cierra el dialogo. Lo que permite que el
-   * componente que use este componente pueda reaccionar a este evento.
-   */
   emits: ["close"],
-
   methods: {
-    /**
-     * Cierra el dialogo si no es fijo y emite el evento 'close'.
-     */
     tryClose() {
       if (this.fixed) {
         return;

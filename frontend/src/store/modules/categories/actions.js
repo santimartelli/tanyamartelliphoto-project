@@ -1,5 +1,8 @@
 import axios from "axios";
 
+/**
+ * Las acciones de Vuex para las categorías.
+ */
 export default {
   /**
    * Obtiene las categorías de la API y las almacena en el estado.
