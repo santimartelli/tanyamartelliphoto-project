@@ -1,5 +1,6 @@
 /**
- * @fileoverview Este archivo contiene el servicio para el envío de emails.
+ * Este archivo contiene el servicio para el envío de emails.
+ * @module Services/Email
  */
 
 require("dotenv").config();
@@ -8,6 +9,15 @@ const nodemailer = require("nodemailer");
 /**
  * Crea el transportador de emails con los datos de autenticación.
  * @type {object}
+ * @const
+ * @property {string} service - El servicio de email.
+ * @property {string} host - El servidor de email.
+ * @property {number} port - El puerto del servidor de email.
+ * @property {boolean} secure - Un valor booleano que indica si el servidor de email es seguro.
+ * @property {object} auth - Las credenciales de autenticación.
+ * @property {string} auth.user - El usuario del email.
+ * @property {string} auth.pass - La contraseña del usuario del email.
+ * @memberof Services/Email
  */
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -23,6 +33,11 @@ const transporter = nodemailer.createTransport({
 /**
  * Envia un email con los datos especificados.
  * @param {object} mailOptions - Las opciones del email.
+ * @param {string} mailOptions.from - El remitente del email.
+ * @param {string} mailOptions.to - El destinatario del email.
+ * @param {string} mailOptions.subject - El asunto del email.
+ * @param {string} mailOptions.text - El contenido del email.
+ * @memberof Services/Email
  * @returns {Promise<string>} - Devuelve una promesa con la respuesta del servidor.
  */
 const sendEmail = (mailOptions) => {
@@ -82,7 +97,7 @@ exports.sendMessageNotificationEmail = (messageData) => {
 
 /**
  * Envia un email de confirmación al remitente de la recepción de la solicitud de reserva.
- * @param {string[]} to - La dirección de email del remitente.
+ * @param {string[]} to - Las direcciones donde se enviará el email.
  * @param {object} bookingData - Los datos de la solicitud de reserva.
  */
 exports.sendBookingRequestConfirmationEmail = (to, bookingData) => {
@@ -119,7 +134,7 @@ exports.sendBookingRequestNotificationEmail = (bookingData) => {
 
 /**
  * Responde a un mensaje por email.
- * @param {string[]} to - La dirección de email del remitente.
+ * @param {string[]} to - Las direcciones donde se enviará el email.
  * @param {object} messageData - Los datos del mensaje.
  */
 exports.replyEmail = (to, messageData) => {

@@ -27,10 +27,23 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @fileoverview Este archivo contiene las rutas para la gestión de usuarios.
+ * Este archivo contiene las rutas para la gestión de autenticación y registro de usuarios.
+ * @module Routes/User
  */
 
 module.exports = (app) => {
+  /**
+   * Gestiona la autenticación y registro de usuarios.
+   * @type {object}
+   * @const
+   * @property {Function} validateRegister - Valida el registro de un usuario.
+   * @requires module:middleware/users
+   * @requires express
+   * @requires bcryptjs
+   * @requires jsonwebtoken
+   * @requires module:models/db
+   * @requires dotenv
+   */
   const express = require("express");
   const router = express.Router();
   const bcrypt = require("bcryptjs");
@@ -41,7 +54,19 @@ module.exports = (app) => {
   const secretKey = process.env.JWT_SECRET_KEY;
 
   /**
-   * @description Ruta para registrar un nuevo usuario.
+   * Ruta para registrar un nuevo usuario.
+   * @name post/api/users/sign-up
+   * @function
+   * @memberof module:Routes/User
+   * @param {string} ruta - La ruta correspondiente.
+   * @param {object} req - El objeto de solicitud.
+   * @param {object} res - El objeto de respuesta.
+   * @param {function} userMiddleware.validateRegister - La función middleware que valida el registro de un usuario.
+   * @param {function} bcrypt.hash - La función que encripta la contraseña.
+   * @param {function} db.query - La función que realiza una consulta a la base de datos.
+   * @param {function} jwt.sign - La función que firma un token.
+   * @param {string} secretKey - La clave secreta para firmar el token.
+   * @returns {object} - El mensaje de registro.
    */
   router.post("/sign-up", userMiddleware.validateRegister, (req, res, next) => {
     db.query(
@@ -87,7 +112,18 @@ module.exports = (app) => {
   });
 
   /**
-   * @description Ruta para iniciar sesión de usuario.
+   * Ruta para iniciar sesión de usuario.
+   * @name post/api/users/login
+   * @function
+   * @memberof module:Routes/User
+   * @param {string} ruta - La ruta correspondiente.
+   * @param {object} req - El objeto de solicitud.
+   * @param {object} res - El objeto de respuesta.
+   * @param {function} db.query - La función que realiza una consulta a la base de datos.
+   * @param {function} bcrypt.compare - La función que compara la contraseña encriptada con la contraseña ingresada.
+   * @param {function} jwt.sign - La función que firma un token.
+   * @param {string} secretKey - La clave secreta para firmar el token.
+   * @returns {object} - El token de autenticación y el usuario.
    */
   router.post("/login", (req, res, next) => {
     db.query(
@@ -161,13 +197,13 @@ module.exports = (app) => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Booking.html">Booking</a></li><li><a href="Category.html">Category</a></li><li><a href="Message.html">Message</a></li><li><a href="Picture.html">Picture</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connection">connection</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#deleteAll">deleteAll</a></li><li><a href="global.html#deleteAllByCategory">deleteAllByCategory</a></li><li><a href="global.html#deleteFile">deleteFile</a></li><li><a href="global.html#deleteOne">deleteOne</a></li><li><a href="global.html#findAll">findAll</a></li><li><a href="global.html#findByCategory">findByCategory</a></li><li><a href="global.html#findOne">findOne</a></li><li><a href="global.html#imageFilter">imageFilter</a></li><li><a href="global.html#replyEmail">replyEmail</a></li><li><a href="global.html#sendBookingRequestConfirmationEmail">sendBookingRequestConfirmationEmail</a></li><li><a href="global.html#sendBookingRequestNotificationEmail">sendBookingRequestNotificationEmail</a></li><li><a href="global.html#sendEmail">sendEmail</a></li><li><a href="global.html#sendMessageConfirmationEmail">sendMessageConfirmationEmail</a></li><li><a href="global.html#sendMessageNotificationEmail">sendMessageNotificationEmail</a></li><li><a href="global.html#storage">storage</a></li><li><a href="global.html#transporter">transporter</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#upload">upload</a></li><li><a href="global.html#uploadPictures">uploadPictures</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DB_Config.html">DB_Config</a></li><li><a href="module-Multer_Config.html">Multer_Config</a></li><li><a href="module-Routes_Booking.html">Routes/Booking</a></li><li><a href="module-Routes_Category.html">Routes/Category</a></li><li><a href="module-Routes_Email.html">Routes/Email</a></li><li><a href="module-Routes_Message.html">Routes/Message</a></li><li><a href="module-Routes_Picture.html">Routes/Picture</a></li><li><a href="module-Routes_User.html">Routes/User</a></li><li><a href="module-Services_Email.html">Services/Email</a></li><li><a href="module-bookingController.html">bookingController</a></li><li><a href="module-categoryController.html">categoryController</a></li><li><a href="module-db.html">db</a></li><li><a href="module-messageController.html">messageController</a></li><li><a href="module-middleware_users.html">middleware/users</a></li><li><a href="module-pictureController.html">pictureController</a></li></ul><h3>Classes</h3><ul><li><a href="Booking.html">Booking</a></li><li><a href="Category.html">Category</a></li><li><a href="Message.html">Message</a></li><li><a href="Picture.html">Picture</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Feb 02 2024 22:40:27 GMT+0100 (hora estándar de Europa central)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Feb 03 2024 12:27:47 GMT+0100 (hora estándar de Europa central)
 </footer>
 
 <script> prettyPrint(); </script>

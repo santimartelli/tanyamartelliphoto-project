@@ -1,8 +1,21 @@
 /**
- * @fileoverview Este archivo contiene las rutas para la gestión de usuarios.
+ * Este archivo contiene las rutas para la gestión de autenticación y registro de usuarios.
+ * @module Routes/User
  */
 
 module.exports = (app) => {
+  /**
+   * Gestiona la autenticación y registro de usuarios.
+   * @type {object}
+   * @const
+   * @property {Function} validateRegister - Valida el registro de un usuario.
+   * @requires module:middleware/users
+   * @requires express
+   * @requires bcryptjs
+   * @requires jsonwebtoken
+   * @requires module:models/db
+   * @requires dotenv
+   */
   const express = require("express");
   const router = express.Router();
   const bcrypt = require("bcryptjs");
@@ -13,7 +26,19 @@ module.exports = (app) => {
   const secretKey = process.env.JWT_SECRET_KEY;
 
   /**
-   * @description Ruta para registrar un nuevo usuario.
+   * Ruta para registrar un nuevo usuario.
+   * @name post/api/users/sign-up
+   * @function
+   * @memberof module:Routes/User
+   * @param {string} ruta - La ruta correspondiente.
+   * @param {object} req - El objeto de solicitud.
+   * @param {object} res - El objeto de respuesta.
+   * @param {function} userMiddleware.validateRegister - La función middleware que valida el registro de un usuario.
+   * @param {function} bcrypt.hash - La función que encripta la contraseña.
+   * @param {function} db.query - La función que realiza una consulta a la base de datos.
+   * @param {function} jwt.sign - La función que firma un token.
+   * @param {string} secretKey - La clave secreta para firmar el token.
+   * @returns {object} - El mensaje de registro.
    */
   router.post("/sign-up", userMiddleware.validateRegister, (req, res, next) => {
     db.query(
@@ -59,7 +84,18 @@ module.exports = (app) => {
   });
 
   /**
-   * @description Ruta para iniciar sesión de usuario.
+   * Ruta para iniciar sesión de usuario.
+   * @name post/api/users/login
+   * @function
+   * @memberof module:Routes/User
+   * @param {string} ruta - La ruta correspondiente.
+   * @param {object} req - El objeto de solicitud.
+   * @param {object} res - El objeto de respuesta.
+   * @param {function} db.query - La función que realiza una consulta a la base de datos.
+   * @param {function} bcrypt.compare - La función que compara la contraseña encriptada con la contraseña ingresada.
+   * @param {function} jwt.sign - La función que firma un token.
+   * @param {string} secretKey - La clave secreta para firmar el token.
+   * @returns {object} - El token de autenticación y el usuario.
    */
   router.post("/login", (req, res, next) => {
     db.query(

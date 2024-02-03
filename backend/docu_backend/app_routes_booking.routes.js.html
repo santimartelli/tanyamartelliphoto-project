@@ -27,40 +27,82 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @fileoverview Este archivo contiene las rutas para gestionar las solicitudes de reserva.
+ * @description Rutas para las reservas.
+ * @module Routes/Booking
  */
 
+
 module.exports = (app) => {
+  /**
+   * Controladores para las reservas.
+   * @type {object}
+   * @const
+   * @requires module:controllers/booking.controller
+   * @requires express
+   */
   const bookings = require("../controllers/booking.controller.js");
   var router = require("express").Router();
 
   /**
-   * @description Ruta para crear una nueva reserva.
+   * Ruta para crear una nueva reserva.
+   * @name post/api/bookings
+   * @function
+   * @memberof module:Routes/Booking
+ * @param {string} ruta - La ruta correspondiente.
+   * @param {function} bookings.create - La función controladora que crea una nueva reserva.
    */
   router.post("/", bookings.create);
 
   /**
-   * @description Ruta para obtener todas las reservas.
+   * Ruta para obtener todas las reservas.
+   * @name get/api/bookings
+   * @function
+   * @memberof module:Routes/Booking
+ * @param {string} ruta - La ruta correspondiente.
+   * @param {function} bookings.findAll - La función controladora que obtiene todas las reservas.
    */
   router.get("/", bookings.findAll);
 
   /**
-   * @description Ruta para obtener una reserva por su ID.
+   * Ruta para obtener una reserva por su ID.
+   * @name get/api/bookings/:id
+   * @function
+   * @memberof module:Routes/Booking
+ * @param {string} ruta - La ruta correspondiente.
+   * @param {number} res.params.id - El ID de la reserva.
+   * @param {function} bookings.findOne - La función controladora que obtiene una reserva por su ID.
    */
   router.get("/:id", bookings.findOne);
 
   /**
-   * @description Ruta para actualizar una reserva por su ID.
+   * Ruta para actualizar una reserva por su ID.
+   * @name put/api/bookings/:id
+   * @function
+   * @memberof module:Routes/Booking
+   * @param {string} ruta - La ruta correspondiente.
+   * @param {number} res.params.id - El ID de la reserva.
+   * @param {function} bookings.update - La función controladora que actualiza una reserva por su ID.
    */
   router.put("/:id", bookings.update);
 
   /**
-   * @description Ruta para eliminar una reserva por su ID.
+   * Ruta para eliminar una reserva por su ID.
+   * @name delete/api/bookings/:id
+   * @function
+   * @memberof module:Routes/Booking
+    * @param {string} ruta - La ruta correspondiente.
+   * @param {number} res.params.id - El ID de la reserva.
+   * @param {function} bookings.deleteOne - La función controladora que elimina una reserva por su ID.
    */
   router.delete("/:id", bookings.deleteOne);
 
   /**
-   * @description Ruta para eliminar todas las reservas.
+   * Ruta para eliminar todas las reservas.
+   * @name delete/api/bookings
+   * @function
+   * @memberof module:Routes/Booking
+    * @param {string} ruta - La ruta correspondiente.
+   * @param {function} bookings.deleteAll - La función controladora que elimina todas las reservas.
    */
   router.delete("/", bookings.deleteAll);
 
@@ -76,13 +118,13 @@ module.exports = (app) => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Booking.html">Booking</a></li><li><a href="Category.html">Category</a></li><li><a href="Message.html">Message</a></li><li><a href="Picture.html">Picture</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connection">connection</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#deleteAll">deleteAll</a></li><li><a href="global.html#deleteAllByCategory">deleteAllByCategory</a></li><li><a href="global.html#deleteFile">deleteFile</a></li><li><a href="global.html#deleteOne">deleteOne</a></li><li><a href="global.html#findAll">findAll</a></li><li><a href="global.html#findByCategory">findByCategory</a></li><li><a href="global.html#findOne">findOne</a></li><li><a href="global.html#imageFilter">imageFilter</a></li><li><a href="global.html#replyEmail">replyEmail</a></li><li><a href="global.html#sendBookingRequestConfirmationEmail">sendBookingRequestConfirmationEmail</a></li><li><a href="global.html#sendBookingRequestNotificationEmail">sendBookingRequestNotificationEmail</a></li><li><a href="global.html#sendEmail">sendEmail</a></li><li><a href="global.html#sendMessageConfirmationEmail">sendMessageConfirmationEmail</a></li><li><a href="global.html#sendMessageNotificationEmail">sendMessageNotificationEmail</a></li><li><a href="global.html#storage">storage</a></li><li><a href="global.html#transporter">transporter</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#upload">upload</a></li><li><a href="global.html#uploadPictures">uploadPictures</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DB_Config.html">DB_Config</a></li><li><a href="module-Multer_Config.html">Multer_Config</a></li><li><a href="module-Routes_Booking.html">Routes/Booking</a></li><li><a href="module-Routes_Category.html">Routes/Category</a></li><li><a href="module-Routes_Email.html">Routes/Email</a></li><li><a href="module-Routes_Message.html">Routes/Message</a></li><li><a href="module-Routes_Picture.html">Routes/Picture</a></li><li><a href="module-Routes_User.html">Routes/User</a></li><li><a href="module-Services_Email.html">Services/Email</a></li><li><a href="module-bookingController.html">bookingController</a></li><li><a href="module-categoryController.html">categoryController</a></li><li><a href="module-db.html">db</a></li><li><a href="module-messageController.html">messageController</a></li><li><a href="module-middleware_users.html">middleware/users</a></li><li><a href="module-pictureController.html">pictureController</a></li></ul><h3>Classes</h3><ul><li><a href="Booking.html">Booking</a></li><li><a href="Category.html">Category</a></li><li><a href="Message.html">Message</a></li><li><a href="Picture.html">Picture</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Feb 02 2024 22:40:27 GMT+0100 (hora estándar de Europa central)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Feb 03 2024 12:27:47 GMT+0100 (hora estándar de Europa central)
 </footer>
 
 <script> prettyPrint(); </script>

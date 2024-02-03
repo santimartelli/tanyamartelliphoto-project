@@ -1,6 +1,6 @@
 /**
- * @fileoverview Archivo que contiene el controlador de las solicitudes de reservas que se envían desde el
- * formulario de la página de reservas.
+ * Controlador de reservas. Contiene funciones para manejar las solicitudes de reserva.
+ * @module bookingController
  */
 
 const BookingModel = require("../models/booking.model.js");

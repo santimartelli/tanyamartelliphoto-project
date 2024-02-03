@@ -1,7 +1,9 @@
 /**
  * @fileoverview Este es el archivo principal del servidor de la aplicación Tanya Martelli Photography.
- * Configura el servidor Express, configura el middleware, define las rutas y arranca el servidor.
+ * Define el servidor, requiere las dependencias necesarias, establece las configuraciones necesarias,
+ * establece las rutas de la aplicación y también se encarga de escuchar las peticiones entrantes.
  */
+
 
 const express = require("express");
 require('dotenv').config();

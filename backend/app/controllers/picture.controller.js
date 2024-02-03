@@ -1,5 +1,6 @@
 /**
- * @fileoverview Este archivo contiene el controlador de las imágenes.
+ * Controlador de las imágenes. Contiene funciones para manejar las imágenes en la base de datos y en el servidor.
+ * @module pictureController
  */
 
 const PictureModel = require("../models/picture.model.js");

@@ -1,3 +1,6 @@
+/**
+ * Getters del módulo de mensajes.
+ */
 export default {
   /**
    * Devuelve los mensajes del estado.

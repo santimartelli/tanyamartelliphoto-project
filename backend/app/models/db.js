@@ -1,12 +1,15 @@
 /**
- * @fileoverview Este archivo contiene la conexión a la base de datos.
+ * Contiene la conexión a la base de datos con MySQL.
+ * @module db
+ * @requires dotenv
+ * @requires mysql2
  */
 
 require("dotenv").config();
 const mysql = require("mysql2");
 
 /**
- * Crea la conexión a la base de datos.
+ * Crea la conexión a la base de datos con MySQL.
  * @constant
  * @type {Object}
  * @property {string} host - El servidor de la base de datos.
@@ -24,6 +27,7 @@ const connection = mysql.createConnection({
 /**
  * Establece la conexión a la base de datos.
  * @param {function} error - El callback que maneja el error.
+ * @memberof db
  */
 connection.connect((error) => {
   if (error) throw error;

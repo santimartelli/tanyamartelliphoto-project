@@ -1,12 +1,9 @@
-/**
- * @fileoverview Modelo de la tabla Pictures. Se definen los atributos de la tabla y
- * el nombre de la tabla a la que hace referencia.
- */
+// Representa el modelo de la imagen y contiene las funciones para interactuar con la base de datos.
 
 const sql = require("./db.js");
 
 /**
- * Representa el modelo imagen
+ * Representa el modelo de la imagen
  * @constructor
  * @param {object} picture - El objeto imagen.
  * @param {string} picture.picturePath - La ruta de la imagen.
@@ -55,7 +52,6 @@ Picture.getAll = (result) => {
  * @param {number} categoryId - El ID de la imagen a buscar.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
-
 Picture.getByCategory = (categoryId, result) => {
   sql.query(
     "SELECT * FROM Pictures WHERE categoryId = ?",

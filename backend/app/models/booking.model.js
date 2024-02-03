@@ -1,14 +1,11 @@
-/**
- * @fileoverview Modelo de la tabla Bookings. Se definen los atributos de la tabla y
- * el nombre de la tabla a la que hace referencia.
- */
+// Representa el modelo de la reserva y contiene las funciones para interactuar con la base de datos.
 
 const sql = require("./db.js");
 
 /**
- * Represenenta el modelo reserva.
+ * Represenenta el modelo de solicitud de reserva.
  * @constructor
- * @param {object} booking - El objeto reserva.
+ * @param {object} booking - El objeto reserva con los datos de la solicitud reserva.
  * @param {string} booking.name - El nombre de la persona que reserva.
  * @param {string} booking.email - El email de la persona que reserva.
  * @param {number} booking.categoryId - La categoría de la foto sesión de la reserva.

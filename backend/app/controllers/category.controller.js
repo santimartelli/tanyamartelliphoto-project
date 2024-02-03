@@ -1,5 +1,6 @@
 /**
- * @fileoverview Archivo que contiene el controlador de las categorías.
+ * Controlador de categorías. Contiene funciones para manejar las solicitudes de la API relacionadas con las categorías.
+ * @module categoryController
  */
 
 const CategoryModel = require("../models/category.model.js");

@@ -1,17 +1,14 @@
-/**
- * @fileoverview Modelo de la tabla Messages. Se definen los atributos de la tabla y
- * el nombre de la tabla a la que hace referencia.
- */
+// Representa el modelo de mensaje y contiene las funciones para interactuar con la base de datos.
 
 const sql = require("./db.js");
 
 /**
- * Representación del modelo mensaje.
+ * Representación del modelo de mensaje.
  * @constructor
- * @param {object} message - El objeto mensaje.
- * @param {string} message.messageName - The name of the message.
- * @param {string} message.messageEmail - The email of the message.
- * @param {string} message.messageContent - The content of the message.
+ * @param {object} message - El objeto mensaje con los datos del mensaje.
+ * @param {string} message.messageName - El nombre de la persona que envía el mensaje.
+ * @param {string} message.messageEmail - El email de la persona que envía el mensaje.
+ * @param {string} message.messageContent - El contenido del mensaje.
  */
 const Message = function (message) {
   this.messageName = message.messageName;
@@ -24,7 +21,6 @@ const Message = function (message) {
  * @param {object} newMessage - El nuevo objeto mensaje.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
-
 Message.create = (newMessage, result) => {
   sql.query("INSERT INTO messages SET ?", newMessage, (err, res) => {
     if (err) {
@@ -42,7 +38,6 @@ Message.create = (newMessage, result) => {
  * Obtiene todos los mensajes de la base de datos y devuelve el resultado.
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
-
 Message.getAll = (result) => {
   sql.query("SELECT * FROM messages", (err, res) => {
     if (err) {

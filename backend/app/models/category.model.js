@@ -1,14 +1,11 @@
-/**
- * @fileoverview Modelo de la tabla Categories. Se definen los atributos de la tabla y
- * el nombre de la tabla a la que hace referencia.
- */
+// Representa el modelo de categoría y contiene las funciones para interactuar con la base de datos.
 
 const sql = require("./db.js");
 
 /**
- * Representación del modelo categoría.
+ * Representación del modelo de categoría.
  * @constructor
- * @param {object} category - El objeto de la categoría.
+ * @param {object} category - El objeto de la categoría con los datos de la categoría.
  * @param {string} category.categoryName - El nombre de la categoría.
  */
 const Category = function (category) {
@@ -105,20 +102,24 @@ Category.updateById = (categoryId, category, result) => {
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Category.removeOne = (categoryId, result) => {
-  sql.query("DELETE FROM Categories WHERE categoryId = ?", categoryId, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
+  sql.query(
+    "DELETE FROM Categories WHERE categoryId = ?",
+    categoryId,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      } else {
+        console.log("deleted category with id:", categoryId);
+        result(null, res);
+      }
     }
-    if (res.affectedRows == 0) {
-      result({ kind: "not_found" }, null);
-      return;
-    } else {
-      console.log("deleted category with id:", categoryId);
-      result(null, res);
-    }
-  });
+  );
 };
 
 /**
