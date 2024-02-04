@@ -33,38 +33,38 @@ export default {
        */
       services: [
         {
-          image: require('../assets/images/pregnancy/preg1.jpg'),
+          image: require('../assets/images/services_pics/embarazo.jpg'),
           title: 'Sesión de Embarazo',
           price: '250€',
           includes: ['2 horas', '50 fotos', '10 fotos editadas']
         },
         {
-          image: require('../assets/images/family/fam1.png'),
+          image: require('../assets/images/services_pics/familiar.jpg'),
           title: 'Sesión Familiar',
           price: '250€',
           includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
         },
         {
-          image: require('../assets/images/fashion/fash1.jpg'),
+          image: require('../assets/images/services_pics/individual.jpg'),
           title: 'Retrato Individual',
           price: '250€',
           includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
         },
         {
-          image: require('../assets/images/newborn/newborn3.jpg'),
+          image: require('../assets/images/services_pics/reciennacido.jpg'),
           title: 'Recien Nacido',
           price: '250€',
           includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
         },
         {
-          image: require('../assets/images/nordic-garden.webp'),
+          image: require('../assets/images/services_pics/eventos.jpg'),
           title: 'Reportaje Eventos',
           price: '250€',
           includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€']
         },
         {
-          image: require('../assets/images/nordic-garden.webp'),
-          title: 'Arquitectura e Interiores',
+          image: require('../assets/images/services_pics/moda.jpg'),
+          title: 'E-commerce y moda',
           price: '250€',
           includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€']
         },
