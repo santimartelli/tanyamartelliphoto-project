@@ -18,7 +18,7 @@ const Category = function (category) {
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Category.create = (newCategory, result) => {
-  sql.query("INSERT INTO Categories SET ?", newCategory, (err, res) => {
+  sql.query("INSERT INTO categories SET ?", newCategory, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -34,7 +34,7 @@ Category.create = (newCategory, result) => {
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Category.getAll = (result) => {
-  sql.query("SELECT * FROM Categories", (err, res) => {
+  sql.query("SELECT * FROM categories", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -51,7 +51,7 @@ Category.getAll = (result) => {
  */
 Category.findById = (categoryId, result) => {
   sql.query(
-    "SELECT * FROM Categories WHERE categoryId = ?",
+    "SELECT * FROM categories WHERE categoryId = ?",
     categoryId,
     (err, res) => {
       if (err) {
@@ -78,7 +78,7 @@ Category.findById = (categoryId, result) => {
  */
 Category.updateById = (categoryId, category, result) => {
   sql.query(
-    "UPDATE Categories SET categoryName = ? WHERE categoryId = ?",
+    "UPDATE categories SET categoryName = ? WHERE categoryId = ?",
     [category.categoryName, categoryId],
     (err, res) => {
       if (err) {
@@ -103,7 +103,7 @@ Category.updateById = (categoryId, category, result) => {
  */
 Category.removeOne = (categoryId, result) => {
   sql.query(
-    "DELETE FROM Categories WHERE categoryId = ?",
+    "DELETE FROM categories WHERE categoryId = ?",
     categoryId,
     (err, res) => {
       if (err) {
@@ -127,7 +127,7 @@ Category.removeOne = (categoryId, result) => {
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Category.removeAll = (result) => {
-  sql.query("DELETE FROM Categories", (err, res) => {
+  sql.query("DELETE FROM categories", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);

@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    volumes:
+      - uploads-volume:/tmphoto_app/resources/static/assets/uploads
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: mysqldb
+      DB_USER: root
+      DB_PASSWORD: N2ZaS&t8e^
+      DB_NAME: tanyamartelliphotography
+      JWT_SECRET_KEY: $$c7ueu8FhvZSLD4#FS8wU35PNuR$$Mh
+      EMAIL_USER: santimartelli@gmail.com
+      EMAIL_PASS: bdpt kdap zbdm zpsc
+    depends_on:
+      - mysqldb
+
+
+  frontend:
+    image: nginx:stable-alpine
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  mysqldb:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: N2ZaS&t8e^
+      MYSQL_DATABASE: tanyamartelliphotography
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./tanyamartelliphotography.sql:/docker-entrypoint-initdb.d/tanyamartelliphotography.sql
+
+volumes:
+  db-data:
+  uploads-volume:

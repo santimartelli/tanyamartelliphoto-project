@@ -8,7 +8,7 @@ export default {
    * @param {Object[]} pictures - Las imágenes a establecer.
    */
   setPictures(state, pictures) {
-    state.pictures = pictures;
+    state.pictures = Array.isArray(pictures) ? pictures : [];
   },
 
   /**

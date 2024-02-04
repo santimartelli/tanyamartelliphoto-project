@@ -20,7 +20,7 @@ const Picture = function (picture) {
  * @param {function} callback - La función de callback que maneja la respuesta de la base de datos.
  */
 Picture.create = (pictureData, callback) => {
-  const query = 'INSERT INTO Pictures (picturePath, categoryId) VALUES ?';
+  const query = 'INSERT INTO pictures (picturePath, categoryId) VALUES ?';
   sql.query(query, [pictureData], callback);
 };
 
@@ -31,8 +31,8 @@ Picture.create = (pictureData, callback) => {
 Picture.getAll = (result) => {
   sql.query(
     `SELECT p.pictureId, p.picturePath, p.categoryId, c.categoryName
-     FROM Pictures p
-     INNER JOIN Categories c ON p.categoryId = c.categoryId`,
+     FROM pictures p
+     INNER JOIN categories c ON p.categoryId = c.categoryId`,
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -54,7 +54,7 @@ Picture.getAll = (result) => {
  */
 Picture.getByCategory = (categoryId, result) => {
   sql.query(
-    "SELECT * FROM Pictures WHERE categoryId = ?",
+    "SELECT * FROM pictures WHERE categoryId = ?",
     categoryId,
     (err, res) => {
       if (err) {
@@ -81,7 +81,7 @@ Picture.getByCategory = (categoryId, result) => {
  */
 Picture.updateById = (pictureId, updatedPicture, result) => {
   sql.query(
-    "UPDATE Pictures SET picturePath = ?, categoryId = ? WHERE pictureId = ?",
+    "UPDATE pictures SET picturePath = ?, categoryId = ? WHERE pictureId = ?",
     [updatedPicture.picturePath, updatedPicture.categoryId, pictureId],
     (err, res) => {
       if (err) {
@@ -105,7 +105,7 @@ Picture.updateById = (pictureId, updatedPicture, result) => {
  */
 Picture.deleteById = (pictureId, result) => {
   sql.query(
-    "DELETE FROM Pictures WHERE pictureId = ?",
+    "DELETE FROM pictures WHERE pictureId = ?",
     pictureId,
     (err, res) => {
       if (err) {
@@ -129,7 +129,7 @@ Picture.deleteById = (pictureId, result) => {
  */
 Picture.deleteAllByCategory = (categoryId, result) => {
   sql.query(
-    "DELETE FROM Pictures WHERE categoryId = ?",
+    "DELETE FROM pictures WHERE categoryId = ?",
     categoryId,
     (err, res) => {
       if (err) {
@@ -147,7 +147,7 @@ Picture.deleteAllByCategory = (categoryId, result) => {
  * @param {function} result - La función de callback que maneja la respuesta de la base de datos.
  */
 Picture.deleteAll = (result) => {
-  sql.query("DELETE FROM Pictures", (err, res) => {
+  sql.query("DELETE FROM pictures", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

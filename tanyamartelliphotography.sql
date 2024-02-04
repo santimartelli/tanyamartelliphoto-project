@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     registered datetime NOT NULL,
-    last_login datetime NOT NULL,
+    last_login datetime default NULL,
     PRIMARY KEY (id)
 );
 
@@ -61,4 +61,3 @@ select * from categories;
 select * from pictures;
 select * from bookings;
 select * from messages;
-DELETE FROM users WHERE id IN (30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41);

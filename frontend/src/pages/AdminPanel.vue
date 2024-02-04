@@ -876,7 +876,7 @@ export default {
       return this.$store.getters["categories/categories"];
     },
     pictures() {
-      return this.$store.getters["pictures/pictures"];
+       return this.$store.getters["pictures/pictures"];
     },
     messages() {
       return this.$store.getters["messages/messages"];

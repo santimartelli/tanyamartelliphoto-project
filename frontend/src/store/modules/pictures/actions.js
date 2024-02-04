@@ -13,10 +13,12 @@ export default {
     axios
       .get("http://localhost:3000/api/pictures")
       .then((response) => {
-        commit("setPictures", response.data);
+        const pictures = Array.isArray(response.data) ? response.data : [];
+        commit("setPictures", pictures);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
+        commit("setPictures", []);
       });
   },
 
