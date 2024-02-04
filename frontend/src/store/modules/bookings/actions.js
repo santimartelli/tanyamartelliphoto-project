@@ -12,7 +12,7 @@ export default {
    */
   getBookings({ commit }) {
     axios
-      .get("http://localhost:3000/api/bookings")
+      .get(`${process.env.VUE_APP_API_URL}/bookings`)
       .then((res) => {
         commit("setBookings", res.data);
       })
@@ -30,7 +30,7 @@ export default {
    */
   updateBooking({ commit, dispatch }, { bookingId, name, email, categoryId, location, place, selectedDate, selectedTime, message }) {
     return axios
-      .put(`http://localhost:3000/api/bookings/${bookingId}`, {
+      .put(`${process.env.VUE_APP_API_URL}/bookings/${bookingId}`, {
         name,
         email,
         categoryId,
@@ -63,7 +63,7 @@ export default {
    */
   addNewBooking({ commit, dispatch }, { name, email, categoryId, location, place, selectedDate, selectedTime, message }) {
     return axios
-      .post(`http://localhost:3000/api/bookings`, {
+      .post(`${process.env.VUE_APP_API_URL}/bookings`, {
         name: name,
         email: email,
         categoryId: categoryId,
@@ -99,7 +99,7 @@ export default {
    */
   deleteBooking({ commit, dispatch }, bookingId) {
     return axios
-      .delete(`http://localhost:3000/api/bookings/${bookingId}`)
+      .delete(`${process.env.VUE_APP_API_URL}/bookings/${bookingId}`)
       .then((response) => {
         if (response.status >= 200 && response.status < 300) {
           console.log("Successfully deleted booking with ID:", bookingId);

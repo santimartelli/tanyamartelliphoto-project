@@ -13,7 +13,7 @@ export default {
    */
   getCategories({ commit }) {
     axios
-      .get("http://localhost:3000/api/categories")
+      .get(`${process.env.VUE_APP_API_URL}/categories`)
       .then((res) => {
         commit("setCategories", res.data);
       })
@@ -34,7 +34,7 @@ export default {
    */
   updateCategory({ commit, dispatch }, { categoryId, categoryName }) {
     return axios
-      .put(`http://localhost:3000/api/categories/${categoryId}`, {
+      .put(`${process.env.VUE_APP_API_URL}/categories/${categoryId}`, {
         categoryName,
       })
       .then((response) => {
@@ -62,7 +62,7 @@ export default {
    */
   addNewCategory({ commit, dispatch }, newCategoryName) {
     return axios
-      .post(`http://localhost:3000/api/categories`, {
+      .post(`${process.env.VUE_APP_API_URL}/categories`, {
         categoryName: newCategoryName,
       })
       .then((response) => {
@@ -93,7 +93,7 @@ export default {
    */
   deleteCategory({ commit, dispatch }, categoryId) {
     return axios
-      .delete(`http://localhost:3000/api/categories/${categoryId}`)
+      .delete(`${process.env.VUE_APP_API_URL}/categories/${categoryId}`)
       .then((response) => {
         if (response.status >= 200 && response.status < 300) {
           console.log("Successfully deleted category with ID:", categoryId);

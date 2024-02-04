@@ -949,7 +949,7 @@ export default {
 
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/pictures",
+          `${process.env.VUE_APP_API_URL}/pictures`,
           formData
         );
 
@@ -1016,7 +1016,7 @@ export default {
         );
         if (response && response.status >= 200 && response.status < 300) {
           const fileResponse = await axios.delete(
-            `http://localhost:3000/api/pictures/deleteFile`,
+            `${process.env.VUE_APP_API_URL}/pictures/deleteFile`,
             {
               params: { filepath: filePath },
             }

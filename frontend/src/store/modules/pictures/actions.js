@@ -11,7 +11,7 @@ export default {
    */
   getPictures({ commit }) {
     axios
-      .get("http://localhost:3000/api/pictures")
+      .get(`${process.env.VUE_APP_API_URL}/pictures`)
       .then((response) => {
         const pictures = Array.isArray(response.data) ? response.data : [];
         commit("setPictures", pictures);
@@ -33,7 +33,7 @@ export default {
    */
   deletePicture({ commit, dispatch }, pictureId) {
     return axios
-      .delete(`http://localhost:3000/api/pictures/${pictureId}`)
+      .delete(`${process.env.VUE_APP_API_URL}/pictures/${pictureId}`)
       .then((response) => {
         if (response.status >= 200 && response.status < 300) {
           // Successfully deleted, commit the mutation and dispatch any necessary actions

@@ -11,7 +11,7 @@ export default {
    */
   getMessages({ commit }) {
     axios
-      .get("http://localhost:3000/api/messages")
+      .get(`${process.env.VUE_APP_API_URL}/messages`)
       .then((res) => {
         commit("setMessages", res.data);
       })
@@ -34,7 +34,7 @@ export default {
    */
   updateMessage({ commit, dispatch }, { messageId, messageName, messageEmail, messageContent }) {
     return axios
-      .put(`http://localhost:3000/api/messages/${messageId}`, {
+      .put(`${process.env.VUE_APP_API_URL}/messages/${messageId}`, {
         messageName,
         messageEmail,
         messageContent,
@@ -67,7 +67,7 @@ export default {
    */
   addNewMessage({ commit, dispatch }, { messageName, messageEmail, messageContent }) {
     return axios
-      .post(`http://localhost:3000/api/messages`, {
+      .post(`${process.env.VUE_APP_API_URL}/messages`, {
         messageName: messageName,
         messageEmail: messageEmail,
         messageContent: messageContent,
@@ -102,7 +102,7 @@ export default {
    */
   replyMessage(context, { name, email, message, messageContent }) {
     return axios
-      .post(`http://localhost:3000/api/email/reply`, {
+      .post(`${process.env.VUE_APP_API_URL}/email/reply`, {
         name,
         email,
         message,
@@ -132,7 +132,7 @@ export default {
    */
   deleteMessage({ commit, dispatch }, messageId) {
     return axios
-      .delete(`http://localhost:3000/api/messages/${messageId}`)
+      .delete(`${process.env.VUE_APP_API_URL}/messages/${messageId}`)
       .then((response) => {
         if (response.status >= 200 && response.status < 300) {
           // Successfully deleted, commit the mutation and dispatch any necessary actions
