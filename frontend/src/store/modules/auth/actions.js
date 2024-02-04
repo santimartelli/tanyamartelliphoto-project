@@ -28,7 +28,7 @@ export default {
   async auth(context, payload) {
     try {
       const response = await axios.post(
-        `${process.env.VUE_APP_API_URL}/api/users/login`,
+        `${process.env.VUE_APP_API_URL}/users/login`,
         {
           username: payload.username,
           password: payload.password,
