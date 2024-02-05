@@ -3,7 +3,7 @@ services:
   backend:
     build: ./backend
     volumes:
-      - uploads-volume:/resources/static/assets/uploads
+      - /var/www/uploads:/tmphoto_app/resources/static/assets/uploads
     ports:
       - "3000:3000"
     environment:

@@ -18,6 +18,7 @@ require("dotenv").config();
  */
 exports.uploadPictures = (req, res) => {
   console.log("req.files", req.files);
+  console.log("req.body", req.body);
   const picturesUploaded = req.files.map((file) => {
     console.log("BASE URL:", process.env.BASE_URL);
     return {
