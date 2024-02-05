@@ -946,6 +946,8 @@ export default {
       }
       formData.append("categoryId", this.categoryId);
 
+      console.log("Form data:", formData);
+
       try {
         const response = await axios.post(
           `${process.env.VUE_APP_API_URL}/pictures`,
