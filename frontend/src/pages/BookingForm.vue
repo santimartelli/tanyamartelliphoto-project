@@ -208,7 +208,7 @@ export default {
         "19:00",
         "20:00",
         "21:00",
-        "Other (especify in message)",
+        "Otra (especifícala en el mensaje)",
       ],
       availableDates: [],
       formIsValidName: true,
