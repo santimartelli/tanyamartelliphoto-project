@@ -6,6 +6,7 @@
 const PictureModel = require("../models/picture.model.js");
 const fs = require("fs");
 const path = require("path");
+require("dotenv").config();
 
 /**
  * Sube una o varias imágenes al servidor y las registra en la base de datos.
