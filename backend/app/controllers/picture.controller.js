@@ -17,8 +17,8 @@ require("dotenv").config();
  * @param {Object} res - La respuesta HTTP.
  */
 exports.uploadPictures = (req, res) => {
-  console.log("req.files", req.files);
-  console.log("req.body", req.body);
+  console.log("REQ.FILES EEE", req.files);
+  console.log("REQ.BODY EEE", req.body);
   const picturesUploaded = req.files.map((file) => {
     console.log("BASE URL:", process.env.BASE_URL);
     return {
@@ -26,6 +26,8 @@ exports.uploadPictures = (req, res) => {
       categoryId: req.body.categoryId,
     };
   });
+
+  console.log("PICTURES UPLOADED", picturesUploaded);
 
   const values = picturesUploaded.map((picture) => [
     picture.picturePath,
