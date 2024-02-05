@@ -19,6 +19,7 @@ require("dotenv").config();
 exports.uploadPictures = (req, res) => {
   console.log("req.files", req.files);
   const picturesUploaded = req.files.map((file) => {
+    console.log("BASE URL:", process.env.BASE_URL);
     return {
       picturePath: `${process.env.BASE_URL}/resources/static/assets/uploads/${file.filename}`,
       categoryId: req.body.categoryId,
