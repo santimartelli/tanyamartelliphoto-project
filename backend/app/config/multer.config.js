@@ -43,7 +43,7 @@ const imageFilter = (req, file, cb) => {
  */
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../../resources/static/assets/uploads/'))
+    cb(null, `${process.env.BASE_URL}/resources/static/assets/uploads/`)
   },
   filename: function (req, file, cb) {
     cb(null, `${Date.now()}-tmphoto-${file.originalname}`)
