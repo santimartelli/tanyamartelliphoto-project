@@ -19,7 +19,7 @@ exports.uploadPictures = (req, res) => {
   console.log("req.files", req.files);
   const picturesUploaded = req.files.map((file) => {
     return {
-      picturePath: `http://localhost:3000/resources/static/assets/uploads/${file.filename}`,
+      picturePath: `${process.env.BASE_URL}/resources/static/assets/uploads/${file.filename}`,
       categoryId: req.body.categoryId,
     };
   });

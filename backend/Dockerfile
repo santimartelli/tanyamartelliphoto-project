@@ -2,7 +2,6 @@ FROM node:16
 
 WORKDIR /tmphoto_app
 COPY package*.json ./
-RUN mkdir -p /resources/static/assets/uploads
 RUN npm install
 COPY . .
 EXPOSE 3000
