@@ -2,7 +2,6 @@
 
 <template>
   <div>
-
     <!-- Dialogo que muestra un mensaje o una reserva -->
 
     <ok-dialog :show="!!okMessage" @close="closeDialog" class="nameEmail">
@@ -97,7 +96,12 @@
       @close="closeBookingUpdateDialog"
     >
       <div class="form">
-        <input type="text" id="name" v-model="updatedName" placeholder="Nombre" />
+        <input
+          type="text"
+          id="name"
+          v-model="updatedName"
+          placeholder="Nombre"
+        />
         <div v-if="!formIsValidName" class="errors">
           Por favor introduce un nombre válido.
         </div>
@@ -190,7 +194,9 @@
           </option>
           <option value="Otra">Otra (Especificar en el mensaje)</option>
         </select>
-        <div v-if="!formIsValidDate" class="errors">Por favor seleccione una fecha.</div>
+        <div v-if="!formIsValidDate" class="errors">
+          Por favor seleccione una fecha.
+        </div>
         <select id="time" v-model="updatedSelectedTime">
           <option v-if="!updatedSelectedTime" value="" disabled selected>
             Selecciona la hora
@@ -236,7 +242,6 @@
     <!-- Menú de pestañas -->
 
     <div class="tabs">
-
       <!-- Pestaña 1 Imagenes -->
 
       <input
@@ -252,7 +257,6 @@
         >Imagenes</label
       >
       <div class="tab" v-show="currentTab === 'tabone'">
-
         <!-- Dentro de la pestaña -->
         <!-- Botón para añadir imagenes -->
 
@@ -409,7 +413,6 @@
         >Categorías</label
       >
       <div class="tab" v-show="currentTab === 'tabtwo'">
-
         <!-- Dentro de la pestaña -->
         <!-- Botón para añadir categorias -->
 
@@ -517,7 +520,6 @@
         >Mensajes</label
       >
       <div class="tab" v-show="currentTab === 'tabthree'">
-
         <!-- Dentro de la pestaña -->
         <!-- Tabla con los datos de los mensajes -->
 
@@ -616,7 +618,6 @@
         >Solicitudes de reserva</label
       >
       <div class="tab" v-show="currentTab === 'tabfour'">
-
         <!-- Dentro de la pestaña -->
         <!-- Tabla con los datos de las solicitudes de reserva -->
 
@@ -870,12 +871,12 @@ export default {
       formIsValidReplyMessage: true,
     };
   },
-   computed: {
+  computed: {
     categories() {
       return this.$store.getters["categories/categories"];
     },
     pictures() {
-       return this.$store.getters["pictures/pictures"];
+      return this.$store.getters["pictures/pictures"];
     },
     messages() {
       return this.$store.getters["messages/messages"];
@@ -900,7 +901,6 @@ export default {
      * Alterna la pestaña
      */
     toggleTab(tab) {
-      console.log("Clicked tab:", tab);
       this.showIconsActions();
       // Toggle the value of currentTab
       this.currentTab = this.currentTab === tab ? "" : tab;
@@ -945,16 +945,11 @@ export default {
         formData.append("images", this.files[i]);
       }
       formData.append("categoryId", this.categoryId);
-
-      console.log("Form data:", formData);
-
       try {
         const response = await axios.post(
           `${process.env.VUE_APP_API_URL}/pictures`,
           formData
         );
-        console.log('Response:', response);
-
         if (response.status >= 200 && response.status < 300) {
           this.feedbackMessage = "Imagenes subidas correctamente";
           this.feedbackOk = 1;
@@ -965,13 +960,16 @@ export default {
           this.$store.dispatch("pictures/getPictures");
         } else {
           this.feedbackOk = 2;
-          this.feedbackMessage = "Fallo subiendo imagenes, por favor inténtelo de nuevo";
+          this.feedbackMessage =
+            "Fallo subiendo imagenes, por favor inténtelo de nuevo";
         }
       } catch (err) {
         this.error =
-          err.message || "Fallo subiendo imagenes, por favor inténtelo de nuevo";
+          err.message ||
+          "Fallo subiendo imagenes, por favor inténtelo de nuevo";
         this.feedbackOk = 2;
-        this.feedbackMessage = "Fallo subiendo imagenes, por favor inténtelo de nuevo";
+        this.feedbackMessage =
+          "Fallo subiendo imagenes, por favor inténtelo de nuevo";
       } finally {
         this.isLoading = false;
         setTimeout(() => {
@@ -1029,15 +1027,18 @@ export default {
             this.feedbackOk = 1;
           } else {
             this.feedbackOk = 2;
-            this.feedbackMessage = "Error eliminando imagen, por favor inténtelo de nuevo";
+            this.feedbackMessage =
+              "Error eliminando imagen, por favor inténtelo de nuevo";
           }
         } else {
           this.feedbackOk = 2;
-          this.feedbackMessage = "Error eliminando imagen, por favor inténtelo de nuevo";
+          this.feedbackMessage =
+            "Error eliminando imagen, por favor inténtelo de nuevo";
         }
       } catch (error) {
         this.feedbackOk = 2;
-        this.feedbackMessage = "Error eliminando imagen, por favor inténtelo de nuevo";
+        this.feedbackMessage =
+          "Error eliminando imagen, por favor inténtelo de nuevo";
       }
       setTimeout(() => {
         this.feedbackMessage = "";
@@ -1113,7 +1114,8 @@ export default {
           this.feedbackOk = 1;
         } catch (error) {
           this.closeEditCategoryDialog();
-          this.feedbackMessage = "Error actualizando categoría, por favor inténtelo de nuevo";
+          this.feedbackMessage =
+            "Error actualizando categoría, por favor inténtelo de nuevo";
           this.feedbackOk = 2;
         }
         setTimeout(() => {
@@ -1137,7 +1139,8 @@ export default {
           // Clear the ctaegoryInput input after successful upload
           this.newCategoryName = "";
         } catch (error) {
-          this.feedbackMessage = "Error añadiendo categoría, por favor inténtelo de nuevo";
+          this.feedbackMessage =
+            "Error añadiendo categoría, por favor inténtelo de nuevo";
           this.feedbackOk = 2;
         }
         setTimeout(() => {
@@ -1145,7 +1148,8 @@ export default {
           this.feedbackOk = 3;
         }, 3000);
       } else {
-        this.feedbackMessage = "Por favor introduce un nombre para la categoría";
+        this.feedbackMessage =
+          "Por favor introduce un nombre para la categoría";
         this.feedbackOk = 2;
         setTimeout(() => {
           this.feedbackMessage = "";
@@ -1184,7 +1188,8 @@ export default {
           this.feedbackMessage = "Categoría eliminada correctamente";
           this.feedbackOk = 1;
         } catch (error) {
-          this.feedbackMessage = "Error eliminando categoría, por favor inténtelo de nuevo";
+          this.feedbackMessage =
+            "Error eliminando categoría, por favor inténtelo de nuevo";
           this.feedbackOk = 2;
         }
         setTimeout(() => {
@@ -1251,7 +1256,8 @@ export default {
           this.feedbackOk = 1;
           this.closeReplyMessage();
         } catch (error) {
-          this.feedbackMessage = "Error enviando el mensaje, por favor inténtelo de nuevo";
+          this.feedbackMessage =
+            "Error enviando el mensaje, por favor inténtelo de nuevo";
           this.feedbackOk = 2;
           this.closeReplyMessage();
         }
@@ -1284,7 +1290,8 @@ export default {
         this.feedbackMessage = "Mensaje eliminado correctamente";
         this.feedbackOk = 1;
       } catch (error) {
-        this.feedbackMessage = "Error eliminando mensaje, por favor inténtelo de nuevo";
+        this.feedbackMessage =
+          "Error eliminando mensaje, por favor inténtelo de nuevo";
         this.feedbackOk = 2;
       }
       setTimeout(() => {
@@ -1419,11 +1426,13 @@ export default {
             message: this.updatedMessage,
           });
           this.closeBookingUpdateDialog();
-          this.feedbackMessage = "Solicitud de reserva actualizada correctamente";
+          this.feedbackMessage =
+            "Solicitud de reserva actualizada correctamente";
           this.feedbackOk = 1;
         } catch (error) {
           this.closeBookingUpdateDialog();
-          this.feedbackMessage = "Error actualizando la solicitud de reserva, por favor inténtelo de nuevo";
+          this.feedbackMessage =
+            "Error actualizando la solicitud de reserva, por favor inténtelo de nuevo";
           this.feedbackOk = 2;
         }
         setTimeout(() => {
@@ -1496,7 +1505,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* Estilos para la pagina de administracion */
 
 /* ESTILOS GENERALES */
@@ -1689,7 +1697,7 @@ body {
   text-align: center;
   margin-top: 1rem;
   margin-bottom: 0;
-  padding: .7rem;
+  padding: 0.7rem;
 }
 
 .file-select::file-selector-button {
@@ -2066,8 +2074,22 @@ tr:nth-child(even) {
   .tabs .tab {
     padding: 1rem 0;
   }
-}
 
+  .buttonAdd {
+    margin: 0 auto 1rem auto;
+  }
+
+  .inputs-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .category-select select {
+    margin-left: -5%;
+    width: 110%;
+
+  }
+}
 /* Dialogo para editar reserva */
 
 .form {

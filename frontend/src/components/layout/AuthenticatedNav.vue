@@ -171,5 +171,9 @@ li {
   .name-title {
     font-size: 1.5rem;
   }
+  .welcome p {
+    font-size: 0.8rem;
+    text-align: center;
+  }
 }
 </style>
