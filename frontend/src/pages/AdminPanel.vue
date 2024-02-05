@@ -951,8 +951,7 @@ export default {
           `${process.env.VUE_APP_API_URL}/pictures`,
           formData
         );
-
-        console.log('Full image URL:', process.env.BASE_URL + response.imagePath);
+        console.log('Response:', response);
 
         if (response.status >= 200 && response.status < 300) {
           this.feedbackMessage = "Imagenes subidas correctamente";
