@@ -10,11 +10,13 @@ export default {
    * @returns {Object[]} - Las imágenes del estado.
    */
   getPictures({ commit }) {
+    console.log("Getting pictures from API...");
+    console.log("process.env.VUE_APP_API_URL", process.env.VUE_APP_API_URL);
     axios
       .get(`${process.env.VUE_APP_API_URL}/pictures`)
       .then((response) => {
-        const pictures = Array.isArray(response.data) ? response.data : [];
-        commit("setPictures", pictures);
+        console.log("Got pictures:", response.data);
+        commit("setPictures", response.data);
       })
       .catch((error) => {
         console.error(error);
