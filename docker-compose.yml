@@ -14,7 +14,7 @@ services:
       JWT_SECRET_KEY: $$c7ueu8FhvZSLD4#FS8wU35PNuR$$Mh
       EMAIL_USER: santimartelli@gmail.com
       EMAIL_PASS: bdpt kdap zbdm zpsc
-      BASE_URL: https://wwww.tanyamartelli.com
+      BASE_URL: https://www.tanyamartelli.com
     depends_on:
       - mysqldb
 
