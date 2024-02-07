@@ -248,6 +248,7 @@
         type="radio"
         name="tabs"
         id="tabone"
+        value="tabone"
         v-model="currentTab"
         @click="toggleTab('tabone')"
       />
@@ -404,6 +405,7 @@
         type="radio"
         name="tabs"
         id="tabtwo"
+        value="tabtwo"
         v-model="currentTab"
         @click="toggleTab('tabtwo')"
       />
@@ -511,6 +513,7 @@
         type="radio"
         name="tabs"
         id="tabthree"
+        value="tabthree"
         v-model="currentTab"
         @click="toggleTab('tabthree')"
       />
@@ -609,6 +612,7 @@
         type="radio"
         name="tabs"
         id="tabfour"
+        value="tabfour"
         v-model="currentTab"
         @click="toggleTab('tabfour')"
       />
