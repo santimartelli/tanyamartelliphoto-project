@@ -702,6 +702,9 @@
         </div>
       </div>
     </div>
+    <div v-if="currentTab==''" class="quote-admin">
+      <p> The only way to do a great work is to love what you do.<br><span>- Steve Jobs -</span></p>
+    </div>
   </div>
 </template>
 
@@ -1555,6 +1558,31 @@ body {
   display: block;
 }
 
+/* Logo fondo */
+
+.quote-admin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50vh;
+  z-index: -1;
+  opacity: 0.5;
+  padding: 0 1rem;
+}
+
+.quote-admin p {
+  font-family: typewriter-extralight;
+  font-size: 1.5rem;
+  letter-spacing: 0.1rem;
+  text-align: center;
+  line-height: 4rem;
+  color: #000;
+}
+
+.quote-admin p span{
+  color: red;
+}
 /* Dialogo Feedback */
 
 .feedbackOk,
