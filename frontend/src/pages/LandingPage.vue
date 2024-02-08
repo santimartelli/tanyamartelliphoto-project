@@ -230,7 +230,7 @@ export default {
    * Llama ala función changeImage para cambiar la imagen principal cada 9 segundos.
    */
   created() {
-    setInterval(this.changeImage, 9000);
+    setInterval(this.changeImage, 5000);
   },
 };
 </script>
@@ -401,6 +401,7 @@ h2 {
   font-size: 6rem;
   cursor: default;
   font-weight: 200;
+  text-align: center;
 }
 
 .space {
@@ -451,6 +452,29 @@ h2 {
 }
 
 /* MEDIA QUERIES */
+@media (min-width: 1800px){
+  .hero{
+    height: 800px;
+  }
+
+  .swiper {
+    height: 600px;
+  }
+}
+
+@media (min-width: 2100px){
+  .hero{
+    height: 1000px;
+  }
+
+  .welcome-message h2 {
+    font-size: 6rem;
+  }
+
+  .welcome-message p {
+    font-size: 1rem;
+  }
+}
 
 @media (max-width: 1235px) {
   .welcome-message {
