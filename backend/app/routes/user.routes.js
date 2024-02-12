@@ -22,6 +22,7 @@ module.exports = (app) => {
   const jwt = require("jsonwebtoken");
   const db = require("../models/db.js");
   const userMiddleware = require("../middleware/users.js");
+  const { loginRateLimiter } = require('../middleware/rateLimit.js');
   require('dotenv').config();
   const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -97,7 +98,7 @@ module.exports = (app) => {
    * @param {string} secretKey - La clave secreta para firmar el token.
    * @returns {object} - El token de autenticación y el usuario.
    */
-  router.post("/login", (req, res, next) => {
+  router.post("/login", loginRateLimiter, (req, res, next) => {
     db.query(
       `SELECT * FROM users WHERE username = ${db.escape(req.body.username)};`,
       (err, result) => {
