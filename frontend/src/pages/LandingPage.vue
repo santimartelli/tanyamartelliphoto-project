@@ -460,6 +460,10 @@ h2 {
   .swiper {
     height: 600px;
   }
+
+  .swiper-slide img {
+    min-height: 600px;
+  }
 }
 
 @media (min-width: 2100px){
