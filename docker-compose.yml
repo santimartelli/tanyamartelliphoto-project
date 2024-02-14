@@ -42,8 +42,8 @@ services:
     volumes:
       - db-data:/var/lib/mysql
       - ./tanyamartelliphotography.sql:/docker-entrypoint-initdb.d/tanyamartelliphotography.sql
-      - ./custom-my.cnf:/etc/mysql/conf.d/custom-my.cnf:ro
-      - /var/log/mysql:/var/log/mysql
+      # - ./custom-my.cnf:/etc/mysql/conf.d/custom-my.cnf:ro
+      # - /var/log/mysql:/var/log/mysql
 
 volumes:
   db-data:
