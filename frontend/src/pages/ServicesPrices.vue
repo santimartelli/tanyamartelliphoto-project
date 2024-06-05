@@ -42,31 +42,31 @@ export default {
           image: require('../assets/images/services_pics/familiar.jpg'),
           title: 'Sesión Familiar',
           price: '250€',
-          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editada 5€', 'Precio del studio no incluido']
         },
         {
           image: require('../assets/images/services_pics/individual.jpg'),
           title: 'Retrato Individual',
           price: '250€',
-          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editada 5€', 'Precio del studio no incluido']
         },
         {
           image: require('../assets/images/services_pics/reciennacido.jpg'),
           title: 'Recien Nacido',
           price: '250€',
-          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€', 'Precio del studio no incluido']
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editada 5€', 'Precio del studio no incluido']
         },
         {
           image: require('../assets/images/services_pics/eventos.jpg'),
           title: 'Reportaje Eventos',
           price: '250€',
-          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€']
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editada 5€']
         },
         {
           image: require('../assets/images/services_pics/moda.jpg'),
           title: 'E-commerce y moda',
           price: '250€',
-          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editeda 5€']
+          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editada 5€']
         },
       ]
     }
