@@ -68,7 +68,7 @@
             {{ cat.categoryName }}
           </option> -->
         </select>
-        <div v-if="!formIsValidCategory" class="errors">
+        <div v-if="!formIsValidSesion" class="errors">
           Por favor, selecciona un tipo de sesión.
         </div>
         <select id="location" v-model="location">

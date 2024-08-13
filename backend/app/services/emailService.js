@@ -127,7 +127,7 @@ exports.sendBookingRequestNotificationEmail = (bookingData) => {
     subject:
       "Tanya Martelli Photography - New booking request received from " +
       bookingData.name,
-    text: `Has recibido una nueva solicitud de reserva, los detalles son los siguientes:\n\nNombre: ${bookingData.name}\nEmail: ${bookingData.email}\nCategoría: ${bookingData.categoryId}\nLocalidad: ${bookingData.location}\nLocalización: ${bookingData.place}\nFecha: ${bookingData.selectedDate}\nHora: ${bookingData.selectedTime}\n\nMensaje: ${bookingData.message}`,
+    text: `Has recibido una nueva solicitud de reserva, los detalles son los siguientes:\n\nNombre: ${bookingData.name}\nEmail: ${bookingData.email}\nTipo de sesión: ${bookingData.sesion}\nLocalidad: ${bookingData.location}\nLocalización: ${bookingData.place}\nFecha: ${bookingData.selectedDate}\nHora: ${bookingData.selectedTime}\n\nMensaje: ${bookingData.message}`,
   };
   sendEmail(mailOptions);
 };

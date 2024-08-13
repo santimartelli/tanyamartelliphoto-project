@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS bookings (
   message TEXT,
   createdAt datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (bookingId),
-  FOREIGN KEY (categoryId) REFERENCES categories(categoryId)
 );
 
 -- Creación de la tabla "messages"
