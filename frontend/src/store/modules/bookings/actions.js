@@ -28,12 +28,12 @@ export default {
    * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
    * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
    */
-  updateBooking({ commit, dispatch }, { bookingId, name, email, categoryId, location, place, selectedDate, selectedTime, message }) {
+  updateBooking({ commit, dispatch }, { bookingId, name, email, sesion, location, place, selectedDate, selectedTime, message }) {
     return axios
       .put(`${process.env.VUE_APP_API_URL}/bookings/${bookingId}`, {
         name,
         email,
-        categoryId,
+        sesion,
         location,
         place,
         selectedDate,
@@ -43,7 +43,7 @@ export default {
       .then((response) => {
         if (response.status >= 200 && response.status < 300) {
           dispatch("getBookings");
-          commit("updateBooking", { bookingId, name, email, categoryId, location, place, selectedDate, selectedTime, message });
+          commit("updateBooking", { bookingId, name, email, sesion, location, place, selectedDate, selectedTime, message });
         } else {
           console.error(`Edit request failed with status: ${response.status}`);
         }
@@ -61,12 +61,12 @@ export default {
    * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
    * @throws {Error} - Si la solicitud falla, se lanza un error con el mensaje de error.
    */
-  addNewBooking({ commit, dispatch }, { name, email, categoryId, location, place, selectedDate, selectedTime, message }) {
+  addNewBooking({ commit, dispatch }, { name, email, sesion, location, place, selectedDate, selectedTime, message }) {
     return axios
       .post(`${process.env.VUE_APP_API_URL}/bookings`, {
         name: name,
         email: email,
-        categoryId: categoryId,
+        sesion: sesion,
         location: location,
         place: place,
         selectedDate: selectedDate,
@@ -77,7 +77,7 @@ export default {
         if (response.status >= 200 && response.status < 300) {
           const responseData = response.data; // capture the response data
           dispatch("getBookings");
-          commit("addNewBooking", { name: responseData.name, email: responseData.email, categoryId: responseData.categoryId, location: responseData.location, place: responseData.place, selectedDate: responseData.selectedDate, selectedTime: responseData.selectedTime, message: responseData.message });
+          commit("addNewBooking", { name: responseData.name, email: responseData.email, sesion: responseData.sesion, location: responseData.location, place: responseData.place, selectedDate: responseData.selectedDate, selectedTime: responseData.selectedTime, message: responseData.message });
         } else {
           console.error(`Add request failed with status: ${response.status}`);
           throw new Error(`Add request failed with status: ${response.status}`);

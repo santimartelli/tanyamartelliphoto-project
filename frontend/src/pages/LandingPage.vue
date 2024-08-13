@@ -53,8 +53,8 @@
         </div>
         <div class="desc-image">
           <img
-            src="../assets/images/tanyadesc.jpg"
-            alt="Tatiana with camera in Zumaia's beach"
+            src="../assets/images/tanyadesc.webp"
+            alt="Tatiana tomando una fotografía en un viñedo del País Vasco"
           />
         </div>
       </div>
@@ -148,43 +148,43 @@ export default {
       currentImageIndex: 0,
       imagenesPortada: [
         {
-          picturePath: require("../assets/images/landing/landing1.jpg"),
+          picturePath: require("../assets/images/landing/landing1.webp"),
           id: 1,
         },
         {
-          picturePath: require("../assets/images/landing/landing2.jpg"),
+          picturePath: require("../assets/images/landing/landing2.webp"),
           id: 2,
         },
         {
-          picturePath: require("../assets/images/landing/landing3.jpg"),
+          picturePath: require("../assets/images/landing/landing3.webp"),
           id: 3,
         },
         {
-          picturePath: require("../assets/images/landing/landing4.jpg"),
+          picturePath: require("../assets/images/landing/landing4.webp"),
           id: 4,
         },
         {
-          picturePath: require("../assets/images/landing/landing5.jpg"),
+          picturePath: require("../assets/images/landing/landing5.webp"),
           id: 5,
         },
         {
-          picturePath: require("../assets/images/landing/landing6.jpg"),
+          picturePath: require("../assets/images/landing/landing6.webp"),
           id: 6,
         },
         {
-          picturePath: require("../assets/images/landing/landing7.jpg"),
+          picturePath: require("../assets/images/landing/landing7.webp"),
           id: 7,
         },
         {
-          picturePath: require("../assets/images/landing/landing8.jpg"),
+          picturePath: require("../assets/images/landing/landing8.webp"),
           id: 8,
         },
         {
-          picturePath: require("../assets/images/landing/landing9.jpg"),
+          picturePath: require("../assets/images/landing/landing9.webp"),
           id: 9,
         },
         {
-          picturePath: require("../assets/images/landing/landing10.jpg"),
+          picturePath: require("../assets/images/landing/landing10.webp"),
           id: 10,
         }
       ],

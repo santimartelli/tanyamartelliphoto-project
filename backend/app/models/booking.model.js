@@ -8,7 +8,7 @@ const sql = require("./db.js");
  * @param {object} booking - El objeto reserva con los datos de la solicitud reserva.
  * @param {string} booking.name - El nombre de la persona que reserva.
  * @param {string} booking.email - El email de la persona que reserva.
- * @param {number} booking.categoryId - La categoría de la foto sesión de la reserva.
+ * @param {string} booking.sesion - La categoría de la foto sesión de la reserva.
  * @param {string} booking.location - La localidad de la reserva.
  * @param {string} booking.place - El lugar de la reserva.
  * @param {string} booking.selectedDate - La fecha seleccionada de la reserva.
@@ -18,7 +18,7 @@ const sql = require("./db.js");
 const Booking = function (booking) {
   this.name = booking.name;
   this.email = booking.email;
-  this.categoryId = booking.categoryId;
+  this.sesion = booking.sesion;
   this.location = booking.location;
   this.place = booking.place;
   this.selectedDate = booking.selectedDate;
@@ -31,7 +31,7 @@ const Booking = function (booking) {
  * @param {Object} newBooking - El objeto nueva reserva.
  * @param {string} newBooking.name - El nombre de la persona que reserva.
  * @param {string} newBooking.email - El email de la persona que reserva.
- * @param {number} newBooking.categoryId - La categoría de la foto sesión de la reserva.
+ * @param {string} newBooking.sesion - La categoría de la foto sesión de la reserva.
  * @param {string} newBooking.location - La localidad de la reserva.
  * @param {string} newBooking.place - El lugar de la reserva.
  * @param {string} newBooking.selectedDate - La fecha seleccionada de la reserva.
@@ -97,7 +97,7 @@ Booking.findById = (bookingId, result) => {
  * @param {Object} booking - El objeto de la reserva.
  * @param {string} booking.name - El nombre de la persona que reserva.
  * @param {string} booking.email - El email de la persona que reserva.
- * @param {number} booking.categoryId - La categoría de la foto sesión de la reserva.
+ * @param {string} booking.sesion - La categoría de la foto sesión de la reserva.
  * @param {string} booking.location - La localidad de la reserva.
  * @param {string} booking.place - El lugar de la reserva.
  * @param {string} booking.selectedDate - La fecha seleccionada de la reserva.
@@ -107,8 +107,8 @@ Booking.findById = (bookingId, result) => {
  */
 Booking.updateById = (bookingId, booking, result) => {
   sql.query(
-    "UPDATE bookings SET name = ?, email = ?, categoryId = ?, location = ?, place = ?, selectedDate = ?, selectedTime = ?, message = ? WHERE bookingId = ?",
-    [booking.name, booking.email, booking.categoryId, booking.location, booking.place, booking.selectedDate, booking.selectedTime, booking.message, bookingId],
+    "UPDATE bookings SET name = ?, email = ?, sesion = ?, location = ?, place = ?, selectedDate = ?, selectedTime = ?, message = ? WHERE bookingId = ?",
+    [booking.name, booking.email, booking.sesion, booking.location, booking.place, booking.selectedDate, booking.selectedTime, booking.message, bookingId],
     (err, res) => {
       if (err) {
         console.log("error: ", err);

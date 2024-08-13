@@ -25,11 +25,11 @@ export default {
    * @param {string} message - El mensaje de la reserva que se actualizará.
    * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
    */
-  updateBooking(state, {bookingId, name, email, categoryId, location, place, selectedDate, selectedTime, message}) {
+  updateBooking(state, {bookingId, name, email, sesion, location, place, selectedDate, selectedTime, message}) {
     const index = state.bookings.findIndex(b => b.bookingId === bookingId);
     state.bookings[index].name = name;
     state.bookings[index].email = email;
-    state.bookings[index].categoryId = categoryId;
+    state.bookings[index].sesion = sesion;
     state.bookings[index].location = location;
     state.bookings[index].place = place;
     state.bookings[index].selectedDate = selectedDate;
@@ -50,11 +50,11 @@ export default {
    * @param {string} message - El mensaje de la reserva que se agregará.
    * @returns {Promise} - Devuelve una promesa que se resuelve cuando la solicitud se completa.
    */
-  addNewBooking(state, { name, email, categoryId, location, place, selectedDate, selectedTime, message }) {
+  addNewBooking(state, { name, email, sesion, location, place, selectedDate, selectedTime, message }) {
     state.bookings.push({
       name,
       email,
-      categoryId,
+      sesion,
       location,
       place,
       selectedDate,

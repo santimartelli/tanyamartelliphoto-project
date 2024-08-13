@@ -17,7 +17,7 @@ exports.create = (req, res) => {
   if (
     !req.body.name ||
     !req.body.email ||
-    !req.body.categoryId ||
+    !req.body.sesion ||
     !req.body.location ||
     !req.body.place ||
     !req.body.selectedDate ||
@@ -29,7 +29,7 @@ exports.create = (req, res) => {
   const newBooking = new BookingModel({
     name: req.body.name,
     email: req.body.email,
-    categoryId: req.body.categoryId,
+    sesion: req.body.sesion,
     location: req.body.location,
     place: req.body.place,
     selectedDate: req.body.selectedDate,

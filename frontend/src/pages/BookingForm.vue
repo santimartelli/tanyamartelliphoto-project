@@ -46,17 +46,27 @@
         <div v-if="!formIsValidEmail" class="errors">
           Por favor, introduce un email válido.
         </div>
-        <select id="session" v-model="categoryId">
-          <option v-if="!categoryId" value="" disabled selected>
+        <select id="session" v-model="sesion">
+          <option value="" disabled selected>
             Selecciona el tipo de sesión
           </option>
-          <option
+          <option value="Acerca de ti">Acerca de ti</option>
+          <option value="Acerca de ti plus">Acerca de ti PLUS</option>
+          <option value="Mamá y bebé">Mamá y bebé</option>
+          <option value="Retrato individual">Retrato individual</option>
+          <option value="Retrato individual plus">Retrato individual PLUS</option>
+          <option value="Embarazo">Embarazo</option>
+          <option value="Familiar">Familiar</option>
+          <option value="Recien nacido">Recien nacido</option>
+          <option value="E-commerce / Moda">E-commerce / Moda</option>
+          <option value="Otra">Otra (especifica en el mensaje)</option>
+          <!-- <option
             v-for="cat in sortedCategories"
             :key="cat.categoryId"
             :value="cat.categoryId"
           >
             {{ cat.categoryName }}
-          </option>
+          </option> -->
         </select>
         <div v-if="!formIsValidCategory" class="errors">
           Por favor, selecciona un tipo de sesión.
@@ -187,7 +197,7 @@ export default {
     return {
       name: "",
       email: "",
-      categoryId: "",
+      sesion: "",
       location: "",
       place: "",
       selectedDate: "",
@@ -213,7 +223,7 @@ export default {
       availableDates: [],
       formIsValidName: true,
       formIsValidEmail: true,
-      formIsValidCategory: true,
+      formIsValidSesion: true,
       formIsValidLocation: true,
       formIsValidPlace: true,
       formIsValidDate: true,
@@ -225,20 +235,20 @@ export default {
     };
   },
 
-  computed: {
-    /**
-     * Devuelve las categorías ordenadas alfabéticamente por nombre.
-     */
-    sortedCategories() {
-      // Obtiene las categorías del store
-      const categories = this.$store.getters["categories/categories"];
+  // computed: {
+  //   /**
+  //    * Devuelve las categorías ordenadas alfabéticamente por nombre.
+  //    */
+  //   sortedCategories() {
+  //     // Obtiene las categorías del store
+  //     const categories = this.$store.getters["categories/categories"];
 
-      // Ordena las categorías alfabetícamente por nombre
-      return categories.slice().sort((a, b) => {
-        return a.categoryName.localeCompare(b.categoryName);
-      });
-    },
-  },
+  //     // Ordena las categorías alfabetícamente por nombre
+  //     return categories.slice().sort((a, b) => {
+  //       return a.categoryName.localeCompare(b.categoryName);
+  //     });
+  //   },
+  // },
 
   methods: {
     /**
@@ -275,7 +285,7 @@ export default {
     closeDialog() {
       this.name = "";
       this.email = "";
-      this.categoryId = "";
+      this.sesion = "";
       this.location = "";
       this.place = "";
       this.selectedDate = "";
@@ -301,7 +311,7 @@ export default {
       this.availableDates = [];
       this.formIsValidName = true;
       this.formIsValidEmail = true;
-      this.formIsValidCategory = true;
+      this.formIsValidSesion = true;
       this.formIsValidLocation = true;
       this.formIsValidPlace = true;
       this.formIsValidDate = true;
@@ -323,7 +333,7 @@ export default {
       // Validaciones
       this.formIsValidName = !!this.name.trim();
       this.formIsValidEmail = this.isValidEmail(this.email.trim());
-      this.formIsValidCategory = !!this.categoryId;
+      this.formIsValidSesion = !!this.sesion.trim();
       this.formIsValidLocation = !!this.location.trim();
       this.formIsValidPlace = !!this.place.trim();
       this.formIsValidDate = !!this.selectedDate.trim();
@@ -332,7 +342,7 @@ export default {
       this.formIsValid =
         this.formIsValidName &&
         this.formIsValidEmail &&
-        this.formIsValidCategory &&
+        this.formIsValidSesion &&
         this.formIsValidLocation &&
         this.formIsValidPlace &&
         this.formIsValidDate &&
@@ -345,7 +355,7 @@ export default {
           await this.$store.dispatch("bookings/addNewBooking", {
             name: this.name,
             email: this.email,
-            categoryId: this.categoryId,
+            sesion: this.sesion,
             location: this.location,
             place: this.place,
             selectedDate: this.selectedDate,

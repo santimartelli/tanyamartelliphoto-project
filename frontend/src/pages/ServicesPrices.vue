@@ -10,6 +10,7 @@
       <img :src="service.image" alt="Service Image">
       <p class="title">{{ service.title }}</p>
       <p class="price">{{ service.price }}</p>
+      <p> Incluye: </p>
       <ul>
         <li v-for="(item, index) in service.includes" :key="index">
           {{ item }}
@@ -32,41 +33,65 @@ export default {
        * Datos de los servicios y precios que se muestran en la página.
        */
       services: [
-        {
-          image: require('../assets/images/services_pics/embarazo.jpg'),
-          title: 'Sesión de Embarazo',
+      {
+          image: require('../assets/images/services_pics/acercadeti.webp'),
+          title: 'Sesión "Acerca de tí"',
           price: '250€',
-          includes: ['2 horas', '50 fotos', '10 fotos editadas']
+          includes: ['Organización de la sesión de fotos (yo misma me encargare de todo)', 'Maquillaje y estilismo para una persona', 'Estilista presente durante la sesión', 'Vestuario de mi colección (ver sección "Outfit" de mi Instagram)', 'Duración de la sesión: 2 horas', 'Entrega de 15 fotos retocadas (archivos originales opcionales)', '3-4 cambios de look', 'Entrega de fotos en 4-8 semanas (dependiendo de la carga de trabajo)', 'Consultar método de entrga de fotos, normalmente a través de Google Drive'],
         },
         {
-          image: require('../assets/images/services_pics/familiar.jpg'),
-          title: 'Sesión Familiar',
-          price: '250€',
-          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editada 5€', 'Precio del studio no incluido']
+          image: require('../assets/images/services_pics/acercadetiplus.webp'),
+          title: 'Sesión "Acerca de tí PLUS"',
+          price: '450€',
+          includes: ['Organización de la sesión de fotos (yo misma me encargare de todo)', 'Maquillaje y estilismo para una persona', 'Estilista presente durante la sesión', 'Vestuario de mi colección (ver sección "Outfit" de mi Instagram)', 'Duración de la sesión: 3 horas', 'Entrega de 10 fotos retocadas (archivos originales opcionales)', 'Entrega de LIBRO DE FOTOS de 10 pliegues con las mejores tomas', '4-6 cambios de look', 'Entrega de fotos en 4-8 semanas (dependiendo de la carga de trabajo)', 'Consultar método de entrga de fotos, normalmente a través de Google Drive'],
         },
         {
-          image: require('../assets/images/services_pics/individual.jpg'),
-          title: 'Retrato Individual',
-          price: '250€',
-          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editada 5€', 'Precio del studio no incluido']
+          image: require('../assets/images/services_pics/mamaybebe.webp'),
+          title: 'Sesión "mamá y bebé"',
+          price: '220€',
+          includes: ['Organización de la sesión de fotos (yo misma me encargare de todo)', 'El papá también puede participar', 'Maquillaje y estilismo para una o dos personas', 'Estilista presente durante la sesión', 'Vestuario de mi colección (ver sección "Outfit" de mi Instagram)', 'Duración de la sesión: 2 horas', 'Entrega de 10 fotos retocadas (archivos originales opcionales)', '2-3 cambios de look', 'Entrega de fotos en 4-8 semanas (dependiendo de la carga de trabajo)', 'Consultar método de entrga de fotos, normalmente a través de Google Drive'],
         },
         {
-          image: require('../assets/images/services_pics/reciennacido.jpg'),
-          title: 'Recien Nacido',
-          price: '250€',
-          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editada 5€', 'Precio del studio no incluido']
+          image: require('../assets/images/services_pics/individual.webp'),
+          title: 'Sesión "retrato individual"',
+          price: '100€',
+          includes: ['Organización de la sesión de fotos (yo misma me encargare de todo)', 'Duración de la sesión: 1 hora', 'Entrega de 1 foto retocada', 'Entrega de 200/300 archivos originales', 'Entrega de fotos en 1-2 semanas (dependiendo de la carga de trabajo)', 'Consultar método de entrga de fotos, normalmente a través de Google Drive'],
         },
         {
-          image: require('../assets/images/services_pics/eventos.jpg'),
-          title: 'Reportaje Eventos',
-          price: '250€',
-          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editada 5€']
+          image: require('../assets/images/services_pics/individualplus.webp'),
+          title: 'Sesión "retrato individual PLUS"',
+          price: '200€',
+          includes: ['Organización de la sesión de fotos (yo misma me encargare de todo)', 'Duración de la sesión: 2 horas', 'Entrega de 2 fotos retocadas', 'Entrega de 300/400 archivos originales', 'Entrega de fotos en 1-2 semanas (dependiendo de la carga de trabajo)', 'Consultar método de entrga de fotos, normalmente a través de Google Drive'],
         },
         {
-          image: require('../assets/images/services_pics/moda.jpg'),
-          title: 'E-commerce y moda',
+          image: require('../assets/images/services_pics/embarazo.webp'),
+          title: 'Sesión "Embarazo"',
           price: '250€',
-          includes: ['2 horas', '50 fotos', '10 fotos editadas', 'Foto extra editada 5€']
+          includes: ['Organización de la sesión de fotos (yo misma me encargare de todo)', 'Maquillaje y estilismo para una persona', 'Duración de la sesión: 2 horas', 'Entrega de 10 fotos retocadas (archivos originales opcionales)', '2-3 cambios de look', 'Entrega de fotos en 4-8 semanas (dependiendo de la carga de trabajo)', 'Consultar método de entrga de fotos, normalmente a través de Google Drive'],
+        },
+        {
+          image: require('../assets/images/services_pics/familiar.webp'),
+          title: 'Sesión "Familiar"',
+          price: '250€',
+          includes: ['Organización de la sesión de fotos (yo misma me encargare de todo)', 'Duración de la sesión: 2 horas', 'Entrega de 10 fotos retocadas (archivos originales opcionales)', '2-3 cambios de look', 'Entrega de fotos en 4-8 semanas (dependiendo de la carga de trabajo)', 'Consultar método de entrga de fotos, normalmente a través de Google Drive'],
+        },
+        {
+          image: require('../assets/images/services_pics/reciennacido.webp'),
+          title: 'Sesión "Recien Nacido"',
+          price: '250€',
+          includes: ['Organización de la sesión de fotos (yo misma me encargare de todo)', 'Duración de la sesión: 2 horas', 'Entrega de 10 fotos retocadas (archivos originales opcionales)', '2-3 cambios de look', 'Entrega de fotos en 4-8 semanas (dependiendo de la carga de trabajo)', 'Consultar método de entrga de fotos, normalmente a través de Google Drive'],
+        },
+        {
+          image: require('../assets/images/services_pics/eventos.webp'),
+          title: 'Sesión "Eventos"',
+          price: '125€/hora',
+          includes: ['Entrega de 100-150 fotos por hora de sesión', 'Entrega de fotos en 1-2 semanas (dependiendo de la carga de trabajo)', 'Consultar método de entrga de fotos, normalmente a través de Google Drive', 'Consultar otras condiciones como traslados y alojamiento si es necesario'],
+        },
+        {
+          image: require('../assets/images/services_pics/moda.webp'),
+          title: 'Sesión "E-commerce / moda"',
+          price: '125€/hora',
+          includes: ['Organización conjunta de la sesión para respetar el estilo de la marca', 'Entrega de 10 fotos retocadas (foto extra 5€)', 'Entrega de fotos en 4-8 semanas (dependiendo de la carga de trabajo)', 'Consultar método de entrga de fotos, normalmente a través de Google Drive'],
         },
       ]
     }
@@ -109,6 +134,7 @@ export default {
   text-align: left;
   font-size: 14px;
   margin-top: 1rem;
+  text-transform: uppercase;
 }
 
 .price {
@@ -120,6 +146,7 @@ export default {
   list-style-type: '- ';
   font-size: 13px;
   margin: .5rem;
+  
 }
 
 .button-container {
