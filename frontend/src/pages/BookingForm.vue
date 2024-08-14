@@ -60,13 +60,6 @@
           <option value="Recien nacido">Recien nacido</option>
           <option value="E-commerce / Moda">E-commerce / Moda</option>
           <option value="Otra">Otra (especifica en el mensaje)</option>
-          <!-- <option
-            v-for="cat in sortedCategories"
-            :key="cat.categoryId"
-            :value="cat.categoryId"
-          >
-            {{ cat.categoryName }}
-          </option> -->
         </select>
         <div v-if="!formIsValidSesion" class="errors">
           Por favor, selecciona un tipo de sesión.

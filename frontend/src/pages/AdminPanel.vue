@@ -20,8 +20,8 @@
         <p v-if="dialogBooking"><strong>Nombre:</strong> {{ selectedBooking.name }}</p>
         <p v-if="dialogBooking"><strong>Email:</strong> {{ selectedBooking.email }}</p>
         <p v-if="dialogBooking">
-          <strong>Categoria:</strong>
-          {{ getCategoryName(selectedBooking.sesion) }}
+          <strong>Tipo de sesión:</strong>
+          {{ selectedBooking.sesion }}
         </p>
         <p v-if="dialogBooking"><strong>Localidad:</strong> {{ selectedBooking.location }}</p>
         <p v-if="dialogBooking"><strong>Lugar:</strong> {{ selectedBooking.place }}</p>
@@ -668,7 +668,7 @@ export default {
       formIsValidCategoryName: true,
       formIsValidName: true,
       formIsValidEmail: true,
-      formIsValidCategory: true,
+      formIsValidSesion: true,
       formIsValidLocation: true,
       formIsValidPlace: true,
       formIsValidDate: true,

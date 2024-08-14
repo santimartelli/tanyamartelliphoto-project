@@ -23,7 +23,6 @@
             Administrador registrado correctamente!
           </p>
           <base-button
-            style="margin-botom=1.5rem;"
             @click="closeRegistrationDialog"
             >Cerrar</base-button
           >
@@ -38,7 +37,6 @@
             Error en el registro, por favor inténtelo de nuevo.
           </p>
           <base-button
-            style="margin-botom=1.5rem;"
             @click="closeRegistrationDialog"
             >Cerrar</base-button
           >

@@ -33,7 +33,7 @@
 
         <div class="desc-image">
           <img
-            src="../assets/images/tanyadesc.jpg"
+            src="../assets/images/tanya.webp"
             alt="Tatiana with camera in Zumaia's beach"
           />
         </div>
@@ -53,7 +53,7 @@
         </div>
         <div class="desc-image">
           <img
-            src="../assets/images/tanyadesc.webp"
+            src="../assets/images/tanya.webp"
             alt="Tatiana tomando una fotografía en un viñedo del País Vasco"
           />
         </div>
@@ -279,7 +279,7 @@ h2 {
 
 .welcome-message {
   width: 80%;
-  padding: 8rem 0;
+  padding: 8rem 0 4rem 0;
   margin: 0 auto;
 }
 
@@ -336,7 +336,7 @@ h2 {
 .lema-mob {
   width: 100%;
   background-color: #f7f7f7;
-  padding: 6rem 2rem;
+  padding: 4rem 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -359,11 +359,15 @@ h2 {
   width: 100%;
   padding: 0;
   background-color: #fff;
-  padding: 0 0 8rem 0;
+  padding: 4rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .swiper {
   height: 400px;
+  width: 90%;
 }
 
 .swiper-mobile {
