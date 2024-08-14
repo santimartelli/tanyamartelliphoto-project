@@ -7,44 +7,26 @@
     <ok-dialog :show="!!okMessage" @close="closeDialog" class="nameEmail">
       <div class="dataContainer">
         <!-- Data message -->
-        <p v-if="dialogMessage">
-          <strong>Nombre:</strong> {{ selectedMessage.messageName }}
-        </p>
-        <p v-if="dialogMessage">
-          <strong>Email:</strong> {{ selectedMessage.messageEmail }}
-        </p>
+        <p v-if="dialogMessage"><strong>Nombre:</strong> {{ selectedMessage.messageName }}</p>
+        <p v-if="dialogMessage"><strong>Email:</strong> {{ selectedMessage.messageEmail }}</p>
         <p v-if="dialogMessage"><strong>Message:</strong></p>
         <p v-if="dialogMessage" class="message">{{ okMessage }}</p>
         <!-- Data booking-->
-        <p v-if="dialogBooking">
-          <strong>Id de la solicitud:</strong> {{ selectedBooking.bookingId }}
-        </p>
+        <p v-if="dialogBooking"><strong>Id de la solicitud:</strong> {{ selectedBooking.bookingId }}</p>
         <p v-if="dialogBooking">
           <strong>Fecha de creación:</strong>
           {{ formatDate(selectedBooking.createdAt) }}
         </p>
-        <p v-if="dialogBooking">
-          <strong>Nombre:</strong> {{ selectedBooking.name }}
-        </p>
-        <p v-if="dialogBooking">
-          <strong>Email:</strong> {{ selectedBooking.email }}
-        </p>
+        <p v-if="dialogBooking"><strong>Nombre:</strong> {{ selectedBooking.name }}</p>
+        <p v-if="dialogBooking"><strong>Email:</strong> {{ selectedBooking.email }}</p>
         <p v-if="dialogBooking">
           <strong>Categoria:</strong>
-          {{ getCategoryName(selectedBooking.categoryId) }}
+          {{ getCategoryName(selectedBooking.sesion) }}
         </p>
-        <p v-if="dialogBooking">
-          <strong>Localidad:</strong> {{ selectedBooking.location }}
-        </p>
-        <p v-if="dialogBooking">
-          <strong>Lugar:</strong> {{ selectedBooking.place }}
-        </p>
-        <p v-if="dialogBooking">
-          <strong>Fecha:</strong> {{ selectedBooking.selectedDate }}
-        </p>
-        <p v-if="dialogBooking">
-          <strong>Hora:</strong> {{ selectedBooking.selectedTime }}
-        </p>
+        <p v-if="dialogBooking"><strong>Localidad:</strong> {{ selectedBooking.location }}</p>
+        <p v-if="dialogBooking"><strong>Lugar:</strong> {{ selectedBooking.place }}</p>
+        <p v-if="dialogBooking"><strong>Fecha:</strong> {{ selectedBooking.selectedDate }}</p>
+        <p v-if="dialogBooking"><strong>Hora:</strong> {{ selectedBooking.selectedTime }}</p>
         <p v-if="dialogBooking"><strong>Message:</strong></p>
         <p v-if="dialogBooking" class="message">{{ okMessage }}</p>
       </div>
@@ -55,13 +37,10 @@
     <edit-category-dialog
       :show="!!openEditCategoryDialog"
       :category="selectedCategory"
-      @close="closeEditCategoryDialog"
-    >
+      @close="closeEditCategoryDialog">
       <div class="form">
         <input type="text" id="categoryName" v-model="updatedCategoryName" />
-        <div v-if="!formIsValidCategoryName" class="errors">
-          Por favor introduce un nombre válido.
-        </div>
+        <div v-if="!formIsValidCategoryName" class="errors">Por favor introduce un nombre válido.</div>
         <div class="buttons-container">
           <base-button @click="editCategory">Enviar</base-button>
           <base-button @click="closeEditCategoryDialog">Cancelar</base-button>
@@ -78,9 +57,7 @@
       <div class="form">
         <p>Respuesta:</p>
         <textarea id="messageToReply" v-model="messageToReply" rows="10" />
-        <div v-if="!formIsValidReplyMessage" class="errors">
-          El mensaje no puede estar vacío.
-        </div>
+        <div v-if="!formIsValidReplyMessage" class="errors">El mensaje no puede estar vacío.</div>
         <div class="buttons-container">
           <base-button @click="replyMessage">Enviar</base-button>
           <base-button @click="closeReplyMessage">Cancelar</base-button>
@@ -90,129 +67,79 @@
 
     <!-- Dialogo para actualizar una solicitud de reserva -->
 
-    <edit-booking-dialog
-      :show="!!openUpdateDialog"
-      :booking="selectedBooking"
-      @close="closeBookingUpdateDialog"
-    >
+    <edit-booking-dialog :show="!!openUpdateDialog" :booking="selectedBooking" @close="closeBookingUpdateDialog">
       <div class="form">
-        <input
-          type="text"
-          id="name"
-          v-model="updatedName"
-          placeholder="Nombre"
-        />
-        <div v-if="!formIsValidName" class="errors">
-          Por favor introduce un nombre válido.
-        </div>
-        <input
-          type="email"
-          id="email"
-          v-model="updatedEmail"
-          placeholder="Email"
-        />
-        <div v-if="!formIsValidEmail" class="errors">
-          Por favor introduce un email válido.
-        </div>
-        <select id="session" v-model="updatedCategoryId">
-          <option v-if="!updatedCategoryId" value="" disabled selected>
-            Selecciona el tipo de sesión
-          </option>
-          <option
-            v-for="cat in sortedCategories"
-            :key="cat.categoryId"
-            :value="cat.categoryId"
-          >
-            {{ cat.categoryName }}
-          </option>
+        <input type="text" id="name" v-model="updatedName" placeholder="Nombre" />
+        <div v-if="!formIsValidName" class="errors">Por favor introduce un nombre válido.</div>
+        <input type="email" id="email" v-model="updatedEmail" placeholder="Email" />
+        <div v-if="!formIsValidEmail" class="errors">Por favor introduce un email válido.</div>
+        <select id="session" v-model="updatedSesion">
+          <option value="" disabled selected>Selecciona el tipo de sesión</option>
+          <option value="Acerca de ti">Acerca de ti</option>
+          <option value="Acerca de ti plus">Acerca de ti PLUS</option>
+          <option value="Mamá y bebé">Mamá y bebé</option>
+          <option value="Retrato individual">Retrato individual</option>
+          <option value="Retrato individual plus">Retrato individual PLUS</option>
+          <option value="Embarazo">Embarazo</option>
+          <option value="Familiar">Familiar</option>
+          <option value="Recien nacido">Recien nacido</option>
+          <option value="E-commerce / Moda">E-commerce / Moda</option>
+          <option value="Otra">Otra (especifica en el mensaje)</option>
         </select>
-        <div v-if="!formIsValidCategory" class="errors">
-          Por favor selecciona un tipo de sesión.
-        </div>
+        <div v-if="!formIsValidSesion" class="errors">Por favor selecciona un tipo de sesión.</div>
         <select id="location" v-model="updatedLocation">
-          <option v-if="!location" value="" disabled selected>
-            Selecciona la localidad
-          </option>
+          <option v-if="!location" value="" disabled selected>Selecciona la localidad</option>
           <option value="Barcelona">Barcelona</option>
           <option value="Girona">Girona</option>
           <option value="Lloret">Lloret de Mar</option>
           <option value="Other">Otra (especificar en mensaje)</option>
         </select>
-        <div v-if="!formIsValidLocation" class="errors">
-          Por favor selecciona una localidad.
-        </div>
+        <div v-if="!formIsValidLocation" class="errors">Por favor selecciona una localidad.</div>
         <div class="envoirment">
           <p class="title">Elige una localización:</p>
           <div class="radio-group">
             <label for="studio" class="radio-container">
               <div class="sideRadio">
-                <input
-                  type="radio"
-                  id="studio"
-                  v-model="updatedPlace"
-                  value="Estudio"
-                />
+                <input type="radio" id="studio" v-model="updatedPlace" value="Estudio" />
                 <span class="checkmark"></span>
                 <span class="radio-desc">En estudio</span>
               </div>
             </label>
             <label for="outdoors" class="radio-container">
               <div class="sideRadio">
-                <input
-                  type="radio"
-                  id="outdoors"
-                  v-model="updatedPlace"
-                  value="En exteriores"
-                />
+                <input type="radio" id="outdoors" v-model="updatedPlace" value="En exteriores" />
                 <span class="checkmark"></span>
                 <span class="radio-desc">En exteriores</span>
               </div>
             </label>
             <label for="other" class="radio-container">
               <div class="sideRadio">
-                <input
-                  type="radio"
-                  id="other"
-                  v-model="updatedPlace"
-                  value="Otro"
-                />
+                <input type="radio" id="other" v-model="updatedPlace" value="Otro" />
                 <span class="checkmark"></span>
                 <span class="radio-desc">Otro</span>
               </div>
             </label>
           </div>
         </div>
-        <div v-if="!formIsValidPlace" class="errors">
-          Por favor selecciona una localización.
-        </div>
+        <div v-if="!formIsValidPlace" class="errors">Por favor selecciona una localización.</div>
         <select id="date" v-model="updatedSelectedDate">
-          <option v-if="!updatedSelectedDate" value="" disabled selected>
-            Selecciona la fecha
-          </option>
+          <option v-if="!updatedSelectedDate" value="" disabled selected>Selecciona la fecha</option>
           <option v-for="date in availableDates" :value="date" :key="date">
             {{ date }}
           </option>
           <option value="Otra">Otra (Especificar en el mensaje)</option>
         </select>
-        <div v-if="!formIsValidDate" class="errors">
-          Por favor seleccione una fecha.
-        </div>
+        <div v-if="!formIsValidDate" class="errors">Por favor seleccione una fecha.</div>
         <select id="time" v-model="updatedSelectedTime">
-          <option v-if="!updatedSelectedTime" value="" disabled selected>
-            Selecciona la hora
-          </option>
+          <option v-if="!updatedSelectedTime" value="" disabled selected>Selecciona la hora</option>
           <option v-for="time in availableTimes" :value="time" :key="time">
             {{ time }}
           </option>
         </select>
-        <div v-if="!formIsValidTime" class="errors">
-          Por favor seleccione una hora.
-        </div>
+        <div v-if="!formIsValidTime" class="errors">Por favor seleccione una hora.</div>
         <label for="message">Mensaje </label>
         <textarea id="message" v-model="updatedMessage" rows="10"></textarea>
-        <div v-if="!formIsValidMessage" class="errors">
-          Por favor introduce un mensaje.
-        </div>
+        <div v-if="!formIsValidMessage" class="errors">Por favor introduce un mensaje.</div>
         <div class="buttons-container">
           <base-button @click="editBooking">Enviar</base-button>
           <base-button @click="closeBookingUpdateDialog">Cancelar</base-button>
@@ -244,26 +171,13 @@
     <div class="tabs">
       <!-- Pestaña 1 Imagenes -->
 
-      <input
-        type="radio"
-        name="tabs"
-        id="tabone"
-        value="tabone"
-        v-model="currentTab"
-        @click="toggleTab('tabone')"
-      />
-      <label
-        :style="{ background: currentTab === 'tabone' ? '#fff' : '' }"
-        for="tabone"
-        >Imagenes</label
-      >
+      <input type="radio" name="tabs" id="tabone" value="tabone" v-model="currentTab" @click="toggleTab('tabone')" />
+      <label :style="{ background: currentTab === 'tabone' ? '#fff' : '' }" for="tabone">Imagenes</label>
       <div class="tab" v-show="currentTab === 'tabone'">
         <!-- Dentro de la pestaña -->
         <!-- Botón para añadir imagenes -->
 
-        <base-button class="buttonAdd" @click="addImages = !addImages"
-          >Añadir imagenes</base-button
-        >
+        <base-button class="buttonAdd" @click="addImages = !addImages">Añadir imagenes</base-button>
         <div v-show="addImages" class="addItem">
           <div v-if="isLoading">
             <p>Subiendo imagenes...</p>
@@ -278,18 +192,11 @@
                   class="file-select"
                   multiple
                   @change="handleFileUpload"
-                  @click="resetUpload"
-                />
+                  @click="resetUpload" />
                 <div class="category-select">
                   <select v-model="categoryId" ref="categoryInput">
-                    <option value="" disabled selected hidden>
-                      Elige una categoría
-                    </option>
-                    <option
-                      v-for="cat in categories"
-                      :key="cat.categoryId"
-                      :value="cat.categoryId"
-                    >
+                    <option value="" disabled selected hidden>Elige una categoría</option>
+                    <option v-for="cat in categories" :key="cat.categoryId" :value="cat.categoryId">
                       {{ cat.categoryName }}
                     </option>
                   </select>
@@ -303,10 +210,7 @@
                   <span>{{ file.name }}</span>
                 </div>
               </div>
-              <div
-                v-show="categoryId && files.length > 0"
-                class="buttons-container"
-              >
+              <div v-show="categoryId && files.length > 0" class="buttons-container">
                 <base-button @click="submitForm">Enviar</base-button>
                 <base-button @click="resetUpload">Cancelar</base-button>
               </div>
@@ -329,11 +233,7 @@
               <tr v-for="picture in pictures" :key="picture.pictureId">
                 <td>{{ picture.pictureId }}</td>
                 <td>
-                  <img
-                    :src="picture.picturePath"
-                    alt="Thumbnail"
-                    class="thumbnail"
-                  />
+                  <img :src="picture.picturePath" alt="Thumbnail" class="thumbnail" />
                 </td>
                 <td>{{ picture.categoryName }}</td>
                 <td class="actions-container">
@@ -343,14 +243,9 @@
                       src="../assets/Icons/view.png"
                       alt="Ver imagen"
                       title="Ver imagen"
-                      @click="showModal(picture)"
-                    />
+                      @click="showModal(picture)" />
                   </div>
-                  <div
-                    v-if="!iconsActions"
-                    class="icon-container view"
-                    @click="showModal(picture)"
-                  >
+                  <div v-if="!iconsActions" class="icon-container view" @click="showModal(picture)">
                     <img src="../assets/Icons/view.png" alt="Ver imagen" />
                     <div>VER IMAGEN</div>
                   </div>
@@ -360,14 +255,9 @@
                       src="../assets/Icons/delete.png"
                       alt="Borrar imagen"
                       title="Borrar imagen"
-                      @click="deletePicture(picture.pictureId)"
-                    />
+                      @click="deletePicture(picture.pictureId)" />
                   </div>
-                  <div
-                    v-if="!iconsActions"
-                    class="icon-container delete"
-                    @click="deletePicture(picture.pictureId)"
-                  >
+                  <div v-if="!iconsActions" class="icon-container delete" @click="deletePicture(picture.pictureId)">
                     <img src="../assets/Icons/delete.png" alt="Borrar imagen" />
                     <div>ELIMINAR IMAGEN</div>
                   </div>
@@ -384,16 +274,8 @@
           <div class="modal">
             <div class="modal-content">
               <div class="backdrop2" @click="closeModal"></div>
-              <img
-                :src="selectedImage.picturePath"
-                alt="Original Image"
-                class="imagen"
-              />
-              <img
-                src="../assets/Icons/closeB.png"
-                class="close"
-                @click="closeModal"
-              />
+              <img :src="selectedImage.picturePath" alt="Original Image" class="imagen" />
+              <img src="../assets/Icons/closeB.png" class="close" @click="closeModal" />
             </div>
           </div>
         </div>
@@ -401,26 +283,13 @@
 
       <!-- Pestaña 2 Categorias -->
 
-      <input
-        type="radio"
-        name="tabs"
-        id="tabtwo"
-        value="tabtwo"
-        v-model="currentTab"
-        @click="toggleTab('tabtwo')"
-      />
-      <label
-        :style="{ background: currentTab === 'tabtwo' ? '#fff' : '' }"
-        for="tabtwo"
-        >Categorías</label
-      >
+      <input type="radio" name="tabs" id="tabtwo" value="tabtwo" v-model="currentTab" @click="toggleTab('tabtwo')" />
+      <label :style="{ background: currentTab === 'tabtwo' ? '#fff' : '' }" for="tabtwo">Categorías</label>
       <div class="tab" v-show="currentTab === 'tabtwo'">
         <!-- Dentro de la pestaña -->
         <!-- Botón para añadir categorias -->
 
-        <base-button class="buttonAdd" @click="addCategory = !addCategory"
-          >Añadir Categoría</base-button
-        >
+        <base-button class="buttonAdd" @click="addCategory = !addCategory">Añadir Categoría</base-button>
         <div v-show="addCategory" class="addItem">
           <div v-if="isLoading">
             <p>Añadiendo categoría...</p>
@@ -436,8 +305,7 @@
                   ref="categoryInput"
                   v-model="newCategoryName"
                   class="add-category-input"
-                  placeholder="Introduce el nombre de la nueva categoría"
-                />
+                  placeholder="Introduce el nombre de la nueva categoría" />
                 <div class="buttons-container">
                   <base-button @click="addNewCategory">Enviar</base-button>
                   <base-button @click="resetCategoryForm">Cancelar</base-button>
@@ -469,14 +337,9 @@
                       src="../assets/Icons/pen.png"
                       alt="Editar categoria"
                       title="Editar categoria"
-                      @click="openUpdateCategoryDialog(category)"
-                    />
+                      @click="openUpdateCategoryDialog(category)" />
                   </div>
-                  <div
-                    v-if="!iconsActions"
-                    class="icon-container edit"
-                    @click="openUpdateCategoryDialog(category)"
-                  >
+                  <div v-if="!iconsActions" class="icon-container edit" @click="openUpdateCategoryDialog(category)">
                     <img src="../assets/Icons/pen.png" alt="Editar categoria" />
                     <div>EDITAR CATEGORIA</div>
                   </div>
@@ -486,18 +349,10 @@
                       src="../assets/Icons/delete.png"
                       alt="Eliminar categoria"
                       title="Eliminar categoria"
-                      @click="deleteCategory(category.categoryId)"
-                    />
+                      @click="deleteCategory(category.categoryId)" />
                   </div>
-                  <div
-                    v-if="!iconsActions"
-                    class="icon-container delete"
-                    @click="deleteCategory(category.categoryId)"
-                  >
-                    <img
-                      src="../assets/Icons/delete.png"
-                      alt="Eliminar categoria"
-                    />
+                  <div v-if="!iconsActions" class="icon-container delete" @click="deleteCategory(category.categoryId)">
+                    <img src="../assets/Icons/delete.png" alt="Eliminar categoria" />
                     <div>ELIMINAR CATEGORIA</div>
                   </div>
                 </td>
@@ -515,13 +370,8 @@
         id="tabthree"
         value="tabthree"
         v-model="currentTab"
-        @click="toggleTab('tabthree')"
-      />
-      <label
-        :style="{ background: currentTab === 'tabthree' ? '#fff' : '' }"
-        for="tabthree"
-        >Mensajes</label
-      >
+        @click="toggleTab('tabthree')" />
+      <label :style="{ background: currentTab === 'tabthree' ? '#fff' : '' }" for="tabthree">Mensajes</label>
       <div class="tab" v-show="currentTab === 'tabthree'">
         <!-- Dentro de la pestaña -->
         <!-- Tabla con los datos de los mensajes -->
@@ -548,14 +398,9 @@
                       src="../assets/Icons/view.png"
                       alt="Ver mensaje"
                       title="Ver message"
-                      @click="viewMessage(message)"
-                    />
+                      @click="viewMessage(message)" />
                   </div>
-                  <div
-                    v-if="!iconsActions"
-                    class="icon-container view"
-                    @click="viewMessage(message)"
-                  >
+                  <div v-if="!iconsActions" class="icon-container view" @click="viewMessage(message)">
                     <img src="../assets/Icons/view.png" alt="view message" />
                     <div>VER MENSAJE</div>
                   </div>
@@ -565,18 +410,10 @@
                       src="../assets/Icons/responder.png"
                       alt="Responder mensaje"
                       title="Responder mensaje"
-                      @click="replyMessageDialog(message)"
-                    />
+                      @click="replyMessageDialog(message)" />
                   </div>
-                  <div
-                    v-if="!iconsActions"
-                    class="icon-container view"
-                    @click="replyMessageDialog(message)"
-                  >
-                    <img
-                      src="../assets/Icons/responder.png"
-                      alt="Responder mensaje"
-                    />
+                  <div v-if="!iconsActions" class="icon-container view" @click="replyMessageDialog(message)">
+                    <img src="../assets/Icons/responder.png" alt="Responder mensaje" />
                     <div>RESPONDER MENSAJE</div>
                   </div>
                   <div v-if="iconsActions">
@@ -585,18 +422,10 @@
                       src="../assets/Icons/delete.png"
                       alt="Eliminar mensaje"
                       title="Eliminar mensaje"
-                      @click="deleteMessage(message.messageId)"
-                    />
+                      @click="deleteMessage(message.messageId)" />
                   </div>
-                  <div
-                    v-if="!iconsActions"
-                    class="icon-container delete"
-                    @click="deleteMessage(message.messageId)"
-                  >
-                    <img
-                      src="../assets/Icons/delete.png"
-                      alt="Eliminar mensaje"
-                    />
+                  <div v-if="!iconsActions" class="icon-container delete" @click="deleteMessage(message.messageId)">
+                    <img src="../assets/Icons/delete.png" alt="Eliminar mensaje" />
                     <div>ELIMINAR MENSAJE</div>
                   </div>
                 </td>
@@ -608,17 +437,8 @@
 
       <!-- Pestaña 4 Solicitudes de Reservas -->
 
-      <input
-        type="radio"
-        name="tabs"
-        id="tabfour"
-        value="tabfour"
-        v-model="currentTab"
-        @click="toggleTab('tabfour')"
-      />
-      <label
-        :style="{ background: currentTab === 'tabfour' ? '#fff' : '' }"
-        for="tabfour"
+      <input type="radio" name="tabs" id="tabfour" value="tabfour" v-model="currentTab" @click="toggleTab('tabfour')" />
+      <label :style="{ background: currentTab === 'tabfour' ? '#fff' : '' }" for="tabfour"
         >Solicitudes de reserva</label
       >
       <div class="tab" v-show="currentTab === 'tabfour'">
@@ -631,7 +451,7 @@
               <tr>
                 <th class="th-1">Id</th>
                 <th class="th-2">Nombre</th>
-                <th class="th-3">Categoría</th>
+                <th class="th-3">Tipo sesión</th>
                 <th class="th-4">Fecha</th>
                 <th class="th-5">Hora</th>
                 <th class="th-6">Acciones</th>
@@ -641,7 +461,7 @@
               <tr v-for="booking in bookings" :key="booking.bookingId">
                 <td>{{ booking.bookingId }}</td>
                 <td>{{ booking.name }}</td>
-                <td>{{ getCategoryName(booking.categoryId) }}</td>
+                <td>{{ booking.sesion }}</td>
                 <td>{{ booking.selectedDate }}</td>
                 <td>{{ booking.selectedTime }}</td>
                 <td class="actions-container">
@@ -651,14 +471,9 @@
                       src="../assets/Icons/view.png"
                       alt="Ver detalles"
                       title="Ver detalles"
-                      @click="viewDetails(booking)"
-                    />
+                      @click="viewDetails(booking)" />
                   </div>
-                  <div
-                    v-if="!iconsActions"
-                    class="icon-container view"
-                    @click="viewDetails(booking)"
-                  >
+                  <div v-if="!iconsActions" class="icon-container view" @click="viewDetails(booking)">
                     <img src="../assets/Icons/view.png" alt="Ver detalles" />
                     <div>VER DETALLES</div>
                   </div>
@@ -668,14 +483,9 @@
                       src="../assets/Icons/pen.png"
                       alt="Editar reserva"
                       title="Editar reserva"
-                      @click="openEditBookingDialog(booking)"
-                    />
+                      @click="openEditBookingDialog(booking)" />
                   </div>
-                  <div
-                    v-if="!iconsActions"
-                    class="icon-container edit"
-                    @click="openEditBookingDialog(booking)"
-                  >
+                  <div v-if="!iconsActions" class="icon-container edit" @click="openEditBookingDialog(booking)">
                     <img src="../assets/Icons/pen.png" alt="Editar reserva" />
                     <div>EDITAR RESERVA</div>
                   </div>
@@ -685,18 +495,10 @@
                       src="../assets/Icons/delete.png"
                       alt="Eliminar reserva"
                       title="Eliminar reserva"
-                      @click="deleteBooking(booking.bookingId)"
-                    />
+                      @click="deleteBooking(booking.bookingId)" />
                   </div>
-                  <div
-                    v-if="!iconsActions"
-                    class="icon-container delete"
-                    @click="deleteBooking(booking.bookingId)"
-                  >
-                    <img
-                      src="../assets/Icons/delete.png"
-                      alt="Eliminar reserva"
-                    />
+                  <div v-if="!iconsActions" class="icon-container delete" @click="deleteBooking(booking.bookingId)">
+                    <img src="../assets/Icons/delete.png" alt="Eliminar reserva" />
                     <div>ELIMINAR RESERVA</div>
                   </div>
                 </td>
@@ -706,8 +508,8 @@
         </div>
       </div>
     </div>
-    <div v-if="currentTab==''" class="quote-admin">
-      <p> The only way to do a great work is to love what you do.<br><span>- Steve Jobs -</span></p>
+    <div v-if="currentTab == ''" class="quote-admin">
+      <p>The only way to do a great work is to love what you do.<br /><span>- Steve Jobs -</span></p>
     </div>
   </div>
 </template>
@@ -839,7 +641,7 @@ export default {
       selectedBooking: null,
       updatedName: "",
       updatedEmail: "",
-      updatedCategoryId: "",
+      updatedSesion: "",
       updatedLocation: "",
       updatedPlace: "",
       updatedSelectedDate: "",
@@ -953,10 +755,7 @@ export default {
       }
       formData.append("categoryId", this.categoryId);
       try {
-        const response = await axios.post(
-          `${process.env.VUE_APP_API_URL}/pictures`,
-          formData
-        );
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/pictures`, formData);
         if (response.status >= 200 && response.status < 300) {
           this.feedbackMessage = "Imagenes subidas correctamente";
           this.feedbackOk = 1;
@@ -967,16 +766,12 @@ export default {
           this.$store.dispatch("pictures/getPictures");
         } else {
           this.feedbackOk = 2;
-          this.feedbackMessage =
-            "Fallo subiendo imagenes, por favor inténtelo de nuevo";
+          this.feedbackMessage = "Fallo subiendo imagenes, por favor inténtelo de nuevo";
         }
       } catch (err) {
-        this.error =
-          err.message ||
-          "Fallo subiendo imagenes, por favor inténtelo de nuevo";
+        this.error = err.message || "Fallo subiendo imagenes, por favor inténtelo de nuevo";
         this.feedbackOk = 2;
-        this.feedbackMessage =
-          "Fallo subiendo imagenes, por favor inténtelo de nuevo";
+        this.feedbackMessage = "Fallo subiendo imagenes, por favor inténtelo de nuevo";
       } finally {
         this.isLoading = false;
         setTimeout(() => {
@@ -1017,35 +812,26 @@ export default {
         const picture = this.pictures.find((p) => p.pictureId === pictureId);
         const url = new URL(picture.picturePath);
         const filePath = url.pathname; // extrae el path de la url
-        const response = await this.$store.dispatch(
-          "pictures/deletePicture",
-          pictureId
-        );
+        const response = await this.$store.dispatch("pictures/deletePicture", pictureId);
         if (response && response.status >= 200 && response.status < 300) {
-          const fileResponse = await axios.delete(
-            `${process.env.VUE_APP_API_URL}/pictures/deleteFile`,
-            {
-              params: { filepath: filePath },
-            }
-          );
+          const fileResponse = await axios.delete(`${process.env.VUE_APP_API_URL}/pictures/deleteFile`, {
+            params: { filepath: filePath },
+          });
 
           if (fileResponse.status === 200) {
             this.feedbackMessage = "Imagen eliminada correctamente";
             this.feedbackOk = 1;
           } else {
             this.feedbackOk = 2;
-            this.feedbackMessage =
-              "Error eliminando imagen, por favor inténtelo de nuevo";
+            this.feedbackMessage = "Error eliminando imagen, por favor inténtelo de nuevo";
           }
         } else {
           this.feedbackOk = 2;
-          this.feedbackMessage =
-            "Error eliminando imagen, por favor inténtelo de nuevo";
+          this.feedbackMessage = "Error eliminando imagen, por favor inténtelo de nuevo";
         }
       } catch (error) {
         this.feedbackOk = 2;
-        this.feedbackMessage =
-          "Error eliminando imagen, por favor inténtelo de nuevo";
+        this.feedbackMessage = "Error eliminando imagen, por favor inténtelo de nuevo";
       }
       setTimeout(() => {
         this.feedbackMessage = "";
@@ -1121,8 +907,7 @@ export default {
           this.feedbackOk = 1;
         } catch (error) {
           this.closeEditCategoryDialog();
-          this.feedbackMessage =
-            "Error actualizando categoría, por favor inténtelo de nuevo";
+          this.feedbackMessage = "Error actualizando categoría, por favor inténtelo de nuevo";
           this.feedbackOk = 2;
         }
         setTimeout(() => {
@@ -1146,8 +931,7 @@ export default {
           // Clear the ctaegoryInput input after successful upload
           this.newCategoryName = "";
         } catch (error) {
-          this.feedbackMessage =
-            "Error añadiendo categoría, por favor inténtelo de nuevo";
+          this.feedbackMessage = "Error añadiendo categoría, por favor inténtelo de nuevo";
           this.feedbackOk = 2;
         }
         setTimeout(() => {
@@ -1155,8 +939,7 @@ export default {
           this.feedbackOk = 3;
         }, 3000);
       } else {
-        this.feedbackMessage =
-          "Por favor introduce un nombre para la categoría";
+        this.feedbackMessage = "Por favor introduce un nombre para la categoría";
         this.feedbackOk = 2;
         setTimeout(() => {
           this.feedbackMessage = "";
@@ -1178,12 +961,9 @@ export default {
      * Funcion que elimina una categoria de la base de datos y del store.
      */
     deleteCategory(categoryId) {
-      const picturesWithCategory = this.pictures.filter(
-        (picture) => picture.categoryId == categoryId
-      );
+      const picturesWithCategory = this.pictures.filter((picture) => picture.categoryId == categoryId);
       if (picturesWithCategory.length > 0) {
-        this.feedbackMessage =
-          "Hay imagenes con esta categoría, por favor eliminalas antes de eliminar la categoría";
+        this.feedbackMessage = "Hay imagenes con esta categoría, por favor eliminalas antes de eliminar la categoría";
         this.feedbackOk = 2;
         setTimeout(() => {
           this.feedbackMessage = "";
@@ -1195,8 +975,7 @@ export default {
           this.feedbackMessage = "Categoría eliminada correctamente";
           this.feedbackOk = 1;
         } catch (error) {
-          this.feedbackMessage =
-            "Error eliminando categoría, por favor inténtelo de nuevo";
+          this.feedbackMessage = "Error eliminando categoría, por favor inténtelo de nuevo";
           this.feedbackOk = 2;
         }
         setTimeout(() => {
@@ -1263,8 +1042,7 @@ export default {
           this.feedbackOk = 1;
           this.closeReplyMessage();
         } catch (error) {
-          this.feedbackMessage =
-            "Error enviando el mensaje, por favor inténtelo de nuevo";
+          this.feedbackMessage = "Error enviando el mensaje, por favor inténtelo de nuevo";
           this.feedbackOk = 2;
           this.closeReplyMessage();
         }
@@ -1297,8 +1075,7 @@ export default {
         this.feedbackMessage = "Mensaje eliminado correctamente";
         this.feedbackOk = 1;
       } catch (error) {
-        this.feedbackMessage =
-          "Error eliminando mensaje, por favor inténtelo de nuevo";
+        this.feedbackMessage = "Error eliminando mensaje, por favor inténtelo de nuevo";
         this.feedbackOk = 2;
       }
       setTimeout(() => {
@@ -1312,12 +1089,12 @@ export default {
     /**
      * Función que devuelve el nombre de la categoria a la que pertenece la reserva.
      */
-    getCategoryName(categoryId) {
-      const category = this.categories.find(
-        (category) => category.categoryId === categoryId
-      );
-      return category.categoryName;
-    },
+    // getCategoryName(categoryId) {
+    //   const category = this.categories.find(
+    //     (category) => category.categoryId === categoryId
+    //   );
+    //   return category.categoryName;
+    // },
 
     /**
      * Función que formatea la fecha y la hora de la reserva.
@@ -1372,7 +1149,7 @@ export default {
       this.openUpdateDialog = false;
       this.updatedName = "";
       this.updatedEmail = "";
-      this.updatedCategoryId = "";
+      this.updatedSesion = "";
       this.updatedLocation = "";
       this.updatedPlace = "";
       this.updatedSelectedDate = "";
@@ -1380,7 +1157,7 @@ export default {
       this.updatedMessage = "";
       this.formIsValidName = true;
       this.formIsValidEmail = true;
-      this.formIsValidCategory = true;
+      this.formIsValidSesion = true;
       this.formIsValidLocation = true;
       this.formIsValidPlace = true;
       this.formIsValidDate = true;
@@ -1402,7 +1179,7 @@ export default {
       // Validations
       this.formIsValidName = !!this.updatedName.trim();
       this.formIsValidEmail = this.isValidEmail(this.updatedEmail.trim());
-      this.formIsValidCategory = !!this.updatedCategoryId;
+      this.formIsValidSesion = !!this.updatedSesion.trim();
       this.formIsValidLocation = !!this.updatedLocation.trim();
       this.formIsValidPlace = !!this.updatedPlace.trim();
       this.formIsValidDate = !!this.updatedSelectedDate.trim();
@@ -1411,7 +1188,7 @@ export default {
       this.formIsValid =
         this.formIsValidName &&
         this.formIsValidEmail &&
-        this.formIsValidCategory &&
+        this.formIsValidSesion &&
         this.formIsValidLocation &&
         this.formIsValidPlace &&
         this.formIsValidDate &&
@@ -1425,7 +1202,7 @@ export default {
             bookingId: this.selectedBooking.bookingId,
             name: this.updatedName,
             email: this.updatedEmail,
-            categoryId: this.updatedCategoryId,
+            sesion: this.updatedSesion,
             location: this.updatedLocation,
             place: this.updatedPlace,
             selectedDate: this.updatedSelectedDate,
@@ -1433,13 +1210,11 @@ export default {
             message: this.updatedMessage,
           });
           this.closeBookingUpdateDialog();
-          this.feedbackMessage =
-            "Solicitud de reserva actualizada correctamente";
+          this.feedbackMessage = "Solicitud de reserva actualizada correctamente";
           this.feedbackOk = 1;
         } catch (error) {
           this.closeBookingUpdateDialog();
-          this.feedbackMessage =
-            "Error actualizando la solicitud de reserva, por favor inténtelo de nuevo";
+          this.feedbackMessage = "Error actualizando la solicitud de reserva, por favor inténtelo de nuevo";
           this.feedbackOk = 2;
         }
         setTimeout(() => {
@@ -1458,8 +1233,7 @@ export default {
         this.feedbackMessage = "Solicitud de reserva eliminada correctamente";
         this.feedbackOk = 1;
       } catch (error) {
-        this.feedbackMessage =
-          "Error eliminando la solicitud de reserva, por favor inténtelo de nuevo";
+        this.feedbackMessage = "Error eliminando la solicitud de reserva, por favor inténtelo de nuevo";
         this.feedbackOk = 2;
       }
       setTimeout(() => {
@@ -1521,8 +1295,8 @@ body {
   min-height: 100vh;
   box-sizing: border-box;
   padding-top: 10vh;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
-    Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande",
+    sans-serif;
   font-weight: 300;
   line-height: 1.5;
   max-width: 60rem;
@@ -1584,7 +1358,7 @@ body {
   color: #000;
 }
 
-.quote-admin p span{
+.quote-admin p span {
   color: red;
 }
 /* Dialogo Feedback */
@@ -2119,7 +1893,6 @@ tr:nth-child(even) {
   .category-select select {
     margin-left: -5%;
     width: 110%;
-
   }
 }
 /* Dialogo para editar reserva */

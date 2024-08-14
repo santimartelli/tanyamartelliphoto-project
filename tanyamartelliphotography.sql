@@ -55,8 +55,8 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 
 -- consultas --
-select * from users;
-select * from categories;
-select * from pictures;
-select * from bookings;
-select * from messages;
+-- select * from users;
+-- select * from categories;
+-- select * from pictures;
+-- select * from bookings;
+-- select * from messages;
