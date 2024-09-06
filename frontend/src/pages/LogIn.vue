@@ -183,7 +183,7 @@ export default {
       newPassword: "",
       newConfirmedPassword: "",
       newCodeVerification: "",
-      codeVerification: "uZ*S3AV6^EaAe6$JjvwwrpWP@F@7Q",
+      codeVerification: process.env.VUE_APP_CODE_VERIFICATION,
       formIsValidUsername: true, //minimo 3 caracteres
       formIsValidPassword: true, // minimo 6 caracteres
       formIsValidConfirmedPassword: true, // minimo 6 caracteres
