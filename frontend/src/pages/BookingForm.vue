@@ -18,38 +18,28 @@
     <div class="container">
       <h2><span class="highlight">Reserva tu sesión!</span></h2>
       <p>
-        ¡Gracias por tu interés en reservar una sesión de fotos conmigo! Por
-        favor, rellena el formulario con tus datos y
-        preferencias y me pondré en contacto contigo lo antes posible para
-        profundizar en los detalles.
+        ¡Gracias por tu interés en reservar una sesión de fotos conmigo! Por favor, rellena el formulario con tus datos
+        y preferencias y me pondré en contacto contigo lo antes posible para profundizar en los detalles.
       </p>
       <p>
-        No dudes en incluir cualquier información adicional o solicitudes
-        específicas que puedas tener. Quiero asegurarme de que tu sesión sea
-        perfecta y se adapte a tus preferencias y necesidades.
+        No dudes en incluir cualquier información adicional o solicitudes específicas que puedas tener. Quiero
+        asegurarme de que tu sesión sea perfecta y se adapte a tus preferencias y necesidades.
       </p>
       <p>
-        Una vez que reciba tu solicitud de reserva, revisaré el formulario y te
-        contactaré para confirmar la disponibilidad y discutir más detalles.
-        Estoy totalmente comprometida con proporcionarte una experiencia excepcional
-        para poder crear recuerdos inolvidables.
+        Una vez que reciba tu solicitud de reserva, revisaré el formulario y te contactaré para confirmar la
+        disponibilidad y discutir más detalles. Estoy totalmente comprometida con proporcionarte una experiencia
+        excepcional para poder crear recuerdos inolvidables.
       </p>
 
       <!-- Formulario de reserva de sesión -->
 
       <form @submit.prevent="submitForm">
         <input type="text" id="name" v-model="name" placeholder="Nombre" />
-        <div v-if="!formIsValidName" class="errors">
-          Por favor, introduce un nombre válido.
-        </div>
+        <div v-if="!formIsValidName" class="errors">Por favor, introduce un nombre válido.</div>
         <input type="email" id="email" v-model="email" placeholder="Email" />
-        <div v-if="!formIsValidEmail" class="errors">
-          Por favor, introduce un email válido.
-        </div>
+        <div v-if="!formIsValidEmail" class="errors">Por favor, introduce un email válido.</div>
         <select id="session" v-model="sesion">
-          <option value="" disabled selected>
-            Selecciona el tipo de sesión
-          </option>
+          <option value="" disabled selected>Selecciona el tipo de sesión</option>
           <option value="Acerca de ti">Acerca de ti</option>
           <option value="Acerca de ti plus">Acerca de ti PLUS</option>
           <option value="Mamá y bebé">Mamá y bebé</option>
@@ -61,44 +51,28 @@
           <option value="E-commerce / Moda">E-commerce / Moda</option>
           <option value="Otra">Otra (especifica en el mensaje)</option>
         </select>
-        <div v-if="!formIsValidSesion" class="errors">
-          Por favor, selecciona un tipo de sesión.
-        </div>
+        <div v-if="!formIsValidSesion" class="errors">Por favor, selecciona un tipo de sesión.</div>
         <select id="location" v-model="location">
-          <option v-if="!location" value="" disabled selected>
-            Selecciona una localidad
-          </option>
+          <option v-if="!location" value="" disabled selected>Selecciona una localidad</option>
           <option value="Barcelona">Barcelona</option>
           <option value="Girona">Girona</option>
           <option value="Lloret">Lloret de Mar</option>
           <option value="Other">Otra (especifica en el mensaje)</option>
         </select>
-        <div v-if="!formIsValidLocation" class="errors">
-          Por favor, selecciona una localidad.
-        </div>
+        <div v-if="!formIsValidLocation" class="errors">Por favor, selecciona una localidad.</div>
         <div class="envoirment">
           <p class="title">Eliga la localización:</p>
           <div class="radio-group">
             <label for="studio" class="radio-container">
               <div class="sideRadio">
-                <input
-                  type="radio"
-                  id="studio"
-                  v-model="place"
-                  value="Estudio"
-                />
+                <input type="radio" id="studio" v-model="place" value="Estudio" />
                 <span class="checkmark"></span>
                 <span class="radio-desc">En estudio</span>
               </div>
             </label>
             <label for="outdoors" class="radio-container">
               <div class="sideRadio">
-                <input
-                  type="radio"
-                  id="outdoors"
-                  v-model="place"
-                  value="Exteriores"
-                />
+                <input type="radio" id="outdoors" v-model="place" value="Exteriores" />
                 <span class="checkmark"></span>
                 <span class="radio-desc">En exteriores</span>
               </div>
@@ -112,13 +86,9 @@
             </label>
           </div>
         </div>
-        <div v-if="!formIsValidPlace" class="errors">
-          Por favor selecciona una localización.
-        </div>
+        <div v-if="!formIsValidPlace" class="errors">Por favor selecciona una localización.</div>
         <select id="date" v-model="selectedDate">
-          <option v-if="!selectedDate" value="" disabled selected>
-            Selecciona la fecha
-          </option>
+          <option v-if="!selectedDate" value="" disabled selected>Selecciona la fecha</option>
           <option v-for="date in availableDates" :value="date" :key="date">
             {{ date }}
           </option>
@@ -126,21 +96,15 @@
         </select>
         <div v-if="!formIsValidDate" class="errors">Por favor selecciona una fecha.</div>
         <select id="time" v-model="selectedTime">
-          <option v-if="!selectedTime" value="" disabled selected>
-            Selecciona una hora
-          </option>
+          <option v-if="!selectedTime" value="" disabled selected>Selecciona una hora</option>
           <option v-for="time in availableTimes" :value="time" :key="time">
             {{ time }}
           </option>
         </select>
-        <div v-if="!formIsValidTime" class="errors">
-          Por favor selecciona una hora.
-        </div>
+        <div v-if="!formIsValidTime" class="errors">Por favor selecciona una hora.</div>
         <label for="message">Mensaje </label>
         <textarea id="message" v-model="message" rows="10"></textarea>
-        <div v-if="!formIsValidMessage" class="errors">
-          Por favor introduce el mensaje.
-        </div>
+        <div v-if="!formIsValidMessage" class="errors">Por favor introduce el mensaje.</div>
         <div class="btn-container">
           <base-button @click="submitForm">Enviar</base-button>
         </div>
@@ -228,21 +192,6 @@ export default {
     };
   },
 
-  // computed: {
-  //   /**
-  //    * Devuelve las categorías ordenadas alfabéticamente por nombre.
-  //    */
-  //   sortedCategories() {
-  //     // Obtiene las categorías del store
-  //     const categories = this.$store.getters["categories/categories"];
-
-  //     // Ordena las categorías alfabetícamente por nombre
-  //     return categories.slice().sort((a, b) => {
-  //       return a.categoryName.localeCompare(b.categoryName);
-  //     });
-  //   },
-  // },
-
   methods: {
     /**
      * Calcula las fechas disponibles para reservar una sesión, jueves y domingos durante los proximos 90 días.
@@ -250,16 +199,39 @@ export default {
     calculateAvailableDates() {
       this.availableDates = [];
       const today = new Date();
-      for (let i = 0; i < 90; i++) {
-        const currentDate = new Date(today);
-        currentDate.setDate(today.getDate() + i);
-        // Check if the day is either Sunday (0) or Thursday (4)
-        if (currentDate.getDay() === 0 || currentDate.getDay() === 4) {
-          const year = currentDate.getFullYear();
-          let month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-          let day = currentDate.getDate().toString().padStart(2, "0");
-          this.availableDates.push(`${day}-${month}-${year}`);
-        }
+      // Fecha de inicio, mañana
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() + 1);
+      // Calcula 3 meses a partir de la fecha de inicio
+      const endDate = new Date(startDate);
+      endDate.setMonth(endDate.getMonth() + 3);
+      // Nombres de los días y meses
+      const dayNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+      const monthNames = [
+        "enero",
+        "febrero",
+        "marzo",
+        "abril",
+        "mayo",
+        "junio",
+        "julio",
+        "agosto",
+        "septiembre",
+        "octubre",
+        "noviembre",
+        "diciembre",
+      ];
+      // Itera sobre cada día entre la fecha de inicio y la fecha de fin y añade la fecha formateada a la lista de fechas disponibles
+      for (
+        let currentDate = new Date(startDate);
+        currentDate <= endDate;
+        currentDate.setDate(currentDate.getDate() + 1)
+      ) {
+        const dayOfWeek = dayNames[currentDate.getDay()]; // Get the day name
+        const day = currentDate.getDate(); // Get the day of the month
+        const month = monthNames[currentDate.getMonth()]; // Get the month name
+        const year = currentDate.getFullYear(); // Get the year
+        this.availableDates.push(`${dayOfWeek} ${day} de ${month} de ${year}`);
       }
     },
 
@@ -361,8 +333,7 @@ export default {
           console.log("Formulario enviado:", this.okMessage);
         } catch (error) {
           console.error("Error enviando el formulario:", error);
-          this.errorMessage =
-            "Ha ocurrido un error al enviar el formulario. Por favor, inténtalo de nuevo más tarde.";
+          this.errorMessage = "Ha ocurrido un error al enviar el formulario. Por favor, inténtalo de nuevo más tarde.";
         }
       }
     },
