@@ -68,10 +68,8 @@ exports.sendMessageConfirmationEmail = (recipentEmail, messageData) => {
     to: [
       recipentEmail,
     ],
-    bcc: [
-      process.env.EMAIL_USER,
+    bcc:
       process.env.EMAIL_SM,
-    ],
     subject: "Hemos recibido tu mensaje!",
     text: `Hola ${messageData.messageName}!\n\nGracias por contactar con nosotros, te contestaremos lo antes posible.\n\nSaludos!\n\nTatiana - Tanya Martelli Photography`,
   };
@@ -110,10 +108,7 @@ exports.sendBookingRequestConfirmationEmail = (recipentEmail, bookingData) => {
       address: process.env.EMAIL_USER,
     },
     to: recipentEmail,
-    bcc: [
-      process.env.EMAIL_USER,
-      process.env.EMAIL_SM,
-    ],
+    bcc: process.env.EMAIL_SM,
     subject: "Hemos recibido tu solicitud de reserva!",
     text: `Hola ${bookingData.name}!\n\nGracias por tu solicitud de reserva, nos pondremos en contacto contigo a la brevedad para profundizar en los detalles.\n\nSaludos!\n\nTatiana - Tanya Martelli Photography`,
   };
