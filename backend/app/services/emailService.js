@@ -20,9 +20,9 @@ const nodemailer = require("nodemailer");
  * @memberof Services/Email
  */
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  host: "smtp.gmail.com",
-  port: 465,
+  service: process.env.NODEMAILER_SERVICE,
+  host: process.env.NODEMAILER_HOST,
+  port: process.env.NODEMAILER_PORT,
   secure: true,
   auth: {
     user: process.env.EMAIL_USER,
@@ -63,12 +63,14 @@ exports.sendMessageConfirmationEmail = (recipentEmail, messageData) => {
   const mailOptions = {
     from: {
       name: "Tanya Martelli Photography",
-      address: "santimartelli@gmail.com",
+      address: process.env.EMAIL_USER,
     },
     to: [
-      "santimartelli@gmail.com",
-      "tanyamartelliphoto@gmail.com",
       recipentEmail,
+    ],
+    bcc: [
+      process.env.EMAIL_USER,
+      process.env.EMAIL_SM,
     ],
     subject: "Hemos recibido tu mensaje!",
     text: `Hola ${messageData.messageName}!\n\nGracias por contactar con nosotros, te contestaremos lo antes posible.\n\nSaludos!\n\nTatiana - Tanya Martelli Photography`,
@@ -84,9 +86,10 @@ exports.sendMessageNotificationEmail = (messageData) => {
   const mailOptions = {
     from: {
       name: "Tanya Martelli Photography",
-      address: "santimartelli@gmail.com",
+      address: process.env.EMAIL_USER,
     },
-    to: ["santimartelli@gmail.com", "tanyamartelliphoto@gmail.com"],
+    to: process.env.EMAIL_USER,
+    bcc: process.env.EMAIL_SM,
     subject:
       "Tanya Martelli Photography - Nuevo mensaje de: " +
       messageData.messageName,
@@ -100,13 +103,17 @@ exports.sendMessageNotificationEmail = (messageData) => {
  * @param {string[]} to - Las direcciones donde se enviará el email.
  * @param {object} bookingData - Los datos de la solicitud de reserva.
  */
-exports.sendBookingRequestConfirmationEmail = (to, bookingData) => {
+exports.sendBookingRequestConfirmationEmail = (recipentEmail, bookingData) => {
   const mailOptions = {
     from: {
       name: "Tanya Martelli Photography",
-      address: "santimartelli@gmail.com",
+      address: process.env.EMAIL_USER,
     },
-    to: to,
+    to: recipentEmail,
+    bcc: [
+      process.env.EMAIL_USER,
+      process.env.EMAIL_SM,
+    ],
     subject: "Hemos recibido tu solicitud de reserva!",
     text: `Hola ${bookingData.name}!\n\nGracias por tu solicitud de reserva, nos pondremos en contacto contigo a la brevedad para profundizar en los detalles.\n\nSaludos!\n\nTatiana - Tanya Martelli Photography`,
   };
@@ -121,9 +128,10 @@ exports.sendBookingRequestNotificationEmail = (bookingData) => {
   const mailOptions = {
     from: {
       name: "Tanya Martelli Photography",
-      address: "santimartelli@gmail.com",
+      address: process.env.EMAIL_USER,
     },
-    to: ["santimartelli@gmail.com", "tanyamartelliphoto@gmail.com"],
+    to: process.env.EMAIL_USER,
+    bcc: process.env.EMAIL_SM,
     subject:
       "Tanya Martelli Photography - New booking request received from " +
       bookingData.name,
@@ -137,13 +145,13 @@ exports.sendBookingRequestNotificationEmail = (bookingData) => {
  * @param {string[]} to - Las direcciones donde se enviará el email.
  * @param {object} messageData - Los datos del mensaje.
  */
-exports.replyEmail = (to, messageData) => {
+exports.replyEmail = (recipentEmail, messageData) => {
   const mailOptions = {
     from: {
       name: "Tanya Martelli Photography",
-      address: "santimartelli@gmail.com",
+      address: process.env.EMAIL_USER,
     },
-    to: to,
+    to: recipentEmail,
     subject: `Hola, ${messageData.name}!`,
     text: `${messageData.message}\n\nSaludos!\n\nTatiana - Tanya Martelli Photography\n\n\n***Esta es una respuesta al mensaje de abajo***\n\n${messageData.name}\n${messageData.email}\n${messageData.messageContent}`,
   };
