@@ -5,6 +5,7 @@
 
 const MessageModel = require("../models/message.model.js");
 const emailService = require("../services/emailService.js");
+const whatsappService = require("../services/whatsappService.js");
 
 /**
  * Crea un nuevo mensaje.
@@ -34,13 +35,19 @@ exports.create = (req, res) => {
           err.message || "Some error occurred while creating the message.",
       });
     } else {
-      // Enviar email de confirmación al usuario y notificación al administrador
-      // No esperamos por los emails para no bloquear la respuesta al usuario
+      // Enviar notificaciones (email y WhatsApp) al administrador y confirmación al usuario
+      // No esperamos por las notificaciones para no bloquear la respuesta al usuario
+
+      // Email notifications
       emailService.sendMessageConfirmationEmail(req.body.messageEmail, req.body)
         .catch(emailErr => console.error("Failed to send confirmation email:", emailErr));
 
       emailService.sendMessageNotificationEmail(req.body)
         .catch(emailErr => console.error("Failed to send notification email:", emailErr));
+
+      // WhatsApp notification to admin
+      whatsappService.sendMessageNotificationWhatsApp(req.body)
+        .catch(whatsappErr => console.error("Failed to send WhatsApp notification:", whatsappErr));
 
       res.send(data);
     }

@@ -12,6 +12,7 @@ module.exports = (app) => {
    * @requires express
    */
   const emailService = require("../services/emailService.js");
+  const whatsappService = require("../services/whatsappService.js");
   var router = require("express").Router();
 
   /**
@@ -51,21 +52,23 @@ module.exports = (app) => {
   });
 
   /**
-   * Test endpoint for email functionality - FOR DEBUGGING ONLY
+   * Test endpoint for email and WhatsApp functionality - FOR DEBUGGING ONLY
    * @name post/api/email/test
    * @function
    * @memberof module:Routes/Email
    */
   router.post("/test", async (req, res) => {
-    console.log("Email test endpoint called:", req.body);
+    console.log("Notification test endpoint called:", req.body);
 
     const testEmail = req.body.email || process.env.EMAIL_SM;
+    const testPhone = req.body.phone || process.env.WHATSAPP_ADMIN_NUMBER;
     const testType = req.body.type || "message";
+    const includeWhatsApp = req.body.whatsapp !== false; // Default to true unless explicitly disabled
 
     if (!testEmail) {
       res.status(400).send({
         message: "Email address required for testing",
-        usage: "POST /api/email/test with { email: 'test@example.com', type: 'message|booking' }"
+        usage: "POST /api/email/test with { email: 'test@example.com', phone: '+34123456789', type: 'message|booking', whatsapp: true }"
       });
       return;
     }
@@ -85,15 +88,25 @@ module.exports = (app) => {
           message: "This is a test booking message"
         };
 
-        const [confirmResult, notifyResult] = await Promise.allSettled([
+        const promises = [
           emailService.sendBookingRequestConfirmationEmail(testEmail, testBookingData),
           emailService.sendBookingRequestNotificationEmail(testBookingData)
-        ]);
+        ];
+
+        if (includeWhatsApp && testPhone) {
+          promises.push(whatsappService.sendBookingNotificationWhatsApp(testBookingData));
+        }
+
+        const results = await Promise.allSettled(promises);
 
         result = {
-          confirmationEmail: confirmResult.status === "fulfilled" ? confirmResult.value : { error: confirmResult.reason },
-          notificationEmail: notifyResult.status === "fulfilled" ? notifyResult.value : { error: notifyResult.reason }
+          confirmationEmail: results[0].status === "fulfilled" ? results[0].value : { error: results[0].reason },
+          notificationEmail: results[1].status === "fulfilled" ? results[1].value : { error: results[1].reason }
         };
+
+        if (includeWhatsApp && testPhone) {
+          result.whatsappNotification = results[2].status === "fulfilled" ? results[2].value : { error: results[2].reason };
+        }
       } else {
         const testMessageData = {
           messageName: "Test User",
@@ -101,30 +114,44 @@ module.exports = (app) => {
           messageContent: "This is a test message content"
         };
 
-        const [confirmResult, notifyResult] = await Promise.allSettled([
+        const promises = [
           emailService.sendMessageConfirmationEmail(testEmail, testMessageData),
           emailService.sendMessageNotificationEmail(testMessageData)
-        ]);
+        ];
+
+        if (includeWhatsApp && testPhone) {
+          promises.push(whatsappService.sendMessageNotificationWhatsApp(testMessageData));
+        }
+
+        const results = await Promise.allSettled(promises);
 
         result = {
-          confirmationEmail: confirmResult.status === "fulfilled" ? confirmResult.value : { error: confirmResult.reason },
-          notificationEmail: notifyResult.status === "fulfilled" ? notifyResult.value : { error: notifyResult.reason }
+          confirmationEmail: results[0].status === "fulfilled" ? results[0].value : { error: results[0].reason },
+          notificationEmail: results[1].status === "fulfilled" ? results[1].value : { error: results[1].reason }
         };
+
+        if (includeWhatsApp && testPhone) {
+          result.whatsappNotification = results[2].status === "fulfilled" ? results[2].value : { error: results[2].reason };
+        }
       }
 
       res.status(200).send({
-        message: "Email test completed",
+        message: "Notification test completed",
         testType,
         testEmail,
+        testPhone: includeWhatsApp ? testPhone : "disabled",
+        whatsappEnabled: includeWhatsApp,
+        whatsappStatus: whatsappService.getWhatsAppStatus(),
         results: result,
         timestamp: new Date().toISOString()
       });
 
     } catch (error) {
-      console.error("Email test error:", error);
+      console.error("Notification test error:", error);
       res.status(500).send({
-        message: "Email test failed",
+        message: "Notification test failed",
         error: error.message,
+        whatsappStatus: whatsappService.getWhatsAppStatus(),
         timestamp: new Date().toISOString()
       });
     }

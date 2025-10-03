@@ -5,10 +5,11 @@
 
 const BookingModel = require("../models/booking.model.js");
 const emailService = require("../services/emailService.js");
+const whatsappService = require("../services/whatsappService.js");
 
 /**
- * Crea una nueva solicitud de reserva, la guarda en la base de datos, envía un email de confirmación al usuario y
- * un email de notificación al administrador.
+ * Crea una nueva solicitud de reserva, la guarda en la base de datos, envía un email de confirmación al usuario,
+ * un email de notificación al administrador y una notificación de WhatsApp al administrador.
  * @param {Object} req - El objeto de solicitud HTTP.
  * @param {Object} res - El objeto de respuesta HTTP.
  */
@@ -43,13 +44,19 @@ exports.create = (req, res) => {
           err.message || "Some error occurred while creating the booking.",
       });
     } else {
-      // Enviar email de confirmación al usuario y notificación al administrador
-      // No esperamos por los emails para no bloquear la respuesta al usuario
+      // Enviar notificaciones (email y WhatsApp) al administrador y confirmación al usuario
+      // No esperamos por las notificaciones para no bloquear la respuesta al usuario
+
+      // Email notifications
       emailService.sendBookingRequestConfirmationEmail(req.body.email, req.body)
         .catch(emailErr => console.error("Failed to send booking confirmation email:", emailErr));
 
       emailService.sendBookingRequestNotificationEmail(req.body)
         .catch(emailErr => console.error("Failed to send booking notification email:", emailErr));
+
+      // WhatsApp notification to admin
+      whatsappService.sendBookingNotificationWhatsApp(req.body)
+        .catch(whatsappErr => console.error("Failed to send booking WhatsApp notification:", whatsappErr));
 
       res.send(data);
     }
