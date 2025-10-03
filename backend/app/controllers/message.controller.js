@@ -27,17 +27,21 @@ exports.create = (req, res) => {
     messageContent: req.body.messageContent,
   });
 
-  MessageModel.create(newMessage, (err, data) => {
+  MessageModel.create(newMessage, async (err, data) => {
     if (err) {
       res.status(500).send({
         message:
           err.message || "Some error occurred while creating the message.",
       });
     } else {
-      // Enviar email de confirmación al usuario
-      emailService.sendMessageConfirmationEmail(req.body.messageEmail, req.body);
-      // Enviar email de notificación al administrador
-      emailService.sendMessageNotificationEmail(req.body);
+      // Enviar email de confirmación al usuario y notificación al administrador
+      // No esperamos por los emails para no bloquear la respuesta al usuario
+      emailService.sendMessageConfirmationEmail(req.body.messageEmail, req.body)
+        .catch(emailErr => console.error("Failed to send confirmation email:", emailErr));
+
+      emailService.sendMessageNotificationEmail(req.body)
+        .catch(emailErr => console.error("Failed to send notification email:", emailErr));
+
       res.send(data);
     }
   });

@@ -36,20 +36,21 @@ exports.create = (req, res) => {
     selectedTime: req.body.selectedTime,
     message: req.body.message,
   });
-  BookingModel.create(newBooking, (err, data) => {
+  BookingModel.create(newBooking, async (err, data) => {
     if (err) {
       res.status(500).send({
         message:
           err.message || "Some error occurred while creating the booking.",
       });
     } else {
-      // Enviar email de confirmación al usuario
-      emailService.sendBookingRequestConfirmationEmail(
-        req.body.email,
-        req.body
-      );
-      // Enviar email de notificación al administrador
-      emailService.sendBookingRequestNotificationEmail(req.body);
+      // Enviar email de confirmación al usuario y notificación al administrador
+      // No esperamos por los emails para no bloquear la respuesta al usuario
+      emailService.sendBookingRequestConfirmationEmail(req.body.email, req.body)
+        .catch(emailErr => console.error("Failed to send booking confirmation email:", emailErr));
+
+      emailService.sendBookingRequestNotificationEmail(req.body)
+        .catch(emailErr => console.error("Failed to send booking notification email:", emailErr));
+
       res.send(data);
     }
   });

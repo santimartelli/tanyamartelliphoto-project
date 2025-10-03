@@ -7,6 +7,49 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 
 /**
+ * Valida si un email tiene un formato válido.
+ * @param {string} email - La dirección de email a validar.
+ * @returns {boolean} - True si el email es válido, false en caso contrario.
+ */
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+/**
+ * Genera un ID único para trackear requests de email.
+ * @returns {string} - ID único para el request.
+ */
+const generateRequestId = () => {
+  return `email_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+};
+
+/**
+ * Logger mejorado para emails con timestamps y request tracking.
+ * @param {string} level - Nivel del log (INFO, ERROR, WARN).
+ * @param {string} message - Mensaje a loggear.
+ * @param {string} requestId - ID del request para tracking.
+ * @param {object} data - Datos adicionales para loggear.
+ */
+const logEmail = (level, message, requestId, data = {}) => {
+  const timestamp = new Date().toISOString();
+  const logEntry = {
+    timestamp,
+    level,
+    service: "EmailService",
+    requestId,
+    message,
+    ...data
+  };
+
+  if (level === "ERROR") {
+    console.error(`[${timestamp}] [${level}] [EmailService] [${requestId}] ${message}`, data);
+  } else {
+    console.log(`[${timestamp}] [${level}] [EmailService] [${requestId}] ${message}`, data);
+  }
+};
+
+/**
  * Crea el transportador de emails con los datos de autenticación.
  * @type {object}
  * @const
@@ -41,33 +84,95 @@ const transporter = nodemailer.createTransport({
  * @param {string} mailOptions.subject - El asunto del email.
  * @param {string} mailOptions.text - El contenido del email.
  * @param {number} [retryCount=0] - Número de intentos realizados para enviar el email.
+ * @param {string} [requestId] - ID del request para tracking.
  * @memberof Services/Email
- * @returns {Promise<string>} - Devuelve una promesa con la respuesta del servidor.
+ * @returns {Promise<object>} - Devuelve una promesa con la respuesta del servidor y status.
  */
-const sendEmail = async (mailOptions, retryCount = 0) => {
+const sendEmail = async (mailOptions, retryCount = 0, requestId = null) => {
   const MAX_RETRIES = 3;
+  const reqId = requestId || generateRequestId();
+
+  // Validar emails antes de enviar
+  const recipients = Array.isArray(mailOptions.to) ? mailOptions.to : [mailOptions.to];
+  const invalidEmails = recipients.filter(email => !isValidEmail(email));
+
+  if (invalidEmails.length > 0) {
+    logEmail("ERROR", "Email validation failed", reqId, {
+      invalidEmails,
+      subject: mailOptions.subject
+    });
+    return {
+      success: false,
+      error: "Invalid email addresses",
+      details: invalidEmails,
+      requestId: reqId
+    };
+  }
+
+  logEmail("INFO", "Attempting to send email", reqId, {
+    to: mailOptions.to,
+    subject: mailOptions.subject,
+    attempt: retryCount + 1
+  });
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("Email enviado:", info.response);
-    return info.response;
+    logEmail("INFO", "Email sent successfully", reqId, {
+      to: mailOptions.to,
+      subject: mailOptions.subject,
+      messageId: info.messageId,
+      response: info.response
+    });
+
+    return {
+      success: true,
+      response: info.response,
+      messageId: info.messageId,
+      requestId: reqId
+    };
   } catch (error) {
-    console.error(`Error enviando email (intento ${retryCount + 1}/${MAX_RETRIES + 1}):`, error);
+    logEmail("ERROR", `Email sending failed (attempt ${retryCount + 1}/${MAX_RETRIES + 1})`, reqId, {
+      to: mailOptions.to,
+      subject: mailOptions.subject,
+      errorCode: error.code,
+      errorMessage: error.message,
+      stack: error.stack
+    });
 
     // Retry logic for transient errors like connection timeouts
     if (
       retryCount < MAX_RETRIES &&
-      (error.code === "ETIMEDOUT" || error.code === "ECONNRESET" || error.code === "ECONNREFUSED")
+      (error.code === "ETIMEDOUT" || error.code === "ECONNRESET" || error.code === "ECONNREFUSED" || error.code === "ESOCKET")
     ) {
-      console.log(`Reintentando envío de email en 2 segundos...`);
+      logEmail("WARN", `Retrying email send in 2 seconds`, reqId, {
+        nextAttempt: retryCount + 2,
+        errorCode: error.code
+      });
+
       // Wait for 2 seconds before retrying
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      return sendEmail(mailOptions, retryCount + 1);
+      return sendEmail(mailOptions, retryCount + 1, reqId);
     }
 
-    // Log the error but don't reject the promise to prevent app crashes
-    console.error("Fallo definitivo al enviar email:", error);
-    return "Email sending failed, but operation continued";
+    // Final failure - log critical error for admin attention
+    logEmail("ERROR", "CRITICAL: Email sending failed definitively - ADMIN ATTENTION REQUIRED", reqId, {
+      to: mailOptions.to,
+      subject: mailOptions.subject,
+      finalErrorCode: error.code,
+      finalErrorMessage: error.message,
+      totalAttempts: retryCount + 1,
+      adminEmail: process.env.EMAIL_SM
+    });
+
+    // Return failure but don't throw to prevent app crashes
+    return {
+      success: false,
+      error: "Email sending failed after all retries",
+      errorCode: error.code,
+      errorMessage: error.message,
+      requestId: reqId,
+      attempts: retryCount + 1
+    };
   }
 };
 
@@ -77,23 +182,42 @@ const sendEmail = async (mailOptions, retryCount = 0) => {
  * @param {object} messageData - Los datos del mensaje.
  * @returns {Promise} - Promesa que se resuelve cuando se intenta enviar el email.
  */
-exports.sendMessageConfirmationEmail = (recipentEmail, messageData) => {
+exports.sendMessageConfirmationEmail = async (recipentEmail, messageData) => {
+  const requestId = generateRequestId();
+
+  logEmail("INFO", "Starting message confirmation email", requestId, {
+    recipient: recipentEmail,
+    senderName: messageData.messageName
+  });
+
   const mailOptions = {
     from: {
       name: "Tanya Martelli Photography",
       address: process.env.EMAIL_USER,
     },
-    to: [recipentEmail],
+    to: recipentEmail,
     bcc: process.env.EMAIL_SM,
     subject: "Hemos recibido tu mensaje!",
     text: `Hola ${messageData.messageName}!\n\nGracias por contactar con nosotros, te contestaremos lo antes posible.\n\nSaludos!\n\nTatiana - Tanya Martelli Photography`,
   };
-  // Return promise but don't wait for it - non-blocking
-  return sendEmail(mailOptions).catch((err) => {
-    console.error("Error en sendMessageConfirmationEmail:", err);
-    // Prevent unhandled promise rejection
-    return null;
-  });
+
+  try {
+    const result = await sendEmail(mailOptions, 0, requestId);
+    if (!result.success) {
+      logEmail("ERROR", "Message confirmation email failed", requestId, result);
+    }
+    return result;
+  } catch (err) {
+    logEmail("ERROR", "Unexpected error in sendMessageConfirmationEmail", requestId, {
+      error: err.message,
+      stack: err.stack
+    });
+    return {
+      success: false,
+      error: "Unexpected error occurred",
+      requestId
+    };
+  }
 };
 
 /**
@@ -101,7 +225,15 @@ exports.sendMessageConfirmationEmail = (recipentEmail, messageData) => {
  * @param {object} messageData - Los datos del mensaje.
  * @returns {Promise} - Promesa que se resuelve cuando se intenta enviar el email.
  */
-exports.sendMessageNotificationEmail = (messageData) => {
+exports.sendMessageNotificationEmail = async (messageData) => {
+  const requestId = generateRequestId();
+
+  logEmail("INFO", "Starting message notification email to admin", requestId, {
+    senderName: messageData.messageName,
+    senderEmail: messageData.messageEmail,
+    admin: process.env.EMAIL_USER
+  });
+
   const mailOptions = {
     from: {
       name: "Tanya Martelli Photography",
@@ -112,10 +244,24 @@ exports.sendMessageNotificationEmail = (messageData) => {
     subject: "Tanya Martelli Photography - Nuevo mensaje de: " + messageData.messageName,
     text: `Has recibido un nuevo mensaje de ${messageData.messageName} (${messageData.messageEmail}):\n\n${messageData.messageContent}`,
   };
-  return sendEmail(mailOptions).catch((err) => {
-    console.error("Error en sendMessageNotificationEmail:", err);
-    return null;
-  });
+
+  try {
+    const result = await sendEmail(mailOptions, 0, requestId);
+    if (!result.success) {
+      logEmail("ERROR", "Message notification email to admin failed", requestId, result);
+    }
+    return result;
+  } catch (err) {
+    logEmail("ERROR", "Unexpected error in sendMessageNotificationEmail", requestId, {
+      error: err.message,
+      stack: err.stack
+    });
+    return {
+      success: false,
+      error: "Unexpected error occurred",
+      requestId
+    };
+  }
 };
 
 /**
@@ -124,7 +270,16 @@ exports.sendMessageNotificationEmail = (messageData) => {
  * @param {object} bookingData - Los datos de la solicitud de reserva.
  * @returns {Promise} - Promesa que se resuelve cuando se intenta enviar el email.
  */
-exports.sendBookingRequestConfirmationEmail = (recipentEmail, bookingData) => {
+exports.sendBookingRequestConfirmationEmail = async (recipentEmail, bookingData) => {
+  const requestId = generateRequestId();
+
+  logEmail("INFO", "Starting booking request confirmation email", requestId, {
+    recipient: recipentEmail,
+    clientName: bookingData.name,
+    sessionType: bookingData.sesion,
+    date: bookingData.selectedDate
+  });
+
   const mailOptions = {
     from: {
       name: "Tanya Martelli Photography",
@@ -135,10 +290,24 @@ exports.sendBookingRequestConfirmationEmail = (recipentEmail, bookingData) => {
     subject: "Hemos recibido tu solicitud de reserva!",
     text: `Hola ${bookingData.name}!\n\nGracias por tu solicitud de reserva, nos pondremos en contacto contigo a la brevedad para profundizar en los detalles.\n\nSaludos!\n\nTatiana - Tanya Martelli Photography`,
   };
-  return sendEmail(mailOptions).catch((err) => {
-    console.error("Error en sendBookingRequestConfirmationEmail:", err);
-    return null;
-  });
+
+  try {
+    const result = await sendEmail(mailOptions, 0, requestId);
+    if (!result.success) {
+      logEmail("ERROR", "Booking request confirmation email failed", requestId, result);
+    }
+    return result;
+  } catch (err) {
+    logEmail("ERROR", "Unexpected error in sendBookingRequestConfirmationEmail", requestId, {
+      error: err.message,
+      stack: err.stack
+    });
+    return {
+      success: false,
+      error: "Unexpected error occurred",
+      requestId
+    };
+  }
 };
 
 /**
@@ -146,7 +315,17 @@ exports.sendBookingRequestConfirmationEmail = (recipentEmail, bookingData) => {
  * @param {object} bookingData - Los datos de la solicitud de reserva.
  * @returns {Promise} - Promesa que se resuelve cuando se intenta enviar el email.
  */
-exports.sendBookingRequestNotificationEmail = (bookingData) => {
+exports.sendBookingRequestNotificationEmail = async (bookingData) => {
+  const requestId = generateRequestId();
+
+  logEmail("INFO", "Starting booking request notification email to admin", requestId, {
+    clientName: bookingData.name,
+    clientEmail: bookingData.email,
+    sessionType: bookingData.sesion,
+    date: bookingData.selectedDate,
+    admin: process.env.EMAIL_USER
+  });
+
   const mailOptions = {
     from: {
       name: "Tanya Martelli Photography",
@@ -157,10 +336,24 @@ exports.sendBookingRequestNotificationEmail = (bookingData) => {
     subject: "Tanya Martelli Photography - New booking request received from " + bookingData.name,
     text: `Has recibido una nueva solicitud de reserva, los detalles son los siguientes:\n\nNombre: ${bookingData.name}\nEmail: ${bookingData.email}\nTipo de sesión: ${bookingData.sesion}\nLocalidad: ${bookingData.location}\nLocalización: ${bookingData.place}\nFecha: ${bookingData.selectedDate}\nHora: ${bookingData.selectedTime}\n\nMensaje: ${bookingData.message}`,
   };
-  return sendEmail(mailOptions).catch((err) => {
-    console.error("Error en sendBookingRequestNotificationEmail:", err);
-    return null;
-  });
+
+  try {
+    const result = await sendEmail(mailOptions, 0, requestId);
+    if (!result.success) {
+      logEmail("ERROR", "Booking request notification email to admin failed", requestId, result);
+    }
+    return result;
+  } catch (err) {
+    logEmail("ERROR", "Unexpected error in sendBookingRequestNotificationEmail", requestId, {
+      error: err.message,
+      stack: err.stack
+    });
+    return {
+      success: false,
+      error: "Unexpected error occurred",
+      requestId
+    };
+  }
 };
 
 /**
@@ -169,7 +362,14 @@ exports.sendBookingRequestNotificationEmail = (bookingData) => {
  * @param {object} messageData - Los datos del mensaje.
  * @returns {Promise} - Promesa que se resuelve cuando se intenta enviar el email.
  */
-exports.replyEmail = (recipentEmail, messageData) => {
+exports.replyEmail = async (recipentEmail, messageData) => {
+  const requestId = generateRequestId();
+
+  logEmail("INFO", "Starting reply email", requestId, {
+    recipient: recipentEmail,
+    originalSender: messageData.name
+  });
+
   const mailOptions = {
     from: {
       name: "Tanya Martelli Photography",
@@ -179,8 +379,22 @@ exports.replyEmail = (recipentEmail, messageData) => {
     subject: `Hola, ${messageData.name}!`,
     text: `${messageData.message}\n\nSaludos!\n\nTatiana - Tanya Martelli Photography\n\n\n***Esta es una respuesta al mensaje de abajo***\n\n${messageData.name}\n${messageData.email}\n${messageData.messageContent}`,
   };
-  return sendEmail(mailOptions).catch((err) => {
-    console.error("Error en replyEmail:", err);
-    return null;
-  });
+
+  try {
+    const result = await sendEmail(mailOptions, 0, requestId);
+    if (!result.success) {
+      logEmail("ERROR", "Reply email failed", requestId, result);
+    }
+    return result;
+  } catch (err) {
+    logEmail("ERROR", "Unexpected error in replyEmail", requestId, {
+      error: err.message,
+      stack: err.stack
+    });
+    return {
+      success: false,
+      error: "Unexpected error occurred",
+      requestId
+    };
+  }
 };
