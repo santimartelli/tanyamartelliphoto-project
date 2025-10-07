@@ -62,18 +62,36 @@ const logEmail = (level, message, requestId, data = {}) => {
  * @property {string} auth.pass - La contraseña del usuario del email.
  * @memberof Services/Email
  */
+const smtpPort = parseInt(process.env.NODEMAILER_PORT, 10) || 587;
+const explicitSecure = process.env.NODEMAILER_SECURE;
+const useSecure = typeof explicitSecure === "string"
+  ? explicitSecure.toLowerCase() === "true"
+  : smtpPort === 465;
+
 const transporter = nodemailer.createTransport({
   service: process.env.NODEMAILER_SERVICE,
   host: process.env.NODEMAILER_HOST,
-  port: process.env.NODEMAILER_PORT,
-  secure: true,
+  port: smtpPort,
+  secure: useSecure,
+  requireTLS: !useSecure,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: process.env.NODEMAILER_TLS_REJECT_UNAUTHORIZED !== "false"
+  },
   // Adding timeout option to prevent hanging connections
   connectionTimeout: 10000, // 10 seconds
   greetingTimeout: 10000,
+});
+
+logEmail("INFO", "Email transporter configured", generateRequestId(), {
+  host: process.env.NODEMAILER_HOST,
+  service: process.env.NODEMAILER_SERVICE,
+  port: smtpPort,
+  secure: useSecure,
+  requireTLS: !useSecure
 });
 
 /**
