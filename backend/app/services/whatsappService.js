@@ -85,7 +85,7 @@ const getPuppeteerOptions = (requestId) => {
   }
 
   return {
-    headless: true,
+    headless: 'new',
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -197,7 +197,7 @@ const initializeClient = () => {
 
     client = new Client({
       authStrategy: new LocalAuth({
-        name: LOCAL_AUTH_NAME
+        clientId: LOCAL_AUTH_NAME
       }),
       puppeteer: puppeteerOptions
     });
