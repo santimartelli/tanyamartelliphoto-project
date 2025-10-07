@@ -6,6 +6,8 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
+const EMAIL_ENABLED = process.env.EMAIL_ENABLED === "true";
+
 /**
  * Valida si un email tiene un formato válido.
  * @param {string} email - La dirección de email a validar.
@@ -68,31 +70,37 @@ const useSecure = typeof explicitSecure === "string"
   ? explicitSecure.toLowerCase() === "true"
   : smtpPort === 465;
 
-const transporter = nodemailer.createTransport({
-  service: process.env.NODEMAILER_SERVICE,
-  host: process.env.NODEMAILER_HOST,
-  port: smtpPort,
-  secure: useSecure,
-  requireTLS: !useSecure,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: process.env.NODEMAILER_TLS_REJECT_UNAUTHORIZED !== "false"
-  },
-  // Adding timeout option to prevent hanging connections
-  connectionTimeout: 10000, // 10 seconds
-  greetingTimeout: 10000,
-});
+let transporter = null;
 
-logEmail("INFO", "Email transporter configured", generateRequestId(), {
-  host: process.env.NODEMAILER_HOST,
-  service: process.env.NODEMAILER_SERVICE,
-  port: smtpPort,
-  secure: useSecure,
-  requireTLS: !useSecure
-});
+if (EMAIL_ENABLED) {
+  transporter = nodemailer.createTransport({
+    service: process.env.NODEMAILER_SERVICE,
+    host: process.env.NODEMAILER_HOST,
+    port: smtpPort,
+    secure: useSecure,
+    requireTLS: !useSecure,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+    tls: {
+      rejectUnauthorized: process.env.NODEMAILER_TLS_REJECT_UNAUTHORIZED !== "false"
+    },
+    // Adding timeout option to prevent hanging connections
+    connectionTimeout: 10000, // 10 seconds
+    greetingTimeout: 10000,
+  });
+
+  logEmail("INFO", "Email transporter configured", generateRequestId(), {
+    host: process.env.NODEMAILER_HOST,
+    service: process.env.NODEMAILER_SERVICE,
+    port: smtpPort,
+    secure: useSecure,
+    requireTLS: !useSecure
+  });
+} else {
+  logEmail("WARN", "Email service disabled, skipping SMTP transporter setup", generateRequestId());
+}
 
 /**
  * Envia un email con los datos especificados.
@@ -123,6 +131,19 @@ const sendEmail = async (mailOptions, retryCount = 0, requestId = null) => {
       success: false,
       error: "Invalid email addresses",
       details: invalidEmails,
+      requestId: reqId
+    };
+  }
+
+  if (!EMAIL_ENABLED) {
+    logEmail("INFO", "Email send skipped because email service is disabled", reqId, {
+      to: mailOptions.to,
+      subject: mailOptions.subject
+    });
+    return {
+      success: true,
+      skipped: true,
+      reason: "Email service disabled",
       requestId: reqId
     };
   }

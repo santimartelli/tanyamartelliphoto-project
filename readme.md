@@ -33,3 +33,8 @@ https://tanyamartelli.com
 - Abre WhatsApp en tu móvil, ve a Dispositivos vinculados y escanea el QR para autorizar los envíos automáticos.
 - La autenticación se almacena bajo `backend/.wwebjs_auth`, por lo que se conservará entre reinicios siempre que el volumen esté montado.
 - Si el log muestra `The profile appears to be in use`, borra el archivo `backend/.wwebjs_auth/session-tanya-martelli-photo/Default/SingletonLock` antes de reiniciar el backend.
+
+## Email Service
+
+- El servicio de correo está deshabilitado por defecto para evitar los errores `ETIMEDOUT` de Gmail.
+- Cuando dispongas de un proveedor SMTP alternativo, establece `EMAIL_ENABLED=true` y las credenciales necesarias en las variables de entorno antes de reiniciar el backend.
