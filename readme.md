@@ -25,3 +25,10 @@ Este proyecto es una aplicación web desarrollada para Tanya Martelli, una fotó
 ## Web del proyecto
 
 https://tanyamartelli.com
+
+## WhatsApp Notifications
+
+- Ejecuta `docker-compose up backend` (o `npm start` en `backend/`) y observa los logs del servicio.
+- La primera vez verás en consola el mensaje `SCAN THE QR CODE...` seguido del código QR para vincular WhatsApp.
+- Abre WhatsApp en tu móvil, ve a Dispositivos vinculados y escanea el QR para autorizar los envíos automáticos.
+- La autenticación se almacena bajo `backend/.wwebjs_auth`, por lo que se conservará entre reinicios siempre que el volumen esté montado.

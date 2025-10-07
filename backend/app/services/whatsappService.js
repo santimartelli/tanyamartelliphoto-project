@@ -6,6 +6,7 @@
 require("dotenv").config();
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+const fs = require('fs');
 
 /**
  * Cliente de WhatsApp Web.js con autenticación local.
@@ -47,6 +48,54 @@ const logWhatsApp = (level, message, requestId, data = {}) => {
   } else {
     console.log(`[${timestamp}] [${level}] [WhatsAppService] [${requestId}] ${message}`, data);
   }
+};
+
+/**
+ * Devuelve la configuración de Puppeteer asegurando que existe un ejecutable válido.
+ * @param {string} requestId - ID del request para logging.
+ * @returns {object} Configuración de Puppeteer.
+ */
+const getPuppeteerOptions = (requestId) => {
+  const candidatePaths = [
+    process.env.PUPPETEER_EXECUTABLE_PATH,
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable'
+  ];
+
+  let executablePath = null;
+  for (const candidate of candidatePaths) {
+    if (candidate && fs.existsSync(candidate)) {
+      executablePath = candidate;
+      break;
+    }
+  }
+
+  if (executablePath) {
+    logWhatsApp("INFO", "Using Chromium executable for WhatsApp client", requestId, {
+      executablePath
+    });
+  } else {
+    logWhatsApp("WARN", "Chromium executable not found in expected locations; falling back to Puppeteer's bundled binary", requestId, {
+      candidatePaths: candidatePaths.filter(Boolean)
+    });
+  }
+
+  return {
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--disable-background-networking',
+      '--no-first-run',
+      '--no-zygote',
+      '--disable-gpu'
+    ],
+    ...(executablePath ? { executablePath } : {})
+  };
 };
 
 /**
@@ -97,24 +146,13 @@ const initializeClient = () => {
 
     isInitializing = true;
 
+    const puppeteerOptions = getPuppeteerOptions(initRequestId);
+
     client = new Client({
       authStrategy: new LocalAuth({
         name: "tanya-martelli-photo"
       }),
-      puppeteer: {
-        headless: true,
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote',
-          '--single-process',
-          '--disable-gpu'
-        ]
-      }
+      puppeteer: puppeteerOptions
     });
 
     client.on('qr', (qr) => {
