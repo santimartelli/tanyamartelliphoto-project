@@ -106,12 +106,20 @@ const getPuppeteerOptions = (requestId) => {
  */
 const releaseChromiumProfileLock = (requestId) => {
   const authBasePath = process.env.WWEBJS_AUTH_PATH || path.join(process.cwd(), '.wwebjs_auth');
-  const sessionPath = path.join(authBasePath, `session-${LOCAL_AUTH_NAME}`);
-
-  const lockCandidates = [
-    path.join(sessionPath, 'Default', 'SingletonLock'),
-    path.join(sessionPath, 'SingletonLock')
+  const sessionCandidates = [
+    path.join(authBasePath, `session-${LOCAL_AUTH_NAME}`),
+    path.join(authBasePath, 'session') // Legacy default folder created before custom name was set
   ];
+
+  const lockCandidates = [];
+  sessionCandidates.forEach((sessionPath) => {
+    lockCandidates.push(
+      path.join(sessionPath, 'Default', 'SingletonLock'),
+      path.join(sessionPath, 'Default', 'SingletonSocket'),
+      path.join(sessionPath, 'SingletonLock'),
+      path.join(sessionPath, 'SingletonSocket')
+    );
+  });
 
   const removedLocks = [];
 
