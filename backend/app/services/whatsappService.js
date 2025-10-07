@@ -7,6 +7,7 @@ require("dotenv").config();
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
+const path = require('path');
 
 /**
  * Cliente de WhatsApp Web.js con autenticación local.
@@ -16,6 +17,7 @@ const fs = require('fs');
 let client = null;
 let isClientReady = false;
 let isInitializing = false;
+const LOCAL_AUTH_NAME = "tanya-martelli-photo";
 
 /**
  * Genera un ID único para trackear requests de WhatsApp.
@@ -99,6 +101,42 @@ const getPuppeteerOptions = (requestId) => {
 };
 
 /**
+ * Elimina archivos de bloqueo de perfiles Chromium que hayan quedado de sesiones anteriores.
+ * @param {string} requestId - ID del request para logging.
+ */
+const releaseChromiumProfileLock = (requestId) => {
+  const authBasePath = process.env.WWEBJS_AUTH_PATH || path.join(process.cwd(), '.wwebjs_auth');
+  const sessionPath = path.join(authBasePath, `session-${LOCAL_AUTH_NAME}`);
+
+  const lockCandidates = [
+    path.join(sessionPath, 'Default', 'SingletonLock'),
+    path.join(sessionPath, 'SingletonLock')
+  ];
+
+  const removedLocks = [];
+
+  for (const lockPath of lockCandidates) {
+    if (fs.existsSync(lockPath)) {
+      try {
+        fs.unlinkSync(lockPath);
+        removedLocks.push(lockPath);
+      } catch (error) {
+        logWhatsApp("WARN", "Unable to remove Chromium profile lock file", requestId, {
+          lockPath,
+          errorMessage: error.message
+        });
+      }
+    }
+  }
+
+  if (removedLocks.length > 0) {
+    logWhatsApp("INFO", "Removed stale Chromium profile lock files", requestId, {
+      files: removedLocks
+    });
+  }
+};
+
+/**
  * Inicializa el cliente de WhatsApp si no está ya inicializado.
  * @returns {Promise<void>}
  */
@@ -147,10 +185,11 @@ const initializeClient = () => {
     isInitializing = true;
 
     const puppeteerOptions = getPuppeteerOptions(initRequestId);
+    releaseChromiumProfileLock(initRequestId);
 
     client = new Client({
       authStrategy: new LocalAuth({
-        name: "tanya-martelli-photo"
+        name: LOCAL_AUTH_NAME
       }),
       puppeteer: puppeteerOptions
     });
