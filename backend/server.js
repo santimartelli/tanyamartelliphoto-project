@@ -12,6 +12,9 @@ const path = require('path');
 
 const app = express();
 
+// honor X-Forwarded-* headers when behind a proxy (nginx)
+app.set('trust proxy', 1);
+
 // archivos estáticos, se usa para servir los archivos estáticos del directorio 'resources/static...'
 app.use('/resources/static/assets/uploads', express.static(path.join(__dirname, 'resources/static/assets/uploads')));
 
