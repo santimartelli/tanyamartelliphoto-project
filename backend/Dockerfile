@@ -1,8 +1,9 @@
 FROM node:18
 
 # Install system dependencies required by puppeteer / whatsapp-web.js
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium \
+    chromium-sandbox \
     ca-certificates \
     fonts-liberation \
     libasound2 \
@@ -36,7 +37,8 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     wget \
     xdg-utils \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf /tmp/*
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
@@ -51,5 +53,4 @@ COPY . .
 EXPOSE 3000
 
 CMD ["npm", "start"]
-
 
