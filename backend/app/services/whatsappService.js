@@ -75,6 +75,26 @@ const initializeClient = () => {
       return;
     }
 
+    let hasSettled = false;
+    const initRequestId = generateRequestId();
+
+    const safeResolve = () => {
+      if (!hasSettled) {
+        hasSettled = true;
+        resolve();
+      }
+    };
+
+    const safeReject = (error) => {
+      if (!hasSettled) {
+        hasSettled = true;
+        isClientReady = false;
+        isInitializing = false;
+        client = null;
+        reject(error);
+      }
+    };
+
     isInitializing = true;
 
     client = new Client({
@@ -103,29 +123,34 @@ const initializeClient = () => {
     });
 
     client.on('ready', () => {
-      console.log('✅ WhatsApp client is ready!');
+      logWhatsApp("INFO", "WhatsApp client is ready", initRequestId);
       isClientReady = true;
       isInitializing = false;
-      resolve();
+      safeResolve();
     });
 
     client.on('authenticated', () => {
-      console.log('✅ WhatsApp authenticated successfully');
+      logWhatsApp("INFO", "WhatsApp authenticated successfully", initRequestId);
     });
 
     client.on('auth_failure', (msg) => {
-      console.error('❌ WhatsApp authentication failed:', msg);
-      isInitializing = false;
-      reject(new Error(`WhatsApp authentication failed: ${msg}`));
+      logWhatsApp("ERROR", "WhatsApp authentication failed", initRequestId, { message: msg });
+      safeReject(new Error(`WhatsApp authentication failed: ${msg}`));
     });
 
     client.on('disconnected', (reason) => {
-      console.log('⚠️ WhatsApp client disconnected:', reason);
+      logWhatsApp("WARN", "WhatsApp client disconnected", initRequestId, { reason });
       isClientReady = false;
       isInitializing = false;
     });
 
-    client.initialize();
+    client.initialize().catch((error) => {
+      logWhatsApp("ERROR", "WhatsApp client initialization threw an error", initRequestId, {
+        errorMessage: error.message,
+        stack: error.stack
+      });
+      safeReject(error);
+    });
   });
 };
 

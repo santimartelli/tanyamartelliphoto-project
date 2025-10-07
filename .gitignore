@@ -3,3 +3,4 @@ docker-compose.yml
 # Development documentation files
 CHANGELOG.md
 CLAUDE.md
+AGENTS.md
