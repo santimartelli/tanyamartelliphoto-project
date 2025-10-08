@@ -329,8 +329,8 @@ exports.sendMessageConfirmationEmail = async (recipentEmail, messageData) => {
 
   const mailOptions = {
     from: {
-      name: "Tanya Martelli Photography",
-      address: process.env.EMAIL_USER,
+      name: DEFAULT_SENDER_NAME,
+      address: DEFAULT_SENDER_EMAIL,
     },
     to: recipentEmail,
     bcc: process.env.EMAIL_SM,
@@ -373,8 +373,8 @@ exports.sendMessageNotificationEmail = async (messageData) => {
 
   const mailOptions = {
     from: {
-      name: "Tanya Martelli Photography",
-      address: process.env.EMAIL_USER,
+      name: DEFAULT_SENDER_NAME,
+      address: DEFAULT_SENDER_EMAIL,
     },
     to: process.env.EMAIL_USER,
     bcc: process.env.EMAIL_SM,
@@ -419,8 +419,8 @@ exports.sendBookingRequestConfirmationEmail = async (recipentEmail, bookingData)
 
   const mailOptions = {
     from: {
-      name: "Tanya Martelli Photography",
-      address: process.env.EMAIL_USER,
+      name: DEFAULT_SENDER_NAME,
+      address: DEFAULT_SENDER_EMAIL,
     },
     to: recipentEmail,
     bcc: process.env.EMAIL_SM,
@@ -465,8 +465,8 @@ exports.sendBookingRequestNotificationEmail = async (bookingData) => {
 
   const mailOptions = {
     from: {
-      name: "Tanya Martelli Photography",
-      address: process.env.EMAIL_USER,
+      name: DEFAULT_SENDER_NAME,
+      address: DEFAULT_SENDER_EMAIL,
     },
     to: process.env.EMAIL_USER,
     bcc: process.env.EMAIL_SM,
@@ -509,8 +509,8 @@ exports.replyEmail = async (recipentEmail, messageData) => {
 
   const mailOptions = {
     from: {
-      name: "Tanya Martelli Photography",
-      address: process.env.EMAIL_USER,
+      name: DEFAULT_SENDER_NAME,
+      address: DEFAULT_SENDER_EMAIL,
     },
     to: recipentEmail,
     subject: `Hola, ${messageData.name}!`,
