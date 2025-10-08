@@ -13,6 +13,7 @@ module.exports = (app) => {
    * @requires express
    */
   const bookings = require("../controllers/booking.controller.js");
+  const { formSubmissionRateLimiter } = require("../middleware/rateLimit.js");
   var router = require("express").Router();
 
   /**
@@ -23,7 +24,7 @@ module.exports = (app) => {
  * @param {string} ruta - La ruta correspondiente.
    * @param {function} bookings.create - La función controladora que crea una nueva reserva.
    */
-  router.post("/", bookings.create);
+  router.post("/", formSubmissionRateLimiter, bookings.create);
 
   /**
    * Ruta para obtener todas las reservas.

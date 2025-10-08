@@ -4,9 +4,13 @@
  */
 
 require("dotenv").config();
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
 const EMAIL_ENABLED = process.env.EMAIL_ENABLED === "true";
+const EMAIL_PROVIDER = "Resend";
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const DEFAULT_SENDER_EMAIL = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_USER;
+const DEFAULT_SENDER_NAME = process.env.RESEND_FROM_NAME || "Tanya Martelli Photography";
 
 /**
  * Valida si un email tiene un formato válido.
@@ -51,56 +55,69 @@ const logEmail = (level, message, requestId, data = {}) => {
   }
 };
 
+let resendClient = null;
+
 /**
- * Crea el transportador de emails con los datos de autenticación.
- * @type {object}
- * @const
- * @property {string} service - El servicio de email.
- * @property {string} host - El servidor de email.
- * @property {number} port - El puerto del servidor de email.
- * @property {boolean} secure - Un valor booleano que indica si el servidor de email es seguro.
- * @property {object} auth - Las credenciales de autenticación.
- * @property {string} auth.user - El usuario del email.
- * @property {string} auth.pass - La contraseña del usuario del email.
- * @memberof Services/Email
+ * Configura el proveedor HTTP utilizado para el envío de emails.
  */
-const smtpPort = parseInt(process.env.NODEMAILER_PORT, 10) || 587;
-const explicitSecure = process.env.NODEMAILER_SECURE;
-const useSecure = typeof explicitSecure === "string"
-  ? explicitSecure.toLowerCase() === "true"
-  : smtpPort === 465;
-
-let transporter = null;
-
 if (EMAIL_ENABLED) {
-  transporter = nodemailer.createTransport({
-    service: process.env.NODEMAILER_SERVICE,
-    host: process.env.NODEMAILER_HOST,
-    port: smtpPort,
-    secure: useSecure,
-    requireTLS: !useSecure,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: process.env.NODEMAILER_TLS_REJECT_UNAUTHORIZED !== "false"
-    },
-    // Adding timeout option to prevent hanging connections
-    connectionTimeout: 10000, // 10 seconds
-    greetingTimeout: 10000,
-  });
-
-  logEmail("INFO", "Email transporter configured", generateRequestId(), {
-    host: process.env.NODEMAILER_HOST,
-    service: process.env.NODEMAILER_SERVICE,
-    port: smtpPort,
-    secure: useSecure,
-    requireTLS: !useSecure
-  });
+  if (!RESEND_API_KEY) {
+    logEmail("ERROR", "Email service enabled but RESEND_API_KEY is missing", generateRequestId());
+  } else if (!DEFAULT_SENDER_EMAIL) {
+    logEmail("ERROR", "Email service enabled but RESEND_FROM_EMAIL/EMAIL_USER is missing", generateRequestId());
+  } else {
+    resendClient = new Resend(RESEND_API_KEY);
+    logEmail("INFO", "Email HTTP provider configured", generateRequestId(), {
+      provider: EMAIL_PROVIDER,
+      defaultSender: DEFAULT_SENDER_EMAIL
+    });
+  }
 } else {
-  logEmail("WARN", "Email service disabled, skipping SMTP transporter setup", generateRequestId());
+  logEmail("WARN", "Email service disabled, skipping HTTP provider setup", generateRequestId());
 }
+
+/**
+ * Normaliza un destinatario de email a la estructura esperada por el proveedor HTTP.
+ * @param {string|object} entry - El destinatario a normalizar.
+ * @returns {{email: string, name?: string}|null} - Objeto con email y nombre opcional.
+ */
+const normalizeEmailAddress = (entry) => {
+  if (!entry) {
+    return null;
+  }
+
+  if (typeof entry === "string") {
+    return { email: entry.trim() };
+  }
+
+  if (typeof entry === "object") {
+    if (entry.email) {
+      return { email: entry.email.trim(), ...(entry.name ? { name: entry.name } : {}) };
+    }
+
+    if (entry.address) {
+      return { email: entry.address.trim(), ...(entry.name ? { name: entry.name } : {}) };
+    }
+  }
+
+  return null;
+};
+
+/**
+ * Construye un listado normalizado de destinatarios.
+ * @param {string|object|Array} input - Los destinatarios a procesar.
+ * @returns {Array<{email: string, name?: string}>} - Lista normalizada de destinatarios.
+ */
+const buildRecipientList = (input) => {
+  if (!input) {
+    return [];
+  }
+
+  const values = Array.isArray(input) ? input : [input];
+  return values
+    .map(normalizeEmailAddress)
+    .filter((entry) => entry && isValidEmail(entry.email));
+};
 
 /**
  * Envia un email con los datos especificados.
@@ -119,8 +136,19 @@ const sendEmail = async (mailOptions, retryCount = 0, requestId = null) => {
   const reqId = requestId || generateRequestId();
 
   // Validar emails antes de enviar
-  const recipients = Array.isArray(mailOptions.to) ? mailOptions.to : [mailOptions.to];
-  const invalidEmails = recipients.filter(email => !isValidEmail(email));
+  const rawRecipients = Array.isArray(mailOptions.to) ? mailOptions.to : [mailOptions.to];
+  const invalidEmails = rawRecipients
+    .map((entry) => {
+      if (typeof entry === "string") {
+        return entry;
+      }
+      if (entry && typeof entry === "object") {
+        return entry.email || entry.address;
+      }
+      return null;
+    })
+    .filter(Boolean)
+    .filter(email => !isValidEmail(email));
 
   if (invalidEmails.length > 0) {
     logEmail("ERROR", "Email validation failed", reqId, {
@@ -148,67 +176,136 @@ const sendEmail = async (mailOptions, retryCount = 0, requestId = null) => {
     };
   }
 
+  if (!RESEND_API_KEY || !resendClient || !DEFAULT_SENDER_EMAIL) {
+    logEmail("ERROR", "Email service misconfigured - missing API key, sender email or client", reqId);
+    return {
+      success: false,
+      error: "Email service misconfigured",
+      requestId: reqId
+    };
+  }
+
+  const sender = normalizeEmailAddress(mailOptions.from) || {
+    email: DEFAULT_SENDER_EMAIL,
+    name: DEFAULT_SENDER_NAME
+  };
+
+  const toList = buildRecipientList(mailOptions.to);
+  const ccList = buildRecipientList(mailOptions.cc);
+  const bccList = buildRecipientList(mailOptions.bcc);
+  const replyTo = normalizeEmailAddress(mailOptions.replyTo);
+  const recipientEmails = toList.map((entry) => entry.email);
+
+  if (!recipientEmails.length) {
+    logEmail("ERROR", "No valid recipients found for email", reqId, {
+      originalRecipients: mailOptions.to
+    });
+    return {
+      success: false,
+      error: "No valid email recipients",
+      requestId: reqId
+    };
+  }
+
   logEmail("INFO", "Attempting to send email", reqId, {
-    to: mailOptions.to,
+    to: recipientEmails,
     subject: mailOptions.subject,
     attempt: retryCount + 1
   });
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    logEmail("INFO", "Email sent successfully", reqId, {
-      to: mailOptions.to,
+    const formatAddressList = (list) => {
+      return list.map((entry) => {
+        if (entry.name) {
+          return `${entry.name} <${entry.email}>`;
+        }
+        return entry.email;
+      });
+    };
+
+    const response = await resendClient.emails.send({
+      from: sender.name ? `${sender.name} <${sender.email}>` : sender.email,
+      to: formatAddressList(toList),
       subject: mailOptions.subject,
-      messageId: info.messageId,
-      response: info.response
+      ...(mailOptions.text ? { text: mailOptions.text } : {}),
+      ...(mailOptions.html ? { html: mailOptions.html } : {}),
+      ...(ccList.length ? { cc: formatAddressList(ccList) } : {}),
+      ...(bccList.length ? { bcc: formatAddressList(bccList) } : {}),
+      ...(replyTo && isValidEmail(replyTo.email)
+        ? { reply_to: replyTo.name ? `${replyTo.name} <${replyTo.email}>` : replyTo.email }
+        : {})
+    });
+
+    if (response.error) {
+      throw new Error(response.error?.message || "Resend returned an error response");
+    }
+
+    const messageId = response.data?.id || null;
+
+    logEmail("INFO", "Email sent successfully", reqId, {
+      to: recipientEmails,
+      subject: mailOptions.subject,
+      provider: EMAIL_PROVIDER,
+      messageId
     });
 
     return {
       success: true,
-      response: info.response,
-      messageId: info.messageId,
+      response: response.data,
+      messageId,
       requestId: reqId
     };
   } catch (error) {
+    const providerStatus = error.response?.status;
+    const providerData = error.response?.data;
+    const errorMessage = error.message || providerData?.message || "Unknown error";
+    const errorCode = error.code || providerData?.name;
+
     logEmail("ERROR", `Email sending failed (attempt ${retryCount + 1}/${MAX_RETRIES + 1})`, reqId, {
-      to: mailOptions.to,
+      to: recipientEmails,
       subject: mailOptions.subject,
-      errorCode: error.code,
-      errorMessage: error.message,
+      errorCode,
+      errorMessage,
+      status: providerStatus,
+      providerResponse: providerData,
       stack: error.stack
     });
 
-    // Retry logic for transient errors like connection timeouts
-    if (
-      retryCount < MAX_RETRIES &&
-      (error.code === "ETIMEDOUT" || error.code === "ECONNRESET" || error.code === "ECONNREFUSED" || error.code === "ESOCKET")
-    ) {
+    const isTransientError =
+      error.code === "ETIMEDOUT" ||
+      error.code === "ECONNRESET" ||
+      error.code === "ECONNREFUSED" ||
+      error.code === "ESOCKET" ||
+      !error.response ||
+      (providerStatus && providerStatus >= 500);
+
+    if (retryCount < MAX_RETRIES && isTransientError) {
       logEmail("WARN", `Retrying email send in 2 seconds`, reqId, {
         nextAttempt: retryCount + 2,
-        errorCode: error.code
+        errorCode: error.code,
+        status: providerStatus
       });
 
-      // Wait for 2 seconds before retrying
       await new Promise((resolve) => setTimeout(resolve, 2000));
       return sendEmail(mailOptions, retryCount + 1, reqId);
     }
 
-    // Final failure - log critical error for admin attention
     logEmail("ERROR", "CRITICAL: Email sending failed definitively - ADMIN ATTENTION REQUIRED", reqId, {
-      to: mailOptions.to,
+      to: recipientEmails,
       subject: mailOptions.subject,
-      finalErrorCode: error.code,
-      finalErrorMessage: error.message,
+      finalErrorCode: errorCode,
+      finalErrorMessage: errorMessage,
+      finalStatus: providerStatus,
+      providerResponse: providerData,
       totalAttempts: retryCount + 1,
       adminEmail: process.env.EMAIL_SM
     });
 
-    // Return failure but don't throw to prevent app crashes
     return {
       success: false,
       error: "Email sending failed after all retries",
-      errorCode: error.code,
-      errorMessage: error.message,
+      errorCode,
+      errorMessage,
       requestId: reqId,
       attempts: retryCount + 1
     };

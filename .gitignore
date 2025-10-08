@@ -4,3 +4,4 @@ docker-compose.yml
 CHANGELOG.md
 CLAUDE.md
 AGENTS.md
+secrets/

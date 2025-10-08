@@ -9,4 +9,16 @@ const loginRateLimiter = rateLimit({
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-module.exports = { loginRateLimiter };
+const formSubmissionRateLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minutes
+    max: 6, // limit each IP
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({
+            message: 'Has enviado demasiadas solicitudes en poco tiempo. Inténtalo de nuevo en unos minutos.'
+        });
+    }
+});
+
+module.exports = { loginRateLimiter, formSubmissionRateLimiter };

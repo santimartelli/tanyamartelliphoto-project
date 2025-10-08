@@ -12,6 +12,7 @@ module.exports = (app) => {
    * @requires express
    */
   const messages = require("../controllers/message.controller.js");
+  const { formSubmissionRateLimiter } = require("../middleware/rateLimit.js");
   var router = require("express").Router();
 
   /**
@@ -22,7 +23,7 @@ module.exports = (app) => {
    * @param {string} ruta - La ruta correspondiente.
    * @param {function} messages.create - La función controladora que crea un nuevo mensaje.
    */
-  router.post("/", messages.create);
+  router.post("/", formSubmissionRateLimiter, messages.create);
 
   /**
    * Ruta para obtener todos los mensajes.

@@ -5,7 +5,30 @@
 
 const BookingModel = require("../models/booking.model.js");
 const emailService = require("../services/emailService.js");
-const whatsappService = require("../services/whatsappService.js");
+const telegramService = require("../services/telegramService.js");
+
+const BOOKING_COOLDOWN_MS = 2 * 60 * 1000;
+const BOOKING_MAX_MESSAGE_LENGTH = 2000;
+const MAX_BOOKING_LINKS_ALLOWED = 1;
+
+const bookingSubmissionTracker = new Map();
+
+const pruneTracker = (tracker, windowMs) => {
+  const now = Date.now();
+  tracker.forEach((timestamp, key) => {
+    if (now - timestamp > windowMs * 5) {
+      tracker.delete(key);
+    }
+  });
+};
+
+const countLinks = (text) => {
+  if (!text) {
+    return 0;
+  }
+  const matches = text.match(/https?:\/\//gi);
+  return matches ? matches.length : 0;
+};
 
 /**
  * Crea una nueva solicitud de reserva, la guarda en la base de datos, envía un email de confirmación al usuario,
@@ -27,6 +50,31 @@ exports.create = (req, res) => {
     res.status(400).send({ message: "Please complete all the fields" });
     return;
   }
+
+  if (req.body.message && req.body.message.length > BOOKING_MAX_MESSAGE_LENGTH) {
+    res.status(400).send({ message: "Please keep the additional message below 2000 characters." });
+    return;
+  }
+
+  if (req.body.message && countLinks(req.body.message) > MAX_BOOKING_LINKS_ALLOWED) {
+    res.status(400).send({ message: "Please remove links from the additional message before sending." });
+    return;
+  }
+
+  const normalizedEmail = req.body.email.trim().toLowerCase();
+  pruneTracker(bookingSubmissionTracker, BOOKING_COOLDOWN_MS);
+  const lastSubmission = bookingSubmissionTracker.get(normalizedEmail);
+  const now = Date.now();
+
+  if (lastSubmission && now - lastSubmission < BOOKING_COOLDOWN_MS) {
+    res.status(429).send({
+      message: "Hemos recibido recientemente una reserva con este correo. Espera un momento antes de reenviarla."
+    });
+    return;
+  }
+
+  bookingSubmissionTracker.set(normalizedEmail, now);
+
   const newBooking = new BookingModel({
     name: req.body.name,
     email: req.body.email,
@@ -39,6 +87,7 @@ exports.create = (req, res) => {
   });
   BookingModel.create(newBooking, async (err, data) => {
     if (err) {
+      bookingSubmissionTracker.delete(normalizedEmail);
       res.status(500).send({
         message:
           err.message || "Some error occurred while creating the booking.",
@@ -54,9 +103,9 @@ exports.create = (req, res) => {
       emailService.sendBookingRequestNotificationEmail(req.body)
         .catch(emailErr => console.error("Failed to send booking notification email:", emailErr));
 
-      // WhatsApp notification to admin
-      whatsappService.sendBookingNotificationWhatsApp(req.body)
-        .catch(whatsappErr => console.error("Failed to send booking WhatsApp notification:", whatsappErr));
+      // Telegram notification to admin
+      telegramService.sendBookingNotificationTelegram(req.body)
+        .catch(telegramErr => console.error("Failed to send booking Telegram notification:", telegramErr));
 
       res.send(data);
     }

@@ -26,15 +26,21 @@ Este proyecto es una aplicación web desarrollada para Tanya Martelli, una fotó
 
 https://tanyamartelli.com
 
-## WhatsApp Notifications
-
-- Ejecuta `docker-compose up backend` (o `npm start` en `backend/`) y observa los logs del servicio.
-- La primera vez verás en consola el mensaje `SCAN THE QR CODE...` seguido del código QR para vincular WhatsApp.
-- Abre WhatsApp en tu móvil, ve a Dispositivos vinculados y escanea el QR para autorizar los envíos automáticos.
-- La autenticación se almacena bajo `backend/.wwebjs_auth`, por lo que se conservará entre reinicios siempre que el volumen esté montado.
-- Si el log muestra `The profile appears to be in use`, borra el archivo `backend/.wwebjs_auth/session-tanya-martelli-photo/Default/SingletonLock` antes de reiniciar el backend.
-
 ## Email Service
 
-- El servicio de correo está deshabilitado por defecto para evitar los errores `ETIMEDOUT` de Gmail.
-- Cuando dispongas de un proveedor SMTP alternativo, establece `EMAIL_ENABLED=true` y las credenciales necesarias en las variables de entorno antes de reiniciar el backend.
+- El backend ahora envía correos a través de [Resend](https://resend.com/), que dispone de un plan gratuito ideal para formularios de contacto.
+- En el `.env` del backend define:  
+  `EMAIL_ENABLED=true`, `RESEND_API_KEY=tu_api_key`, `RESEND_FROM_EMAIL=remitente@tudominio.com` y opcionalmente `RESEND_FROM_NAME="Nombre remitente"`.
+- Asegúrate de que el dominio/remitente estén verificados en Resend para evitar bloqueos. Si no defines `RESEND_FROM_EMAIL`, usará `EMAIL_USER` como respaldo.
+- El endpoint `/api/email/test` permite verificar la entrega de correos y Telegram. Envía `{"email":"tu@correo.com","telegram":true}` para comprobar ambos canales.
+
+## Telegram Notifications
+
+- Se añadió un canal de alertas vía Telegram para mensajes y reservas.
+- Crea un bot con [@BotFather](https://t.me/BotFather), copia el token y obtén el ID del chat donde quieres recibir las notificaciones (por ejemplo con [@userinfobot](https://t.me/userinfobot) o añadiendo el bot a un grupo).
+- Configura en el `.env` del backend: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` y (opcional) `TELEGRAM_THREAD_ID` si usas topics en grupos. Para deshabilitar este canal establece `TELEGRAM_ENABLED=false`.
+
+## Anti-spam
+
+- Las rutas de contacto y reservas aplican rate limiting (`6` envíos cada 10 minutos por IP) y enfriamiento adicional por correo para frenar envíos automatizados.
+- Los mensajes se validan para evitar enlaces masivos, palabras clave sospechosas y textos excesivamente largos. Ajusta estos parámetros en `backend/app/controllers/message.controller.js` y `backend/app/controllers/booking.controller.js` según tus necesidades.

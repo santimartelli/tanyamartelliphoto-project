@@ -5,7 +5,39 @@
 
 const MessageModel = require("../models/message.model.js");
 const emailService = require("../services/emailService.js");
-const whatsappService = require("../services/whatsappService.js");
+const telegramService = require("../services/telegramService.js");
+
+const MESSAGE_COOLDOWN_MS = 60 * 1000;
+const MESSAGE_MAX_LENGTH = 1500;
+const MAX_LINKS_ALLOWED = 2;
+const SUSPICIOUS_KEYWORDS = ["viagra", "casino", "loan", "crypto", "investment", "betting"];
+
+const messageSubmissionTracker = new Map();
+
+const pruneTracker = (tracker, windowMs) => {
+  const now = Date.now();
+  tracker.forEach((timestamp, key) => {
+    if (now - timestamp > windowMs * 5) {
+      tracker.delete(key);
+    }
+  });
+};
+
+const countLinks = (text) => {
+  if (!text) {
+    return 0;
+  }
+  const matches = text.match(/https?:\/\//gi);
+  return matches ? matches.length : 0;
+};
+
+const containsSuspiciousKeyword = (text) => {
+  if (!text) {
+    return false;
+  }
+  const lowered = text.toLowerCase();
+  return SUSPICIOUS_KEYWORDS.some((keyword) => lowered.includes(keyword));
+};
 
 /**
  * Crea un nuevo mensaje.
@@ -22,6 +54,36 @@ exports.create = (req, res) => {
     res.status(400).send({ message: "Please complete all the fields" });
     return;
   }
+
+  if (req.body.messageContent.length > MESSAGE_MAX_LENGTH) {
+    res.status(400).send({ message: "Please keep the message below 1500 characters." });
+    return;
+  }
+
+  if (countLinks(req.body.messageContent) > MAX_LINKS_ALLOWED) {
+    res.status(400).send({ message: "Please remove links from the message before sending." });
+    return;
+  }
+
+  if (containsSuspiciousKeyword(req.body.messageContent)) {
+    res.status(400).send({ message: "The message contains blocked keywords." });
+    return;
+  }
+
+  const normalizedEmail = req.body.messageEmail.trim().toLowerCase();
+  pruneTracker(messageSubmissionTracker, MESSAGE_COOLDOWN_MS);
+  const lastSubmission = messageSubmissionTracker.get(normalizedEmail);
+  const now = Date.now();
+
+  if (lastSubmission && now - lastSubmission < MESSAGE_COOLDOWN_MS) {
+    res.status(429).send({
+      message: "Has enviado un mensaje hace muy poco. Por favor espera unos segundos antes de intentarlo nuevamente."
+    });
+    return;
+  }
+
+  messageSubmissionTracker.set(normalizedEmail, now);
+
   const newMessage = new MessageModel({
     messageName: req.body.messageName,
     messageEmail: req.body.messageEmail,
@@ -30,6 +92,7 @@ exports.create = (req, res) => {
 
   MessageModel.create(newMessage, async (err, data) => {
     if (err) {
+      messageSubmissionTracker.delete(normalizedEmail);
       res.status(500).send({
         message:
           err.message || "Some error occurred while creating the message.",
@@ -45,9 +108,9 @@ exports.create = (req, res) => {
       emailService.sendMessageNotificationEmail(req.body)
         .catch(emailErr => console.error("Failed to send notification email:", emailErr));
 
-      // WhatsApp notification to admin
-      whatsappService.sendMessageNotificationWhatsApp(req.body)
-        .catch(whatsappErr => console.error("Failed to send WhatsApp notification:", whatsappErr));
+      // Telegram notification to admin
+      telegramService.sendMessageNotificationTelegram(req.body)
+        .catch(telegramErr => console.error("Failed to send Telegram notification:", telegramErr));
 
       res.send(data);
     }
