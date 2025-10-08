@@ -5,10 +5,11 @@
 
 require("dotenv").config();
 const axios = require("axios");
+const { resolveSecret } = require("../config/db.config");
 
 const TELEGRAM_ENABLED = process.env.TELEGRAM_ENABLED !== "false";
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+const TELEGRAM_BOT_TOKEN = resolveSecret(process.env.TELEGRAM_BOT_TOKEN);
+const TELEGRAM_CHAT_ID = resolveSecret(process.env.TELEGRAM_CHAT_ID);
 const TELEGRAM_THREAD_ID = process.env.TELEGRAM_THREAD_ID;
 
 /**

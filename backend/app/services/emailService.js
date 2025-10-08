@@ -5,10 +5,11 @@
 
 require("dotenv").config();
 const { Resend } = require("resend");
+const { resolveSecret } = require("../config/db.config");
 
 const EMAIL_ENABLED = process.env.EMAIL_ENABLED === "true";
 const EMAIL_PROVIDER = "Resend";
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const RESEND_API_KEY = resolveSecret(process.env.RESEND_API_KEY);
 const DEFAULT_SENDER_EMAIL = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_USER;
 const DEFAULT_SENDER_NAME = process.env.RESEND_FROM_NAME || "Tanya Martelli Photography";
 

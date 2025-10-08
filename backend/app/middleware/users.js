@@ -4,6 +4,7 @@
  */
 
 const jwt = require("jsonwebtoken");
+const { resolveSecret } = require("../config/db.config");
 
 module.exports = {
   /**
@@ -48,7 +49,7 @@ module.exports = {
     try {
       const token = req.headers.authorization.split(" ")[1];
       console.log('Token: ', token);
-      const secretKey = process.env.JWT_SECRET_KEY;
+      const secretKey = resolveSecret(process.env.JWT_SECRET_KEY);
       console.log('Secret key: ', secretKey);
       const decoded = jwt.verify(token, secretKey);
       console.log('Decoded: ', decoded);

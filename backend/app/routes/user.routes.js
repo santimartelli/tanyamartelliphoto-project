@@ -23,8 +23,9 @@ module.exports = (app) => {
   const db = require("../models/db.js");
   const userMiddleware = require("../middleware/users.js");
   const { loginRateLimiter } = require('../middleware/rateLimit.js');
+  const { resolveSecret } = require("../config/db.config");
   require('dotenv').config();
-  const secretKey = process.env.JWT_SECRET_KEY;
+  const secretKey = resolveSecret(process.env.JWT_SECRET_KEY);
 
   /**
    * Ruta para registrar un nuevo usuario.
