@@ -15,11 +15,36 @@
  */
 
 require('dotenv').config();
+const fs = require('fs');
+
+/**
+ * Devuelve el valor del secreto ya sea directamente o leyendo desde un archivo.
+ * Permite compatibilidad con Docker Secrets que montan el valor como archivo.
+ * @param {string} value - Valor recibido desde la variable de entorno.
+ * @returns {string|undefined} - Valor final del secreto.
+ */
+const resolveSecret = (value) => {
+  if (!value) {
+    return value;
+  }
+
+  try {
+    if (fs.existsSync(value)) {
+      return fs.readFileSync(value, 'utf8').trim();
+    }
+  } catch (error) {
+    console.warn('[DB Config] No se pudo leer el secreto desde archivo:', error.message);
+  }
+
+  return value;
+};
+
 module.exports = {
   HOST: process.env.DB_HOST,
   USER: process.env.DB_USER,
-  PASSWORD: process.env.DB_PASSWORD,
+  PASSWORD: resolveSecret(process.env.DB_PASSWORD),
   DB: process.env.DB_NAME,
+  resolveSecret
 };
 
 

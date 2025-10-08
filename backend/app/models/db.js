@@ -7,6 +7,7 @@
 
 require("dotenv").config();
 const mysql = require("mysql2");
+const dbConfig = require("../config/db.config.js");
 
 /**
  * Crea la conexión a la base de datos con MySQL.
@@ -18,10 +19,10 @@ const mysql = require("mysql2");
  * @property {string} database - El nombre de la base de datos.
  */
 const connection = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: dbConfig.HOST,
+  user: dbConfig.USER,
+  password: dbConfig.PASSWORD,
+  database: dbConfig.DB,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0

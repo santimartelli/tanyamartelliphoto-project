@@ -1,4 +1,20 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Environment variables
 .env
-.wwebjs_auth/
-.wwebjs_cache/
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
