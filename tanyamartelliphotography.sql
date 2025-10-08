@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   selectedTime VARCHAR(50) NOT NULL,
   message TEXT,
   createdAt datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (bookingId),
+  PRIMARY KEY (bookingId)
 );
 
 -- Creación de la tabla "messages"
