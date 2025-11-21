@@ -1,0 +1,19 @@
+[mysqld]
+# Increase wait_timeout to prevent connection drops
+wait_timeout = 28800
+interactive_timeout = 28800
+
+# Increase max_connections if needed
+max_connections = 200
+
+# Enable TCP keepalive
+tcp_keepalive_time = 120
+tcp_keepalive_intvl = 30
+tcp_keepalive_probes = 3
+
+# Connection pool settings
+max_allowed_packet = 64M
+
+# Performance tuning
+innodb_buffer_pool_size = 256M
+innodb_log_file_size = 64M

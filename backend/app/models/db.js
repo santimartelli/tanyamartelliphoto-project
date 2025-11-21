@@ -25,13 +25,32 @@ const connection = mysql.createPool({
   database: dbConfig.DB,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  connectTimeout: 60000,
+  acquireTimeout: 60000,
+  timeout: 60000,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 0
 });
 
 connection.getConnection((err, conn) => {
   if (err) throw err;
   console.log("Conexión con la base de datos correcta. Id: " + conn.threadId);
   conn.release(); // Release the connection back to the pool
+});
+
+// Handle connection pool errors
+connection.on('error', (err) => {
+  console.error('Database pool error:', err);
+  if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+    console.error('Database connection was closed.');
+  }
+  if (err.code === 'ER_CON_COUNT_ERROR') {
+    console.error('Database has too many connections.');
+  }
+  if (err.code === 'ECONNREFUSED') {
+    console.error('Database connection was refused.');
+  }
 });
 
 module.exports = connection;
